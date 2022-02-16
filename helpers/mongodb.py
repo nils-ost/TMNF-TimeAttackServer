@@ -41,7 +41,11 @@ def laptime_add(player_id, challange_id, time):
         ts = int(datetime.now().timestamp())
         lt = {'player_id': player_id, 'challange_id': challange_id, 'time': time, 'created_at': ts}
         mongoDB().laptimes.insert_one(lt)
-        # TODO: bestlaptimes aktualisieren
+        best = mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challange_id': challange_id})
+        if best is None:
+            mongoDB().bestlaptimes.insert_one(lt)
+        elif best['time'] > time:
+            mongoDB().bestlaptimes.update_one({'_id': best['_id']}, {'$set': {'time': time, 'created_at': ts}})
 
 
 """
