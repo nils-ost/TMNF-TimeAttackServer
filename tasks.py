@@ -19,3 +19,8 @@ def stop_development(c):
             c.run(f"sudo docker stop {name}")
     print('Removing storage for dev-mongo')
     c.run('sudo rm -rf /media/ramdisk/mongodb')
+
+
+@task(pre=[stop_development], post=[start_development], name="dev-clean")
+def cleanup_development(c):
+    pass

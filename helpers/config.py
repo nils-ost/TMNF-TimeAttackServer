@@ -13,6 +13,10 @@ config = {
         'host': 'localhost',
         'port': 27017,
         'database': 'tmnf-ta'
+    },
+    'challenges': {
+        'least_rounds': 6,
+        'least_time': 300000
     }
 }
 
