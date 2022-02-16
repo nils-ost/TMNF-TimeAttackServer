@@ -34,9 +34,6 @@ def print_all():
     print('challenges:')
     for c in mongoDB().challenges.find({}):
         print(c)
-    print('accounts:')
-    for a in mongoDB().accounts.find({}):
-        print(a)
     print('players:')
     for p in mongoDB().players.find({}):
         print(p)
@@ -69,8 +66,7 @@ def player_update(player_id, nickname, current_uid):
     player_id = clean_player_id(player_id)
     player = mongoDB().players.find_one({'_id': player_id})
     if player is None:
-        account_id = str(mongoDB().accounts.insert_one({}).inserted_id)
-        mongoDB().players.insert_one({'_id': player_id, 'account_id': account_id, 'current_uid': current_uid, 'nickname': nickname, 'last_update': ts})
+        mongoDB().players.insert_one({'_id': player_id, 'current_uid': current_uid, 'nickname': nickname, 'last_update': ts})
     else:
         mongoDB().players.update_one({'_id': player_id}, {'$set': {'nickname': nickname, 'current_uid': current_uid, 'last_update': ts}})
 
@@ -79,3 +75,11 @@ def challenge_add(challenge_id, name):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
         mongoDB().challenges.insert_one({'_id': challenge_id, 'name': name})
+
+
+def challenge_all():
+    return mongoDB().challenges.find({})
+
+
+def challenge_get(challenge_id):
+    return mongoDB().challenges.find_one({'_id': challenge_id})

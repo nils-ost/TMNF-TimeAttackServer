@@ -17,6 +17,9 @@ config = {
     'challenges': {
         'least_rounds': 6,
         'least_time': 300000
+    },
+    'server': {
+        'port': 8000
     }
 }
 

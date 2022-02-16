@@ -13,8 +13,11 @@ callback_queue = Queue()
 receiver_process = None
 worker_process = None
 
+next_challenge = None
+
 
 def setNextChallengeTimeLimit():
+    global next_challenge
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     new_time = 0
     if challenge['LapRace']:
@@ -23,6 +26,7 @@ def setNextChallengeTimeLimit():
         new_time = challenge['SilverTime'] * challenge_config['least_rounds']
     new_time = max(new_time, challenge_config['least_time'])
     sender.callMethod('SetTimeAttackLimit', new_time)
+    next_challenge = challenge['UId']
     print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(new_time / 1000)}s")
 
 
@@ -81,3 +85,11 @@ def start_processes():
     if receiver_process is None:
         receiver_process = Process(target=receiver_function, args=(callback_queue, ), daemon=True)
         receiver_process.start()
+
+
+def current_challenge_id():
+    return current_challenge
+
+
+def next_challenge_id():
+    return next_challenge
