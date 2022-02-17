@@ -4,14 +4,14 @@
 
 `/challenges`
 
-`/challenge/current`
+`/challenges/current`
 
-`/challenge/next`
+`/challenges/next`
 
-`/players`
+`/players` gives all players
 
-`/ranking/<challenge_id>`
+`/rankings/<challenge_id>` gives ranking for challenge_id
 
-`/ranking/global`
+`/rankings` gives global ranking
 
 ## Private

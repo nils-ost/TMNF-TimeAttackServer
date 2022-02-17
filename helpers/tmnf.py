@@ -6,13 +6,14 @@ from helpers.mongodb import laptime_add, challenge_add, player_update
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
 
-receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
-sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+receiver = None
+sender = None
 
 callback_queue = Queue()
 receiver_process = None
 worker_process = None
 
+current_challenge = None
 next_challenge = None
 
 
@@ -28,13 +29,6 @@ def setNextChallengeTimeLimit():
     sender.callMethod('SetTimeAttackLimit', new_time)
     next_challenge = challenge['UId']
     print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(new_time / 1000)}s")
-
-
-current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
-challenge_add(current_challenge['UId'], current_challenge['Name'])
-print(f"Challenge current: {current_challenge['Name']}")
-current_challenge = current_challenge['UId']
-setNextChallengeTimeLimit()
 
 
 def receiver_function(msg_queue):
@@ -79,6 +73,20 @@ def worker_function(msg_queue):
 def start_processes():
     global worker_process
     global receiver_process
+    global receiver
+    global sender
+    global config
+    global current_challenge
+
+    receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+    sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+
+    current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
+    challenge_add(current_challenge['UId'], current_challenge['Name'])
+    print(f"Challenge current: {current_challenge['Name']}")
+    current_challenge = current_challenge['UId']
+    setNextChallengeTimeLimit()
+
     if worker_process is None:
         worker_process = Process(target=worker_function, args=(callback_queue, ), daemon=True)
         worker_process.start()

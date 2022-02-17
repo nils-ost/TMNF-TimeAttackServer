@@ -71,6 +71,10 @@ def player_update(player_id, nickname, current_uid):
         mongoDB().players.update_one({'_id': player_id}, {'$set': {'nickname': nickname, 'current_uid': current_uid, 'last_update': ts}})
 
 
+def player_all():
+    return mongoDB().players.find({})
+
+
 def challenge_add(challenge_id, name):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
@@ -83,3 +87,29 @@ def challenge_all():
 
 def challenge_get(challenge_id):
     return mongoDB().challenges.find_one({'_id': challenge_id})
+
+
+def ranking_for(challenge_id):
+    result = list()
+    next_points = 1
+    for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': None}):
+        result.append({'player_id': lt['player_id'], 'points': 0, 'time': lt['time'], 'at': lt['created_at']})
+        next_points += 1
+    for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': {'$ne': None}}).sort('time', DESCENDING):
+        result.append({'player_id': lt['player_id'], 'points': next_points, 'time': lt['time'], 'at': lt['created_at']})
+        next_points += 1
+    return result
+
+
+def ranking_global():
+    pp = dict()
+    for c in [c['_id'] for c in challenge_all()]:
+        for player, points in [(p['player_id'], p['points']) for p in ranking_for(c)]:
+            if player not in pp:
+                pp[player] = points
+            else:
+                pp[player] += points
+    result = list()
+    for player, points in pp.items():
+        result.append({'player_id': player, 'points': points})
+    return result
