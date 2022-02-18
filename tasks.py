@@ -36,10 +36,20 @@ def generate_testdata(c):
     player_update('nijo', 'NiJO', 250)
     player_update('someone', 'Hello World', 249)
     player_update('bad', 'I suck', 248)
+    for p in range(1, 11):
+        player_update(f"p{p}", f"Player{p}", 248 - p)
+    laptime_add('nijo', 'cid1', 25000)
+    laptime_add('someone', 'cid1', 25000)
     laptime_add('bad', 'cid1', 50000)
+    laptime_add('nijo', 'cid2', 25000)
+    laptime_add('someone', 'cid2', 25000)
     laptime_add('bad', 'cid2', 0)
-    for c in ['cid1', 'cid2', 'cid3']:
-        for p in ['nijo', 'someone']:
-            for i in range(10):
-                laptime_add(p, c, randrange(1000, 5000, 1) * 10)
+    laptime_add('nijo', 'cid3', 25000)
+    laptime_add('someone', 'cid3', 25000)
+    laptime_add('bad', 'cid3', 25000)
+    for i in range(100):
+        p = randrange(1, 11, 1)
+        c = randrange(1, 4, 1)
+        t = randrange(1000, 5000, 1) * 10
+        laptime_add(f"p{p}", f"cid{c}", t)
     print_all()

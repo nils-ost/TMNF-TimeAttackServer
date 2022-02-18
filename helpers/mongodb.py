@@ -89,27 +89,61 @@ def challenge_get(challenge_id):
     return mongoDB().challenges.find_one({'_id': challenge_id})
 
 
-def ranking_for(challenge_id):
-    result = list()
-    next_points = 1
-    for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': None}):
-        result.append({'player_id': lt['player_id'], 'points': 0, 'time': lt['time'], 'at': lt['created_at']})
-        next_points += 1
-    for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': {'$ne': None}}).sort('time', DESCENDING):
-        result.append({'player_id': lt['player_id'], 'points': next_points, 'time': lt['time'], 'at': lt['created_at']})
-        next_points += 1
-    return result
-
-
-def ranking_global():
-    pp = dict()
-    for c in [c['_id'] for c in challenge_all()]:
-        for player, points in [(p['player_id'], p['points']) for p in ranking_for(c)]:
-            if player not in pp:
-                pp[player] = points
+def ranking_for(challenge_id, current_challenge_id=None):
+    if challenge_id == current_challenge_id:
+        players = dict()
+        players_none = list()
+        for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': None}):
+            players[lt['player_id']] = {'time': lt['time'], 'at': lt['created_at']}
+            players_none.append(lt['player_id'])
+        rank = 0
+        step = 1
+        time = None
+        for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': {'$ne': None}}).sort('time', ASCENDING):
+            p = lt['player_id']
+            players[p] = {'time': lt['time'], 'at': lt['created_at']}
+            if lt['time'] == time:
+                step += 1
             else:
-                pp[player] += points
+                rank += step
+                step = 1
+                time = lt['time']
+            players[p]['rank'] = rank
+        for p in players_none:
+            players[p]['rank'] = len(players)
+            players[p]['points'] = 0
+        result = list()
+        for p in players:
+            if p not in players_none:
+                players[p]['points'] = len(players) - (players[p]['rank'] - 1)
+            rc = players[p]
+            rc['player_id'] = p
+            result.append(dict(rc))
+            rc['challenge_id'] = challenge_id
+            mongoDB().ranking.replace_one({'challenge_id': challenge_id, 'player_id': p}, rc, True)
+        return result
+    else:
+        result = list()
+        for rc in mongoDB().ranking.find({'challenge_id': challenge_id}).sort('rank', ASCENDING):
+            rc.pop('_id')
+            rc.pop('challenge_id')
+            result.append(rc)
+        return result
+
+
+def ranking_global(current_challenge_id=None):
+    if current_challenge_id is not None:
+        ranking_for(current_challenge_id, current_challenge_id)  # forces ranking for current challenge to be rebuild
     result = list()
-    for player, points in pp.items():
-        result.append({'player_id': player, 'points': points})
+    rank = 0
+    step = 1
+    points = None
+    for player in mongoDB().ranking.aggregate([{"$group": {'_id': '$player_id', 'points': {'$sum': '$points'}}}, {'$sort': {'points': DESCENDING}}]):
+        if player['points'] == points:
+            step += 1
+        else:
+            rank += step
+            step = 1
+            points = player['points']
+        result.append({'player_id': player['_id'], 'rank': rank, 'points': points})
     return result
