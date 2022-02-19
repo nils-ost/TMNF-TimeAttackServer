@@ -1,7 +1,7 @@
 from multiprocessing import Process, Queue
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_add, player_update
+from helpers.mongodb import laptime_add, challenge_add, player_update, ranking_rebuild
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
@@ -17,7 +17,22 @@ current_challenge = None
 next_challenge = None
 
 
-def setNextChallengeTimeLimit():
+def prepareChallenges():
+    starting_index = 0
+    infos_returned = 10
+    fetched_count = 0
+    while True:
+        for challenge in sender.callMethod('GetChallengeList', (infos_returned, starting_index, )):
+            challenge_add(challenge['UId'], challenge['Name'])
+            fetched_count += 1
+        if fetched_count % infos_returned == 0:
+            starting_index += infos_returned
+        else:
+            break
+    ranking_rebuild()
+
+
+def prepareNextChallenge():
     global next_challenge
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     new_time = 0
@@ -47,9 +62,10 @@ def receiver_function(msg_queue):
             challenge_add(params[0]['UId'], params[0]['Name'])
             current_challenge = params[0]['UId']
             print(f"Challenge begin: {params[0]['Name']}")
-            setNextChallengeTimeLimit()
+            prepareNextChallenge()
 
         elif func == 'TrackMania.EndRace':
+            ranking_rebuild(current_challenge)  # triggers a last cache-rebuild
             current_challenge = None
             print(f"Challenge end: {params[1]['Name']}")
 
@@ -80,12 +96,13 @@ def start_processes():
 
     receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+    prepareChallenges()
 
     current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
     challenge_add(current_challenge['UId'], current_challenge['Name'])
     print(f"Challenge current: {current_challenge['Name']}")
     current_challenge = current_challenge['UId']
-    setNextChallengeTimeLimit()
+    prepareNextChallenge()
 
     if worker_process is None:
         worker_process = Process(target=worker_function, args=(callback_queue, ), daemon=True)

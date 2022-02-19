@@ -147,3 +147,15 @@ def ranking_global(current_challenge_id=None):
             points = player['points']
         result.append({'player_id': player['_id'], 'rank': rank, 'points': points})
     return result
+
+
+def ranking_rebuild(challenge_id=None):
+    """
+    Clears out ranking cache and rebuilds it for all challenges (or a singel challenge)
+    """
+    if challenge_id is not None:
+        ranking_for(challenge_id, challenge_id)
+    else:
+        mongoDB().ranking.drop()
+        for challenge in challenge_all():
+            ranking_for(challenge['_id'], challenge['_id'])
