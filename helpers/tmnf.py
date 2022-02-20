@@ -126,8 +126,10 @@ def start_processes():
 
 
 def current_challenge_id():
+    global current_challenge
     return current_challenge
 
 
 def next_challenge_id():
+    global next_challenge
     return next_challenge
