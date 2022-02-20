@@ -15,6 +15,7 @@ config = {
         'database': 'tmnf-ta'
     },
     'challenges': {
+        'rel_time': 'SilverTime',
         'least_rounds': 6,
         'least_time': 300000
     },

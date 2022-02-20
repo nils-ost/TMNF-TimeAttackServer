@@ -1,7 +1,7 @@
 from multiprocessing import Process, Queue
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_add, player_update, ranking_rebuild
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, player_update, ranking_rebuild
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
@@ -17,13 +17,26 @@ current_challenge = None
 next_challenge = None
 
 
+def calcTimeLimit(rel_time, lap_race, nb_laps):
+    if lap_race and nb_laps < 1:
+        new_time = challenge_config['least_time']
+    elif lap_race and nb_laps > 1:
+        new_time = (rel_time / nb_laps) * challenge_config['least_rounds']
+    else:
+        new_time = rel_time * challenge_config['least_rounds']
+    return int(max(new_time, challenge_config['least_time']))
+
+
 def prepareChallenges():
     starting_index = 0
     infos_returned = 10
     fetched_count = 0
     while True:
-        for challenge in sender.callMethod('GetChallengeList', (infos_returned, starting_index, )):
-            challenge_add(challenge['UId'], challenge['Name'])
+        for challenge in sender.callMethod('GetChallengeList', infos_returned, starting_index)[0]:
+            challenge = sender.callMethod('GetChallengeInfo', challenge['FileName'])[0]
+            rel_time = challenge.get(challenge_config['rel_time'], 30000)
+            time_limit = calcTimeLimit(rel_time, challenge['LapRace'], challenge['NbLaps'])
+            challenge_add(challenge['UId'], challenge['Name'], time_limit, rel_time, challenge['LapRace'])
             fetched_count += 1
         if fetched_count % infos_returned == 0:
             starting_index += infos_returned
@@ -35,15 +48,10 @@ def prepareChallenges():
 def prepareNextChallenge():
     global next_challenge
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
-    new_time = 0
-    if challenge['LapRace']:
-        new_time = (challenge['SilverTime'] / challenge['NbLaps']) * challenge_config['least_rounds']
-    else:
-        new_time = challenge['SilverTime'] * challenge_config['least_rounds']
-    new_time = max(new_time, challenge_config['least_time'])
-    sender.callMethod('SetTimeAttackLimit', new_time)
+    time_limit = challenge_get(challenge['UId'])['time_limit']
+    sender.callMethod('SetTimeAttackLimit', time_limit)
     next_challenge = challenge['UId']
-    print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(new_time / 1000)}s")
+    print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")
 
 
 def receiver_function(msg_queue):
@@ -59,7 +67,12 @@ def receiver_function(msg_queue):
                     print(f"{player_login} drove: {player_time / 1000}")
 
         elif func == 'TrackMania.BeginRace':
-            challenge_add(params[0]['UId'], params[0]['Name'])
+            challenge_db = challenge_get(params[0]['UId'])
+            if challenge_db['lap_race'] and challenge_db['nb_laps'] == -1:
+                new_time = calcTimeLimit(challenge_db['rel_time'], True, params[0]['NbLaps'])
+                challenge_update(params[0]['UId'], time_limit=new_time, nb_laps=params[0]['NbLaps'])
+            else:
+                challenge_update(params[0]['UId'])
             current_challenge = params[0]['UId']
             print(f"Challenge begin: {params[0]['Name']}")
             prepareNextChallenge()
@@ -99,7 +112,7 @@ def start_processes():
     prepareChallenges()
 
     current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
-    challenge_add(current_challenge['UId'], current_challenge['Name'])
+    challenge_update(current_challenge['UId'], force_inc=False)
     print(f"Challenge current: {current_challenge['Name']}")
     current_challenge = current_challenge['UId']
     prepareNextChallenge()
