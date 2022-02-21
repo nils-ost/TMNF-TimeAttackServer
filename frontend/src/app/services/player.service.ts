@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { RankingGlobal } from '../interfaces/ranking-global';
+import { Player } from '../interfaces/player';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RankingGlobalService {
+export class PlayerService {
 
-  private rankingGlobalUrl = 'http://192.168.56.102:8000/rankings/';
+  private playerUrl = 'http://192.168.56.102:8000/players/';
 
   constructor(private http: HttpClient) { }
 
@@ -23,11 +23,11 @@ export class RankingGlobalService {
     console.error(
       `Backend returned code ${error.status}, body was: `, error.error);
   }
-  // Return an observable with a user-facing error message.
-  return throwError(() => new Error('Something bad happened; please try again later.'));
-}
+    // Return an observable with a user-facing error message.
+    return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
 
-  public getRankingGlobal(): Observable<RankingGlobal[]> {
-    return this.http.get<RankingGlobal[]>(this.rankingGlobalUrl).pipe(catchError(this.handleError));
+  public getPlayers(): Observable<Player[]> {
+    return this.http.get<Player[]>(this.playerUrl).pipe(catchError(this.handleError));
   }
 }

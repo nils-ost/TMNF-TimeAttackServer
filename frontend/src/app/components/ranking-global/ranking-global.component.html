@@ -1,4 +1,4 @@
-<p-table [value]="rankingGlobals">
+<p-table [value]="globalRankings">
     <ng-template pTemplate="header">
         <tr>
             <th>rank</th>
@@ -6,11 +6,11 @@
             <th>points</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rankingGlobal>
+    <ng-template pTemplate="body" let-globalRanking>
         <tr>
-            <td>{{rankingGlobal.rank}}</td>
-            <td>{{rankingGlobal.player_id}}</td>
-            <td>{{rankingGlobal.points}}</td>
+            <td>{{globalRanking.rank}}</td>
+            <td [ngClass]="{'highlight': globalRanking.player_id === 'nijovanostow'}">{{playerName(globalRanking.player_id)}}</td>
+            <td>{{globalRanking.points}}</td>
         </tr>
     </ng-template>
 </p-table>
