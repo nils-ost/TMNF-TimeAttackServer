@@ -5,10 +5,12 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 cheroot==8.6.0
 CherryPy==18.6.1
+cherrypy-cors==1.6
 curtsies==0.3.10
 cwcwidth==0.1.5
 dataclasses==0.8
 greenlet==1.1.2
+httpagentparser==1.9.2
 idna==3.3
 importlib-resources==5.4.0
 invoke==1.6.0
