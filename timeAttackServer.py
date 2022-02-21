@@ -1,8 +1,8 @@
 import cherrypy
 import cherrypy_cors
 import time
-from helpers.mongodb import challenge_all, challenge_get, player_all, ranking_global, ranking_for
-from helpers.tmnf import start_processes as start_tmnf_connection, current_challenge_id, next_challenge_id
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, ranking_global, ranking_for
+from helpers.tmnf import start_processes as start_tmnf_connection
 from helpers.config import get_config
 
 
@@ -29,7 +29,7 @@ class Challenges():
     @cherrypy.expose()
     @cherrypy.tools.json_out()
     def current(self):
-        c = challenge_get(current_challenge_id())
+        c = challenge_get(current=True)
         c['id'] = c['_id']
         c.pop('_id', None)
         return c
@@ -37,7 +37,7 @@ class Challenges():
     @cherrypy.expose()
     @cherrypy.tools.json_out()
     def next(self):
-        c = challenge_get(next_challenge_id())
+        c = challenge_get(next=True)
         c['id'] = c['_id']
         c.pop('_id', None)
         return c
@@ -60,13 +60,13 @@ class Rankings():
     def index(self, challenge_id=None, rebuild='false'):
         if challenge_id is None:
             if rebuild == 'true':
-                return ranking_global(current_challenge_id())
+                return ranking_global(challenge_id_get(current=True))
             else:
                 return ranking_global()
         elif challenge_get(challenge_id) is None:
             return {'m': 'invalid challenge_id'}
         else:
-            return ranking_for(challenge_id, current_challenge_id())
+            return ranking_for(challenge_id, challenge_id_get(current=True))
 
 
 if __name__ == '__main__':

@@ -100,8 +100,26 @@ def challenge_all():
     return mongoDB().challenges.find({})
 
 
-def challenge_get(challenge_id):
+def challenge_get(challenge_id=None, current=False, next=False):
+    if current:
+        challenge_id = challenge_id_get(current=True)
+    if next:
+        challenge_id = challenge_id_get(next=True)
     return mongoDB().challenges.find_one({'_id': challenge_id})
+
+
+def challenge_id_get(current=False, next=False):
+    if current:
+        return mongoDB().utils.find_one({'_id': 'current_challenge_id'})['value']
+    else:
+        return mongoDB().utils.find_one({'_id': 'next_challenge_id'})['value']
+
+
+def challenge_id_set(challenge_id, current=False, next=False):
+    if current:
+        mongoDB().utils.replace_one({'_id': 'current_challenge_id'}, {'_id': 'current_challenge_id', 'value': challenge_id}, True)
+    else:
+        mongoDB().utils.replace_one({'_id': 'next_challenge_id'}, {'_id': 'next_challenge_id', 'value': challenge_id}, True)
 
 
 def ranking_for(challenge_id, current_challenge_id=None):

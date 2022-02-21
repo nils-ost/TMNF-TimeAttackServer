@@ -1,7 +1,7 @@
 from multiprocessing import Process, Queue
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, player_update, ranking_rebuild
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_id_get, challenge_id_set, player_update, ranking_rebuild
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
@@ -12,9 +12,6 @@ sender = None
 callback_queue = Queue()
 receiver_process = None
 worker_process = None
-
-current_challenge = None
-next_challenge = None
 
 
 def calcTimeLimit(rel_time, lap_race, nb_laps):
@@ -46,20 +43,19 @@ def prepareChallenges():
 
 
 def prepareNextChallenge():
-    global next_challenge
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     time_limit = challenge_get(challenge['UId'])['time_limit']
     sender.callMethod('SetTimeAttackLimit', time_limit)
-    next_challenge = challenge['UId']
+    challenge_id_set(challenge['UId'], next=True)
     print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")
 
 
 def receiver_function(msg_queue):
-    global current_challenge
     while True:
         func, params = msg_queue.get()
 
         if func == 'TrackMania.PlayerFinish':
+            current_challenge = challenge_id_get(current=True)
             if current_challenge is not None:
                 player_id, player_login, player_time = params
                 laptime_add(player_login, current_challenge, player_time)
@@ -73,13 +69,13 @@ def receiver_function(msg_queue):
                 challenge_update(params[0]['UId'], time_limit=new_time, nb_laps=params[0]['NbLaps'])
             else:
                 challenge_update(params[0]['UId'])
-            current_challenge = params[0]['UId']
+            challenge_id_set(params[0]['UId'], current=True)
             print(f"Challenge begin: {params[0]['Name']}")
             prepareNextChallenge()
 
         elif func == 'TrackMania.EndRace':
-            ranking_rebuild(current_challenge)  # triggers a last cache-rebuild
-            current_challenge = None
+            ranking_rebuild(challenge_id_get(current=True))  # triggers a last cache-rebuild
+            challenge_id_set(None, current=True)
             print(f"Challenge end: {params[1]['Name']}")
 
         elif func == 'TrackMania.PlayerInfoChanged':
@@ -105,7 +101,6 @@ def start_processes():
     global receiver
     global sender
     global config
-    global current_challenge
 
     receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
@@ -114,7 +109,7 @@ def start_processes():
     current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
     challenge_update(current_challenge['UId'], force_inc=False)
     print(f"Challenge current: {current_challenge['Name']}")
-    current_challenge = current_challenge['UId']
+    challenge_id_set(current_challenge['UId'], current=True)
     prepareNextChallenge()
 
     if worker_process is None:
@@ -123,13 +118,3 @@ def start_processes():
     if receiver_process is None:
         receiver_process = Process(target=receiver_function, args=(callback_queue, ), daemon=True)
         receiver_process.start()
-
-
-def current_challenge_id():
-    global current_challenge
-    return current_challenge
-
-
-def next_challenge_id():
-    global next_challenge
-    return next_challenge
