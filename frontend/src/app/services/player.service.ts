@@ -9,7 +9,7 @@ import { Player } from '../interfaces/player';
 })
 export class PlayerService {
 
-  private playerUrl = 'http://192.168.56.102:8000/players/';
+  private playerUrl = 'http://localhost:8000/players/';
 
   constructor(private http: HttpClient) { }
 
