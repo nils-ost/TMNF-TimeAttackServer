@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { GlobalRanking } from '../interfaces/ranking';
+import { GlobalRanking, ChallengeRanking } from '../interfaces/ranking';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -28,7 +28,11 @@ export class RankingService {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
-  public getGlobalRankings(): Observable<GlobalRanking[]> {
+  getGlobalRankings(): Observable<GlobalRanking[]> {
     return this.http.get<GlobalRanking[]>(this.rankingUrl).pipe(catchError(this.handleError));
+  }
+
+  getChallengeRankings(challenge_id: string): Observable<ChallengeRanking[]> {
+    return this.http.get<ChallengeRanking[]>(this.rankingUrl + challenge_id).pipe(catchError(this.handleError));
   }
 }

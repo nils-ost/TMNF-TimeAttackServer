@@ -1,6 +1,6 @@
 <app-challenges-ticker [challenges]="challenges" [current_challenge_id]="c_current.id" [next_challenge_id]="c_next.id"></app-challenges-ticker>
 
 <div class="grid">
-    <div class="col-7 card"><app-players-list [players]="players"></app-players-list></div>
+    <div class="col-7 card"><app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings"></app-ranking-challenge></div>
     <div class="col-5"><app-ranking-global [players]="players" [globalRankings]="globalRankings"></app-ranking-global></div>
 </div>

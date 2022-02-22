@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from '../../interfaces/player';
-import { GlobalRanking } from '../../interfaces/ranking';
+import { GlobalRanking, ChallengeRanking } from '../../interfaces/ranking';
 import { Challenge } from '../../interfaces/challenge';
 import { PlayerService } from '../../services/player.service';
 import { RankingService } from '../../services/ranking.service';
@@ -22,6 +22,7 @@ export class WallboardComponent implements OnInit {
 
   players: Player[] = [];
   globalRankings: GlobalRanking[] = [];
+  challengeRankings: ChallengeRanking[] = [];
   challenges: Challenge[] = [];
   c_current!: Challenge;
   c_next!: Challenge;
@@ -33,9 +34,9 @@ export class WallboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.refreshChallenges();
     this.refreshPlayers();
     this.refreshRankings();
-    this.refreshChallenges();
     this.enableAutoRefresh();
   }
 
@@ -61,6 +62,15 @@ export class WallboardComponent implements OnInit {
   }
 
   refreshRankings() {
+    if (this.c_current) {
+      this.rankingService
+        .getChallengeRankings(this.c_current.id)
+        .subscribe(
+          (rankings: ChallengeRanking[]) => {
+            this.challengeRankings = rankings;
+          }
+        );
+    }
     this.rankingService
       .getGlobalRankings()
       .subscribe(

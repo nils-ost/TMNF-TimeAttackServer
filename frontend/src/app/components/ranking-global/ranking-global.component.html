@@ -9,7 +9,7 @@
     <ng-template pTemplate="body" let-globalRanking>
         <tr>
             <td>{{globalRanking.rank}}</td>
-            <td [ngClass]="{'highlight': globalRanking.player_id === 'nijovanostow'}">{{playerName(globalRanking.player_id)}}</td>
+            <td>{{playerName(globalRanking.player_id)}}</td>
             <td>{{globalRanking.points}}</td>
         </tr>
     </ng-template>
