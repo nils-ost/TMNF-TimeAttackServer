@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { GlobalRanking } from '../interfaces/ranking';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RankingService {
 
-  private rankingUrl = 'http://192.168.56.102:8000/rankings/?rebuild=true';
+  private rankingUrl = environment.apiUrl + '/rankings/';
 
   constructor(private http: HttpClient) { }
 

@@ -8,7 +8,7 @@ import { Player } from '../../interfaces/player';
 })
 export class PlayersListComponent implements OnInit {
 
-  @Input() players: Player[] = [];
+  @Input() players!: Player[];
 
   constructor() { }
 

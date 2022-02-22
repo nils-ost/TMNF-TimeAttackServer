@@ -64,6 +64,34 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "wst": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.workstation.ts"
+                }
+              ]
+            },
+            "lap": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.laptop.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -76,6 +104,12 @@
             },
             "development": {
               "browserTarget": "TMNF-TimeAttackServer:build:development"
+            },
+            "wst": {
+              "browserTarget": "TMNF-TimeAttackServer:build:wst"
+            },
+            "lap": {
+              "browserTarget": "TMNF-TimeAttackServer:build:lap"
             }
           },
           "defaultConfiguration": "development"

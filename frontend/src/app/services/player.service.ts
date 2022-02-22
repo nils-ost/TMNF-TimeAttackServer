@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../interfaces/player';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
 
-  private playerUrl = 'http://localhost:8000/players/';
+  private playerUrl = environment.apiUrl + '/players/';
 
   constructor(private http: HttpClient) { }
 

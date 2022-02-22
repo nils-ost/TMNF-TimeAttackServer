@@ -1,8 +1,4 @@
-<div class="grid">
-    <div class="col"></div>
-    <div class="col-4 text-center" style="background-color: cornsilk;">Current Challenge | Next Challenge</div>
-    <div class="col"></div>
-</div>
+<app-challenges-ticker [challenges]="challenges" [current_challenge_id]="c_current.id" [next_challenge_id]="c_next.id"></app-challenges-ticker>
 
 <div class="grid">
     <div class="col-7 card"><app-players-list [players]="players"></app-players-list></div>

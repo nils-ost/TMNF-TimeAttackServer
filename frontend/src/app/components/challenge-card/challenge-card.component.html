@@ -1,0 +1,19 @@
+<p-card styleClass="p-card-shadow">
+    <ng-template pTemplate="title">
+        {{ challenge.name }}
+    </ng-template>
+    <p>Seen Count: {{ challenge.seen_count }}</p>
+    <p>Time Limit: {{ challenge.time_limit }}</p>
+    <ng-template pTemplate="footer" *ngIf="!challenge.is_current && !challenge.is_next && !challenge.is_loading">
+        Up in: {{ challenge.up_in }}
+    </ng-template>
+    <ng-template pTemplate="footer" *ngIf="challenge.is_current">
+        Current
+    </ng-template>
+    <ng-template pTemplate="footer" *ngIf="challenge.is_next && !challenge.is_loading">
+        Next in: {{ challenge.up_in }}
+    </ng-template>
+    <ng-template pTemplate="footer" *ngIf="challenge.is_loading">
+        Loading
+    </ng-template>
+</p-card>

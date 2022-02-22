@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Challenge } from '../interfaces/challenge';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChallengeService {
 
-  private challengeUrl = 'http://192.168.56.102:8000/challenges/';
+  private challengeUrl = environment.apiUrl + '/challenges/';
 
   constructor(private http: HttpClient) { }
 
@@ -29,5 +30,13 @@ export class ChallengeService {
 
   public getChallenges(): Observable<Challenge[]> {
     return this.http.get<Challenge[]>(this.challengeUrl).pipe(catchError(this.handleError));
+  }
+
+  getChallengeCurrent(): Observable<Challenge> {
+    return this.http.get<Challenge>(this.challengeUrl + "current").pipe(catchError(this.handleError));
+  }
+
+  getChallengeNext(): Observable<Challenge> {
+    return this.http.get<Challenge>(this.challengeUrl + "next").pipe(catchError(this.handleError));
   }
 }
