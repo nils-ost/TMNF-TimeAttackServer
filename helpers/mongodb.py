@@ -92,6 +92,7 @@ def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None
         updates['$inc'] = {'seen_count': 1}
         mongoDB().challenges.update_one({'_id': challenge_id}, updates)
     else:
+        updates['$set']['seen_last'] = {'$cond': [{'$eq': ['$seen_last', None]}, int(datetime.now().timestamp()), '$seen_count']}
         updates['$set']['seen_count'] = {'$cond': [{'$eq': ['$seen_count', 0]}, 1, '$seen_count']}
         mongoDB().challenges.update_one({'_id': challenge_id}, [updates])
 
@@ -109,10 +110,14 @@ def challenge_get(challenge_id=None, current=False, next=False):
 
 
 def challenge_id_get(current=False, next=False):
+    cid = None
     if current:
-        return mongoDB().utils.find_one({'_id': 'current_challenge_id'})['value']
+        cid = mongoDB().utils.find_one({'_id': 'current_challenge_id'})
     else:
-        return mongoDB().utils.find_one({'_id': 'next_challenge_id'})['value']
+        cid = mongoDB().utils.find_one({'_id': 'next_challenge_id'})
+    if cid is None:
+        return 'unknown'
+    return cid['value']
 
 
 def challenge_id_set(challenge_id, current=False, next=False):

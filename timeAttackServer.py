@@ -30,6 +30,8 @@ class Challenges():
     @cherrypy.tools.json_out()
     def current(self):
         c = challenge_get(current=True)
+        if c is None:
+            return None
         c['id'] = c['_id']
         c.pop('_id', None)
         return c
@@ -38,6 +40,8 @@ class Challenges():
     @cherrypy.tools.json_out()
     def next(self):
         c = challenge_get(next=True)
+        if c is None:
+            return None
         c['id'] = c['_id']
         c.pop('_id', None)
         return c
