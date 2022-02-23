@@ -23,6 +23,7 @@ export class ChallengesTickerComponent implements OnInit {
   }
 
   refreshChallengeDisplay() {
+    let max_elements = 8;
     let tmp: ChallengeDisplay[] = [];
     let current_index: number = -1;
     let up_in: number = 0;
@@ -46,9 +47,10 @@ export class ChallengesTickerComponent implements OnInit {
         if (up_in < 0) cd.is_loading = true;
         up_in += c.time_limit / 1000;
       }
-      if (current_index != -1) tmp.push(cd);
+      if (current_index != -1 && tmp.length < max_elements) tmp.push(cd);
+      if (tmp.length >= max_elements) break;
     }
-    if (current_index != -1) {
+    if (current_index != -1 && tmp.length < max_elements) {
       for(let i = 0; i < current_index; i++) {
         let c: Challenge = this.challenges[i];
         let cd: ChallengeDisplay = {
@@ -64,7 +66,8 @@ export class ChallengesTickerComponent implements OnInit {
         else cd.up_in = "~" + Math.floor(up_in).toString() + "s";
         if (up_in < 0) cd.is_loading = true;
         up_in += cd.time_limit;
-        tmp.push(cd);
+        if (tmp.length < max_elements) tmp.push(cd);
+        if (tmp.length >= max_elements) break;
       }
     }
     this.challengeDisplay = tmp;

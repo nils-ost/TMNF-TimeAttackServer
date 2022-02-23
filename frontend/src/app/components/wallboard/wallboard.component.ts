@@ -14,10 +14,8 @@ import { Subscription, timer } from 'rxjs';
 })
 export class WallboardComponent implements OnInit {
   refreshPlayersTimer = timer(30000, 30000);
-  refreshRankingsTimer = timer(10000, 10000);
   refreshChallengesTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
-  refreshRankingsTimerSubscription: Subscription | undefined;
   refreshChallengesTimerSubscription: Subscription | undefined;
 
   players: Player[] = [];
@@ -34,21 +32,19 @@ export class WallboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.refreshChallenges();
     this.refreshPlayers();
-    this.refreshRankings();
+    this.refreshChallenges();
     this.enableAutoRefresh();
   }
 
   enableAutoRefresh() {
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
-    this.refreshRankingsTimerSubscription = this.refreshRankingsTimer.subscribe(() => this.refreshRankings());
     this.refreshChallengesTimerSubscription = this.refreshChallengesTimer.subscribe(() => this.refreshChallenges());
   }
 
   disableAutoRefresh() {
     this.refreshPlayersTimerSubscription?.unsubscribe();
-    this.refreshRankingsTimerSubscription?.unsubscribe();
+    this.refreshChallengesTimerSubscription?.unsubscribe();
   }
 
   refreshPlayers() {
@@ -67,39 +63,42 @@ export class WallboardComponent implements OnInit {
         .getChallengeRankings(this.c_current.id)
         .subscribe(
           (rankings: ChallengeRanking[]) => {
+            this.rankingService
+              .getGlobalRankings()
+              .subscribe(
+                (rankings: GlobalRanking[]) => {
+                  rankings.sort((a, b) => a.rank - b.rank);
+                  this.globalRankings = rankings;
+                }
+              );
+            rankings.sort((a, b) => a.rank - b.rank);
             this.challengeRankings = rankings;
           }
         );
     }
-    this.rankingService
-      .getGlobalRankings()
-      .subscribe(
-        (rankings: GlobalRanking[]) => {
-          this.globalRankings = rankings;
-        }
-      );
   }
 
   refreshChallenges() {
     this.challengeService
-      .getChallenges()
-      .subscribe(
-        (challenges: Challenge[]) => {
-          this.challenges = challenges;
-        }
-      );
-    this.challengeService
       .getChallengeCurrent()
       .subscribe(
         (c: Challenge) => {
+          this.refreshRankings();
+          this.challengeService
+            .getChallengeNext()
+            .subscribe(
+              (c: Challenge) => {
+                this.c_next = c;
+              }
+            );
+          this.challengeService
+            .getChallenges()
+            .subscribe(
+              (challenges: Challenge[]) => {
+                this.challenges = challenges;
+              }
+            );
           this.c_current = c;
-        }
-      );
-    this.challengeService
-      .getChallengeNext()
-      .subscribe(
-        (c: Challenge) => {
-          this.c_next = c;
         }
       );
   }

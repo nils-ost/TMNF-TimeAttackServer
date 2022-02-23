@@ -9,10 +9,10 @@
     </ng-template>
     <ng-template pTemplate="body" let-ranking>
         <tr>
-            <td>{{ranking.rank}}</td>
-            <td>{{ranking.points}}</td>
-            <td>{{playerName(ranking.player_id)}}</td>
-            <td>{{ ranking.time / 1000 }}s</td>
+            <td>{{ ranking.rank }}</td>
+            <td>{{ ranking.points }}</td>
+            <td>{{ playerName(ranking.player_id) }}</td>
+            <td>{{ (!ranking.time ? "---" : (ranking.time / 1000).toFixed(3).toString() + "s") }}</td>
         </tr>
     </ng-template>
 </p-table>
