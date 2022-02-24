@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { GlobalRanking, ChallengeRanking } from '../../interfaces/ranking';
 import { Challenge } from '../../interfaces/challenge';
@@ -35,6 +35,10 @@ export class WallboardComponent implements OnInit {
     this.refreshPlayers();
     this.refreshChallenges();
     this.enableAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    this.disableAutoRefresh();
   }
 
   enableAutoRefresh() {

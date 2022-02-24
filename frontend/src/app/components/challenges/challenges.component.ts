@@ -1,7 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Challenge } from '../../interfaces/challenge';
-import { ChallengeService } from '../../services/challenge.service';
-import { timer } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-challenges',
@@ -9,27 +7,16 @@ import { timer } from 'rxjs';
   styleUrls: ['./challenges.component.css']
 })
 export class ChallengesComponent implements OnInit {
-  private refreshTimer = timer(10000, 10000);
-  private refreshTimerSubscription = this.refreshTimer.subscribe(() => this.refreshData());
-
-  challenges: Challenge[] = [];
 
   constructor(
-    private challengeService: ChallengeService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.refreshData();
-  }
-
-  refreshData() {
-    this.challengeService
-      .getChallenges()
-      .subscribe(
-        (challenges: Challenge[]) => {
-          this.challenges = challenges;
-        }
-      );
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params); // { orderby: "price" }
+      });
   }
 
 }

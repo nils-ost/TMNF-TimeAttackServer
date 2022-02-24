@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
@@ -27,6 +28,7 @@ import { ChallengesTickerComponent } from './components/challenges-ticker/challe
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     HttpClientModule,
     TableModule,
     CardModule,

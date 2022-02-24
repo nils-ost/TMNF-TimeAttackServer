@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Challenge, ChallengeDisplay } from '../../interfaces/challenge';
 import { Subscription, timer } from 'rxjs';
 
@@ -14,12 +14,25 @@ export class ChallengesTickerComponent implements OnInit {
   challengeDisplay: ChallengeDisplay[] = [];
 
   refreshChallengeDisplayTimer = timer(1000, 1000);
-  refreshChallengeDisplayTimerSubscription: Subscription = this.refreshChallengeDisplayTimer.subscribe(() => this.refreshChallengeDisplay());
+  refreshChallengeDisplayTimerSubscription: Subscription | undefined;
 
   constructor() { }
 
   ngOnInit(): void {
     this.refreshChallengeDisplay();
+    this.enableAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    this.disableAutoRefresh();
+  }
+
+  enableAutoRefresh() {
+    this.refreshChallengeDisplayTimerSubscription = this.refreshChallengeDisplayTimer.subscribe(() => this.refreshChallengeDisplay());
+  }
+
+  disableAutoRefresh() {
+    this.refreshChallengeDisplayTimerSubscription?.unsubscribe();
   }
 
   refreshChallengeDisplay() {
