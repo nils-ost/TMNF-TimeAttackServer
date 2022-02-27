@@ -1,6 +1,7 @@
 import cherrypy
 import cherrypy_cors
 import time
+import os
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, ranking_global, ranking_for
 from helpers.tmnf import start_processes as start_tmnf_connection
 from helpers.config import get_config
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     conf = {
         '/': {
             'tools.sessions.on': True,
-            'tools.staticdir.root': "/home/nijo/workspace/TMNF-TimeAttack/static",
+            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang",
             'tools.staticdir.index': "index.html"

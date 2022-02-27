@@ -1,0 +1,18 @@
+[Unit]
+Description=__image__ (inside Docker)
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStart=/usr/bin/docker run --rm --name %n \
+    __additional__ \
+    -v __storage__ \
+    -p __port__ \
+    __image__
+
+[Install]
+WantedBy=default.target
