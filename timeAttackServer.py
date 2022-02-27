@@ -12,10 +12,6 @@ class TimeAttackServer():
         self.players = Players()
         self.rankings = Rankings()
 
-    @cherrypy.expose()
-    def index(self):
-        return "<html><body><center>Hallo</center></body></html>"
-
 
 class Challenges():
     @cherrypy.expose()
@@ -76,7 +72,16 @@ class Rankings():
 if __name__ == '__main__':
     conf = {
         '/': {
-            'tools.sessions.on': True
+            'tools.sessions.on': True,
+            'tools.staticdir.root': "/home/nijo/workspace/TMNF-TimeAttack/static",
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang",
+            'tools.staticdir.index': "index.html"
+        },
+        '/wallboard': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang",
+            'tools.staticdir.index': "index.html"
         }
     }
     config = get_config('server')

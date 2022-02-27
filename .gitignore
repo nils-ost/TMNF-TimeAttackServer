@@ -2,3 +2,4 @@
 venv/
 .envrc
 config.json
+static/ang
