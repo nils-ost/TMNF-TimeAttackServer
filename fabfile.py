@@ -78,7 +78,7 @@ def cleanup_deploy_helpers(c):
 
 
 def upload_project_files(c):
-    for f in ["timeAttackServer.py", "requirements.txt"]:
+    for f in ["timeAttackServer.py", "nextChallenge.py", "requirements.txt"]:
         print(f"Uploading {f}")
         c.put(f, remote=os.path.join(project_dir, f))
     for d in ["helpers", "static"]:

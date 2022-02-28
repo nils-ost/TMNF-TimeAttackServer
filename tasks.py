@@ -26,6 +26,11 @@ def cleanup_development(c):
     pass
 
 
+@task(name="ng-build")
+def ng_build(c):
+    c.run('cd frontend; ng build --output-path ../static/ang')
+
+
 @task(name="testdata")
 def generate_testdata(c):
     from helpers.mongodb import challenge_add, player_update, laptime_add, print_all
