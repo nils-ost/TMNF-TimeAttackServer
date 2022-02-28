@@ -78,7 +78,9 @@ def player_all():
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
-        mongoDB().challenges.insert_one({'_id': challenge_id, 'name': name, 'seen_count': 0, 'seen_last': None, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1})
+        mongoDB().challenges.insert_one({'_id': challenge_id, 'name': name, 'seen_count': 0, 'seen_last': None, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True})
+    else:
+        mongoDB().challenges.update_one({'_id': challenge_id}, {'$set': {'name': name, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True}})
 
 
 def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None):
@@ -92,13 +94,13 @@ def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None
         updates['$inc'] = {'seen_count': 1}
         mongoDB().challenges.update_one({'_id': challenge_id}, updates)
     else:
-        updates['$set']['seen_last'] = {'$cond': [{'$eq': ['$seen_last', None]}, int(datetime.now().timestamp()), '$seen_count']}
+        updates['$set']['seen_last'] = {'$cond': [{'$eq': ['$seen_last', None]}, int(datetime.now().timestamp()), '$seen_last']}
         updates['$set']['seen_count'] = {'$cond': [{'$eq': ['$seen_count', 0]}, 1, '$seen_count']}
         mongoDB().challenges.update_one({'_id': challenge_id}, [updates])
 
 
 def challenge_all():
-    return mongoDB().challenges.find({})
+    return mongoDB().challenges.find({'active': True})
 
 
 def challenge_get(challenge_id=None, current=False, next=False):
@@ -107,6 +109,10 @@ def challenge_get(challenge_id=None, current=False, next=False):
     if next:
         challenge_id = challenge_id_get(next=True)
     return mongoDB().challenges.find_one({'_id': challenge_id})
+
+
+def challenge_deactivate_all():
+    mongoDB().challenges.update_many({}, {'$set': {'active': False}})
 
 
 def challenge_id_get(current=False, next=False):

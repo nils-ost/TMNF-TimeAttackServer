@@ -1,7 +1,7 @@
 from multiprocessing import Process, Queue
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_id_get, challenge_id_set, player_update, ranking_rebuild
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_rebuild
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
@@ -25,6 +25,7 @@ def calcTimeLimit(rel_time, lap_race, nb_laps):
 
 
 def prepareChallenges():
+    challenge_deactivate_all()
     starting_index = 0
     infos_returned = 10
     fetched_count = 0
