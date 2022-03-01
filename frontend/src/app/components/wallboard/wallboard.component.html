@@ -1,8 +1,8 @@
 <app-challenges-ticker [challenges]="challenges" [current_challenge_id]="c_current.id" [next_challenge_id]="c_next.id" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()"></app-challenges-ticker>
 
-<div class="grid">
-    <div class="col-7 card"><app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings"></app-ranking-challenge></div>
-    <div class="col-5"><app-ranking-global [players]="players" [globalRankings]="globalRankings"></app-ranking-global></div>
+<div class="rankings-container">
+    <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings"></app-ranking-challenge>
+    <app-ranking-global [players]="players" [globalRankings]="globalRankings"></app-ranking-global>
 </div>
 
 <p-speedDial [model]="speeddail_menu" direction="left" buttonClassName="p-button-outlined"></p-speedDial>

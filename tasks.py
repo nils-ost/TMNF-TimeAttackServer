@@ -73,4 +73,4 @@ def generate_testdata_real(c):
         rel_time_s = rel_time - 5000
         rel_time += 5000
         for p in range(1, 11):
-            laptime_add(f"p{p}", c['_id'], randrange(rel_time_s, rel_time, 1))
+            laptime_add(f"p{p}", c['_id'], randrange(int(rel_time_s), int(rel_time), 1))

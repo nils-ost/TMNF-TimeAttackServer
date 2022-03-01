@@ -1,3 +1,39 @@
+:host ::ng-deep .rankings-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    app-ranking-challenge {
+        flex-grow: 4;
+    }
+
+    app-ranking-global {
+        flex-grow: 3;
+    }
+}
+
+:host ::ng-deep .ranking-table {
+    padding: 0;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--surface-card);
+
+    
+        tr, tr th {
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        tr:last-child {
+            td {
+                border-bottom: 0;
+            }
+        }
+}
+
 :host ::ng-deep .p-speeddial-direction-left {
     right: 1rem;
     bottom: 1rem;
