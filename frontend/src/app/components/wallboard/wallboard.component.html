@@ -1,8 +1,33 @@
 <app-challenges-ticker [challenges]="challenges" [current_challenge_id]="c_current.id" [next_challenge_id]="c_next.id" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()"></app-challenges-ticker>
 
+<div class="title-bar">
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        Current Challenge
+        <i class="pi pi-chevron-down"></i>
+    </div>
+    <div class="title">
+        <i class="pi pi-chevron-up"></i>
+        Challenge Schedule
+        <i class="pi pi-chevron-up"></i>
+    </div>
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        Global Ranking
+        <i class="pi pi-chevron-down"></i>
+    </div>
+</div>
+
 <div class="rankings-container">
-    <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings"></app-ranking-challenge>
-    <app-ranking-global [players]="players" [globalRankings]="globalRankings"></app-ranking-global>
+    <div class="ranking-challenge">
+        <div class="challenge-connector"></div>
+        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings"></app-ranking-challenge>
+    </div>
+
+    <div class="ranking-global">
+        <div class="global-connector"></div>
+        <app-ranking-global [players]="players" [globalRankings]="globalRankings"></app-ranking-global>
+    </div>
 </div>
 
 <p-speedDial [model]="speeddail_menu" direction="left" buttonClassName="p-button-outlined"></p-speedDial>

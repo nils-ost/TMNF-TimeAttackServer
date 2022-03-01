@@ -1,21 +1,24 @@
 <div class="challenge-card">
-    <div class="header">
-        {{ challenge.name }}
+    <div class="card-content">
+        <div class="header">
+            {{ challenge.name }}
+        </div>
+        <div class="stats">
+            <p>Seen Count: {{ challenge.seen_count }}</p>
+            <p>Time Limit: {{ challenge.time_limit }}</p>
+            <p *ngIf="!challenge.is_current && !challenge.is_next && !challenge.is_loading">
+                Up in: {{ challenge.up_in }}
+            </p>
+            <p *ngIf="challenge.is_current">
+                Current
+            </p>
+            <p *ngIf="challenge.is_next && !challenge.is_loading">
+                Next in: {{ challenge.up_in }}
+            </p>
+            <p *ngIf="challenge.is_loading">
+                Loading
+            </p>
+        </div>
     </div>
-    <div class="stats">
-        <p>Seen Count: {{ challenge.seen_count }}</p>
-        <p>Time Limit: {{ challenge.time_limit }}</p>
-        <p *ngIf="!challenge.is_current && !challenge.is_next && !challenge.is_loading">
-            Up in: {{ challenge.up_in }}
-        </p>
-        <p *ngIf="challenge.is_current">
-            Current
-        </p>
-        <p *ngIf="challenge.is_next && !challenge.is_loading">
-            Next in: {{ challenge.up_in }}
-        </p>
-        <p *ngIf="challenge.is_loading">
-            Loading
-        </p>
-    </div>
+    <div class="card-connector"></div>
 </div>
