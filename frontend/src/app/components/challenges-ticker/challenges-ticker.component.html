@@ -1,5 +1,3 @@
-<p-carousel [value]="challengeDisplay" [numVisible]="8" [numScroll]="1" [circular]="false" [showNavigators]="false" [showIndicators]="false">
-    <ng-template let-cd pTemplate="item">
-        <app-challenge-card [challenge]="cd"></app-challenge-card>
-    </ng-template>
-</p-carousel>
+<div class="challenge-card-container">
+    <app-challenge-card *ngFor="let cd of challengeDisplay" [challenge]="cd"></app-challenge-card>
+</div>

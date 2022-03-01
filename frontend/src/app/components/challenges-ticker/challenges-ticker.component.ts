@@ -1,30 +1,40 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Challenge, ChallengeDisplay } from '../../interfaces/challenge';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-challenges-ticker',
   templateUrl: './challenges-ticker.component.html',
-  styleUrls: ['./challenges-ticker.component.css']
+  styleUrls: ['./challenges-ticker.component.scss']
 })
 export class ChallengesTickerComponent implements OnInit {
   @Input() challenges!: Challenge[];
   @Input() current_challenge_id!: string;
   @Input() next_challenge_id!: string;
+  @Input() switchAutoRefreshEvent!: Observable<boolean>;
   challengeDisplay: ChallengeDisplay[] = [];
 
   refreshChallengeDisplayTimer = timer(1000, 1000);
   refreshChallengeDisplayTimerSubscription: Subscription | undefined;
+  switchAutoRefreshSubscription: Subscription | undefined;
 
   constructor() { }
 
   ngOnInit(): void {
     this.refreshChallengeDisplay();
     this.enableAutoRefresh();
+
+    this.switchAutoRefreshSubscription = this.switchAutoRefreshEvent.subscribe(
+      (switchOn) => {
+        if (switchOn) this.enableAutoRefresh();
+        else this.disableAutoRefresh();
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.disableAutoRefresh();
+    this.switchAutoRefreshSubscription?.unsubscribe();
   }
 
   enableAutoRefresh() {

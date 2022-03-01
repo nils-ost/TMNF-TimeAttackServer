@@ -1,0 +1,12 @@
+:host ::ng-deep .challenge-card-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    app-challenge-card {
+        flex-grow: 1;
+    }
+}

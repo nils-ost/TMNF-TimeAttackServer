@@ -3,9 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
-import { CardModule } from 'primeng/card';
-import { CarouselModule } from 'primeng/carousel';
 import { RippleModule } from 'primeng/ripple';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -32,9 +31,8 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     AppRoutingModule,
     HttpClientModule,
     TableModule,
-    CardModule,
-    CarouselModule,
-    RippleModule
+    RippleModule,
+    SpeedDialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,18 +5,20 @@ import { Challenge } from '../../interfaces/challenge';
 import { PlayerService } from '../../services/player.service';
 import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, Subject } from 'rxjs';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-wallboard',
   templateUrl: './wallboard.component.html',
-  styleUrls: ['./wallboard.component.css']
+  styleUrls: ['./wallboard.component.scss']
 })
 export class WallboardComponent implements OnInit {
   refreshPlayersTimer = timer(30000, 30000);
   refreshChallengesTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
   refreshChallengesTimerSubscription: Subscription | undefined;
+  switchAutoRefreshSubscription: Subscription | undefined;
 
   players: Player[] = [];
   globalRankings: GlobalRanking[] = [];
@@ -24,6 +26,9 @@ export class WallboardComponent implements OnInit {
   challenges: Challenge[] = [];
   c_current!: Challenge;
   c_next!: Challenge;
+  switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
+
+  speeddail_menu: MenuItem[] = [];
 
   constructor(
     private playerService: PlayerService,
@@ -35,10 +40,49 @@ export class WallboardComponent implements OnInit {
     this.refreshPlayers();
     this.refreshChallenges();
     this.enableAutoRefresh();
+
+    this.switchAutoRefreshSubscription = this.switchAutoRefreshSubject.subscribe(
+      (switchOn) => {
+        if (switchOn) this.enableAutoRefresh();
+        else this.disableAutoRefresh();
+      }
+    );
+
+    this.speeddail_menu = [
+        {
+            tooltipOptions: {
+                tooltipLabel: "Enable AutoRefresh",
+                tooltipPosition: "top"
+            },
+            icon: 'pi pi-refresh',
+            command: () => {
+                this.switchAutoRefreshSubject.next(true);
+            }
+        },
+        {
+            tooltipOptions: {
+                tooltipLabel: "Disable AutoRefresh",
+                tooltipPosition: "top"
+            },
+            icon: 'pi pi-trash',
+            command: () => {
+                this.switchAutoRefreshSubject.next(false);
+            }
+        },
+        {
+            tooltipOptions: {
+                tooltipLabel: "Open Players Screen",
+                tooltipPosition: "top"
+            },
+            icon: 'pi pi-user',
+            routerLink: ['/player']
+        }
+    ]
   }
 
   ngOnDestroy(): void {
     this.disableAutoRefresh();
+    this.switchAutoRefreshSubscription?.unsubscribe();
   }
 
   enableAutoRefresh() {
