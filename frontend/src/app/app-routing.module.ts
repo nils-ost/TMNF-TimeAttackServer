@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; // CLI imports router
-import { ChallengesComponent } from './components/challenges/challenges.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 import { WallboardComponent } from './components/wallboard/wallboard.component';
 
 const routes: Routes = [
-  { path: 'challenges', component: ChallengesComponent },
+  { path: 'welcome', component: WelcomeComponent },
   { path: 'wallboard', component: WallboardComponent },
-  { path: '**', component: ChallengesComponent },
+  { path: '**', component: WelcomeComponent },
 ];
 
 // configures NgModule imports and exports
