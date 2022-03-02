@@ -83,6 +83,21 @@ if __name__ == '__main__':
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang",
             'tools.staticdir.index': "index.html"
+        },
+        '/welcome': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang",
+            'tools.staticdir.index': "index.html"
+        },
+        '/player': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang",
+            'tools.staticdir.index': "index.html"
+        },
+        '/challenge': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang",
+            'tools.staticdir.index': "index.html"
         }
     }
     config = get_config('server')

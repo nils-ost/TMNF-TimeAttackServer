@@ -13,6 +13,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale":"en-US",
+        "locales": {
+          "de": "src/locales/messages.de.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -37,6 +43,7 @@
           },
           "configurations": {
             "production": {
+              "localize": ["de"],
               "budgets": [
                 {
                   "type": "initial",
@@ -72,6 +79,7 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
+              "localize": ["de"],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -86,6 +94,7 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
+              "localize": ["de"],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

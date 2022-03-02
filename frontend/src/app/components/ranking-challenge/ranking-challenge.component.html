@@ -13,6 +13,9 @@
             <th i18n="table header player laptime|Header for column laptime in ranking challenge table on wallboard screen@@tableHeaderPlayerLaptime">
                 time
             </th>
+            <th i18n="table header player drove laptime at|Header for column at which player drove laptime in ranking challenge table on wallboard screen@@tableHeaderPlayerLaptimeAt">
+                at
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-ranking>
@@ -21,6 +24,7 @@
             <td>{{ ranking.points }}</td>
             <td>{{ playerName(ranking.player_id) }}</td>
             <td>{{ (!ranking.time ? "---" : (ranking.time / 1000).toFixed(3).toString() + "s") }}</td>
+            <td>{{ ranking.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>
 </p-table>

@@ -28,6 +28,7 @@ def cleanup_development(c):
 
 @task(name="ng-build")
 def ng_build(c):
+    c.run('rm -rf static/ang')
     c.run('cd frontend; ng build --output-path ../static/ang')
 
 
