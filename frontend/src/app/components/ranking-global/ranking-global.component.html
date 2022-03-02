@@ -1,9 +1,15 @@
 <p-table [value]="globalRankings" styleClass="ranking-table">
     <ng-template pTemplate="header">
         <tr>
-            <th>rank</th>
-            <th>player_id</th>
-            <th>points</th>
+            <th i18n="table header player rank|Header for column gloabl rank in ranking global table on wallboard screen@@rankingGlobalTableHeaderRank">
+                rank
+            </th>
+            <th i18n="table header player name|Header for column playername in ranking global table on wallboard screen@@rankingGlobalTableHeaderPlayer">
+                player
+            </th>
+            <th i18n="table header player points|Header for column gloabl points in ranking global table on wallboard screen@@rankingGlobalTableHeaderPoints">
+                points
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-globalRanking>

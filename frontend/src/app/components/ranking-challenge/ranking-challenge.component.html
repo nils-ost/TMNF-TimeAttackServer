@@ -1,10 +1,18 @@
 <p-table [value]="challengeRankings" styleClass="ranking-table">
     <ng-template pTemplate="header">
         <tr>
-            <th>rank</th>
-            <th>points</th>
-            <th>player_id</th>
-            <th>time</th>
+            <th i18n="table header player rank|Header for column challenge rank in ranking challenge table on wallboard screen@@rankingChallengeTableHeaderRank">
+                rank
+            </th>
+            <th i18n="table header player points|Header for column challenge points in ranking challenge table on wallboard screen@@rankingChallengeTableHeaderPoints">
+                points
+            </th>
+            <th i18n="table header player name|Header for column playername in ranking challenge table on wallboard screen@@rankingChallengeTableHeaderPlayer">
+                player
+            </th>
+            <th i18n="table header player laptime|Header for column laptime in ranking challenge table on wallboard screen@@rankingChallengeTableHeaderTime">
+                time
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-ranking>
