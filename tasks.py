@@ -32,6 +32,16 @@ def ng_build(c):
     c.run('cd frontend; ng build --output-path ../static/ang')
 
 
+@task(name="create-bundle")
+def create_bundle(c):
+    c.run('rm -rf /tmp/tmnf-tas; mkdir -p /tmp/tmnf-tas')
+    for item in ['timeAttackServer.py', 'fabfile.py', 'requirements.txt', 'helpers', 'static']:
+        c.run(f"cp -r {item} /tmp/tmnf-tas/")
+    c.run('cp install/bundle-installer.sh /tmp/tmnf-tas/installer.sh; chmod +x /tmp/tmnf-tas/installer.sh')
+    c.run('makeself.sh /tmp/tmnf-tas ./tmnf-tas-installer.run "Installer for TMNF-TimeAttacServer" ./installer.sh')
+    c.run('rm -rf /tmp/tmnf-tas')
+
+
 @task(name="testdata")
 def generate_testdata(c):
     from helpers.mongodb import challenge_add, player_update, laptime_add, print_all
