@@ -111,6 +111,8 @@ export class WallboardComponent implements OnInit {
         .getChallengeRankings(this.c_current.id)
         .subscribe(
           (rankings: ChallengeRanking[]) => {
+            rankings.sort((a, b) => a.rank - b.rank);
+            this.challengeRankings = rankings;
             this.rankingService
               .getGlobalRankings()
               .subscribe(
@@ -119,8 +121,17 @@ export class WallboardComponent implements OnInit {
                   this.globalRankings = rankings;
                 }
               );
+          }
+        );
+    }
+    else {
+      this.challengeRankings = [];
+      this.rankingService
+        .getGlobalRankings()
+        .subscribe(
+          (rankings: GlobalRanking[]) => {
             rankings.sort((a, b) => a.rank - b.rank);
-            this.challengeRankings = rankings;
+            this.globalRankings = rankings;
           }
         );
     }
@@ -131,7 +142,7 @@ export class WallboardComponent implements OnInit {
       .getChallengeCurrent()
       .subscribe(
         (c: Challenge) => {
-          this.refreshRankings();
+          this.c_current = c;
           this.challengeService
             .getChallengeNext()
             .subscribe(
@@ -146,7 +157,7 @@ export class WallboardComponent implements OnInit {
                 this.challenges = challenges;
               }
             );
-          this.c_current = c;
+          this.refreshRankings();
         }
       );
   }

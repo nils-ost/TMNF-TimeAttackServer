@@ -59,6 +59,7 @@ def laptime_add(player_id, challenge_id, time):
     elif time == 0 and mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id}) is None:
         lt['time'] = None
         mongoDB().bestlaptimes.insert_one(lt)
+    mongoDB().players.update_one({'_id': player_id}, {'$set': {'last_update': ts}})
 
 
 def player_update(player_id, nickname, current_uid):

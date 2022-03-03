@@ -28,6 +28,7 @@
 
   * id
   * name
+  * last_update
 
 `/rankings/<challenge_id>` gives ranking for challenge_id
 

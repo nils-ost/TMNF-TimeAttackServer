@@ -50,7 +50,7 @@ class Players():
     def index(self):
         result = list()
         for p in player_all():
-            result.append({'id': p['_id'], 'name': p['nickname']})
+            result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update']})
         return result
 
 
@@ -76,27 +76,12 @@ if __name__ == '__main__':
             'tools.sessions.on': True,
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang",
+            'tools.staticdir.dir': "ang/de",
             'tools.staticdir.index': "index.html"
         },
-        '/wallboard': {
+        '/de': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang",
-            'tools.staticdir.index': "index.html"
-        },
-        '/welcome': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang",
-            'tools.staticdir.index': "index.html"
-        },
-        '/player': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang",
-            'tools.staticdir.index': "index.html"
-        },
-        '/challenge': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang",
+            'tools.staticdir.dir': "ang/de",
             'tools.staticdir.index': "index.html"
         }
     }

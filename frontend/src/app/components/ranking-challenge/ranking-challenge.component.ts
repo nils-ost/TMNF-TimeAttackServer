@@ -5,7 +5,7 @@ import { Player } from '../../interfaces/player';
 @Component({
   selector: 'app-ranking-challenge',
   templateUrl: './ranking-challenge.component.html',
-  styleUrls: ['./ranking-challenge.component.css']
+  styleUrls: ['./ranking-challenge.component.scss']
 })
 export class RankingChallengeComponent implements OnInit {
   @Input() challengeRankings!: ChallengeRanking[];
@@ -20,6 +20,12 @@ export class RankingChallengeComponent implements OnInit {
     let p = this.players.find(p => p.id === player_id);
     if (p) return p.name;
     else return '--new player--';
+  }
+
+  playerActive(player_id: string): boolean {
+    let p = this.players.find(p => p.id === player_id);
+    if (p) return (((Date.now() / 1000) - p.last_update) <= 60);
+    else return false;
   }
 
 }

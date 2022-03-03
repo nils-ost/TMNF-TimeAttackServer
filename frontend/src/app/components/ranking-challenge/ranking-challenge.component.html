@@ -19,7 +19,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-ranking>
-        <tr>
+        <tr [ngClass]="{'player-active': playerActive(ranking.player_id)}">
             <td>{{ ranking.rank }}</td>
             <td>{{ ranking.points }}</td>
             <td>{{ playerName(ranking.player_id) }}</td>
