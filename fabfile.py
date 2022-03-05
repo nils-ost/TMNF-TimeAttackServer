@@ -11,6 +11,7 @@ backup_dir = "/var/backup"
 storagedir_mongo = "/var/data/mongodb"
 mongodb_image = 'mongo:4.4'
 mongodb_service = "docker.mongodb.service"
+tas_service = "tmnf-tas.service"
 
 
 def docker_pull(c, image):
@@ -59,6 +60,18 @@ def systemctl_install_service(c, local_file, remote_file, replace_macros):
         c.run("sed -i -e 's/" + macro + "/" + value.replace('/', '\/') + "/g' " + os.path.join('/etc/systemd/system', remote_file))
 
 
+def install_rsyslog(c):
+    print("Configuring rsyslog for TMNF-TAS")
+    c.put("install/rsyslog.conf", "/etc/rsyslog.d/tmnf-tas.conf")
+    systemctl_start(c, 'rsyslog')
+
+
+def install_logrotate(c):
+    print("Configuring logrotate for TMNF-TAS")
+    c.put("install/logrotate", "/etc/logrotate.d/tmnf-tas")
+    c.run("chmod 644 /etc/logrotate.d/tmnf-tas")
+
+
 def setup_virtualenv(c):
     print("Setup virtualenv for TMNF-TAS")
     c.run(f"virtualenv -p /usr/bin/python3 {os.path.join(project_dir, 'venv')}")
@@ -86,8 +99,14 @@ def upload_project_files(c):
         patchwork.transfers.rsync(c, d, project_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
 
 
-def create_directorys(c):
-    for d in [project_dir, storagedir_mongo, backup_dir]:
+def create_directorys_mongodb(c):
+    for d in [storagedir_mongo, backup_dir]:
+        print(f"Creating {d}")
+        c.run(f"mkdir -p {d}", warn=True, hide=True)
+
+
+def create_directorys_tas(c):
+    for d in [project_dir]:
         print(f"Creating {d}")
         c.run(f"mkdir -p {d}", warn=True, hide=True)
 
@@ -126,26 +145,70 @@ def backup_mongodb(c):
         c.run(f'docker cp {mongodb_service}:/backup.tar.gz {backup_path}', hide=True)
 
 
-@task
-def deploy(c):
-    c.run('hostname')
-    c.run('uname -a')
+def deploy_mongodb_pre(c):
     install_apt_package(c, 'curl')
-    install_apt_package(c, 'rsync')
     install_docker(c)
-    install_apt_package(c, 'python3')
-    install_apt_package(c, 'virtualenv')
     systemctl_start_docker(c)
     docker_pull(c, mongodb_image)
     upload_deploy_helpers(c)
-    create_directorys(c)
+    create_directorys_mongodb(c)
     backup_mongodb(c)
+
+
+def deploy_mongodb_post(c):
+    cleanup_deploy_helpers(c)
+    docker_prune(c)
+
+
+@task(name="deploy-mongodb")
+def deploy_mongodb(c):
+    deploy_mongodb_pre(c)
+
+    systemctl_stop(c, mongodb_service)
+    systemctl_install_service(c, 'docker.service', mongodb_service, [('__additional__', ''), ('__storage__', storagedir_mongo + ':/data/db'), ('__port__', '27017:27017'), ('__image__', mongodb_image)])
+    c.run("systemctl daemon-reload")
+    systemctl_start(c, mongodb_service)
+
+    deploy_mongodb_post(c)
+
+
+def deploy_tas_pre(c):
+    install_apt_package(c, 'rsync')
+    install_apt_package(c, 'python3')
+    install_apt_package(c, 'virtualenv')
+    create_directorys_tas(c)
+
+
+@task(name="deploy-tas")
+def deploy_tas(c):
+    deploy_tas_pre(c)
+
+    systemctl_stop(c, tas_service)
+    upload_project_files(c)
+    setup_virtualenv(c)
+    install_rsyslog(c)
+    install_logrotate(c)
+    systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
+    c.run("systemctl daemon-reload")
+    systemctl_start(c, tas_service)
+
+
+@task
+def deploy(c):
+    deploy_mongodb_pre(c)
+    deploy_tas_pre(c)
+
+    systemctl_stop(c, tas_service)
     systemctl_stop(c, mongodb_service)
     upload_project_files(c)
     setup_virtualenv(c)
+    install_rsyslog(c)
+    install_logrotate(c)
+    systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
     systemctl_install_service(c, 'docker.service', mongodb_service, [('__additional__', ''), ('__storage__', storagedir_mongo + ':/data/db'), ('__port__', '27017:27017'), ('__image__', mongodb_image)])
     c.run("systemctl daemon-reload")
     systemctl_start(c, mongodb_service)
     wait_for_mongodb(c)
-    cleanup_deploy_helpers(c)
-    docker_prune(c)
+    systemctl_start(c, tas_service)
+
+    deploy_mongodb_post(c)

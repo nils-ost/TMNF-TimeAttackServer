@@ -1,0 +1,7 @@
+/var/log/tmnf-tas.log {
+  rotate 7
+  daily
+  compress
+  missingok
+  notifempty
+}
