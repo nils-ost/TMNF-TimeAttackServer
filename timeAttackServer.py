@@ -3,7 +3,7 @@ import cherrypy_cors
 import time
 import os
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, ranking_global, ranking_for
-from helpers.tmnf import start_processes as start_tmnf_connection
+from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
 
@@ -89,5 +89,5 @@ if __name__ == '__main__':
     cherrypy_cors.install()
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
 
-    start_tmnf_connection()
+    start_tmnfd_connection()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)

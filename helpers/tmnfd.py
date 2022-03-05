@@ -1,17 +1,18 @@
+"""
+TrachMania Nations Forever - Dedicated Server
+"""
 from multiprocessing import Process, Queue
+from multiprocessing.managers import BaseManager
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_rebuild
+import time
+import sys
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
 
-receiver = None
-sender = None
-
-callback_queue = Queue()
-receiver_process = None
-worker_process = None
+watcher_process = None
 
 
 def calcTimeLimit(rel_time, lap_race, nb_laps):
@@ -24,7 +25,7 @@ def calcTimeLimit(rel_time, lap_race, nb_laps):
     return int(max(new_time, challenge_config['least_time']))
 
 
-def prepareChallenges():
+def prepareChallenges(sender):
     challenge_deactivate_all()
     starting_index = 0
     infos_returned = 10
@@ -43,7 +44,7 @@ def prepareChallenges():
     ranking_rebuild()
 
 
-def prepareNextChallenge():
+def prepareNextChallenge(sender):
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     time_limit = challenge_get(challenge['UId'])['time_limit']
     sender.callMethod('SetTimeAttackLimit', time_limit)
@@ -51,7 +52,7 @@ def prepareNextChallenge():
     print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")
 
 
-def receiver_function(msg_queue):
+def worker_function(msg_queue, sender):
     while True:
         func, params = msg_queue.get()
 
@@ -72,7 +73,7 @@ def receiver_function(msg_queue):
                 challenge_update(params[0]['UId'])
             challenge_id_set(params[0]['UId'], current=True)
             print(f"Challenge begin: {params[0]['Name']}")
-            prepareNextChallenge()
+            prepareNextChallenge(sender)
 
         elif func == 'TrackMania.EndRace':
             ranking_rebuild(challenge_id_get(current=True))  # triggers a last cache-rebuild
@@ -90,32 +91,59 @@ def receiver_function(msg_queue):
             print(f"{params[0]} disconnected")
 
 
-def worker_function(msg_queue):
-    global receiver
+def receiver_function(msg_queue, receiver):
     while True:
-        msg_queue.put(receiver.receiveCallback())
+        try:
+            msg_queue.put(receiver.receiveCallback())
+        except ConnectionResetError:
+            print("Lost connection to: TMNF - Dedicated Server")
+            return
 
 
-def start_processes():
-    global worker_process
-    global receiver_process
-    global receiver
-    global sender
-    global config
+def watcher_function():
+    BaseManager.register('GbxRemote', GbxRemote)
+    manager = BaseManager()
+    manager.start()
+    receiver = manager.GbxRemote(config['host'], config['port'], config['user'], config['password'])
+    sender = manager.GbxRemote(config['host'], config['port'], config['user'], config['password'])
 
-    receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
-    sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
-    prepareChallenges()
+    callback_queue = Queue()
+    worker_process = Process(target=worker_function, args=(callback_queue, sender, ), daemon=True)
+    worker_process.start()
+    receiver_process = Process(target=receiver_function, args=(callback_queue, receiver, ), daemon=True)
 
-    current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
-    challenge_update(current_challenge['UId'], force_inc=False)
-    print(f"Challenge current: {current_challenge['Name']}")
-    challenge_id_set(current_challenge['UId'], current=True)
-    prepareNextChallenge()
+    first_start = True
+    while True:
+        if not receiver_process.is_alive():
+            delay_counter = 0
+            while not receiver.connect():
+                if delay_counter == 0:
+                    print("Waiting for: TMNF - Dedicated Server")
+                delay_counter = (delay_counter + 1) % 30
+                time.sleep(1)
+            while not sender.connect():
+                time.sleep(1)
+            print("Connected to: TMNF - Dedicated Server")
+            prepareChallenges(sender)
 
-    if worker_process is None:
-        worker_process = Process(target=worker_function, args=(callback_queue, ), daemon=True)
-        worker_process.start()
-    if receiver_process is None:
-        receiver_process = Process(target=receiver_function, args=(callback_queue, ), daemon=True)
-        receiver_process.start()
+            current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
+            challenge_update(current_challenge['UId'], force_inc=False)
+            print(f"Challenge current: {current_challenge['Name']}")
+            challenge_id_set(current_challenge['UId'], current=True)
+            prepareNextChallenge(sender)
+            if first_start:
+                first_start = False
+            else:
+                if sys.version_info.minor >= 7:
+                    receiver_process.close()
+                receiver_process = Process(target=receiver_function, args=(callback_queue, receiver, ), daemon=True)
+            receiver_process.start()
+        time.sleep(1)
+
+
+def connect():
+    global watcher_process
+
+    if watcher_process is None:
+        watcher_process = Process(target=watcher_function)
+        watcher_process.start()

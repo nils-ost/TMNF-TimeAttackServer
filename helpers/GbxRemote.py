@@ -5,21 +5,29 @@ from xmlrpc.client import dumps as xmldumps
 
 class GbxRemote():
     def __init__(self, host, port, user, pw):
-        self.handler = 0x80000000
-        self.callback_enabled = False
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((socket.gethostbyname(host), port))
+        self.connection_info = (host, port, user, pw)
 
-        # recieve and validate header
-        data = self.socket.recv(4)
-        headerLength = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24)
+    def connect(self):
+        try:
+            host, port, user, pw = self.connection_info
+            self.handler = 0x80000000
+            self.callback_enabled = False
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.connect((socket.gethostbyname(host), port))
 
-        header = self.socket.recv(headerLength)
-        if not header.decode() == "GBXRemote 2":
-            print('Invalid header.')
-            exit(0)
+            # recieve and validate header
+            data = self.socket.recv(4)
+            headerLength = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24)
 
-        self.callMethod('Authenticate', user, pw)
+            header = self.socket.recv(headerLength)
+            if not header.decode() == "GBXRemote 2":
+                print('Invalid header.')
+                exit(0)
+
+            self.callMethod('Authenticate', user, pw)
+            return True
+        except OSError:
+            return False
 
     def _incHandler(self):
         self.handler += 1

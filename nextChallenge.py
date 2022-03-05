@@ -10,6 +10,7 @@ args = parser.parse_args()
 
 config = get_config('tmnf-server')
 sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+sender.connect()
 
 if args.challenge > -1:
     print(sender.callMethod('SetNextChallengeIndex', args.challenge))
