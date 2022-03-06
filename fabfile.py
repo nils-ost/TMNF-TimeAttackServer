@@ -12,6 +12,10 @@ storagedir_mongo = "/var/data/mongodb"
 mongodb_image = 'mongo:4.4'
 mongodb_service = "docker.mongodb.service"
 tas_service = "tmnf-tas.service"
+tmnfd_dl_url = "http://files2.trackmaniaforever.com/TrackmaniaServer_2011-02-21.zip"
+tmnfd_dir = "/opt/middleware/tmnfd"
+tmnfd_version = "2011-02-21"
+tmnfd_zip = "dedicated.zip"
 
 
 def docker_pull(c, image):
@@ -111,6 +115,12 @@ def create_directorys_tas(c):
         c.run(f"mkdir -p {d}", warn=True, hide=True)
 
 
+def create_directorys_tmnfd(c):
+    for d in [tmnfd_dir]:
+        print(f"Creating {d}")
+        c.run(f"mkdir -p {d}", warn=True, hide=True)
+
+
 def install_apt_package(c, package):
     global apt_update_run
     if not c.run(f"dpkg -s {package}", warn=True, hide=True).ok:
@@ -143,6 +153,41 @@ def backup_mongodb(c):
         print(f"Creating backup: {backup_path}", flush=True)
         c.run(f'docker exec -t {mongodb_service} /bin/sh -c "mongodump --forceTableScan -o /backup; tar cfz /backup.tar.gz /backup; rm -rf /backup"', hide=True)
         c.run(f'docker cp {mongodb_service}:/backup.tar.gz {backup_path}', hide=True)
+
+
+def tmnfd_version_matches(c):
+    version = c.run(f"cat {os.path.join(tmnfd_dir, 'version')}", warn=True, hide=True)
+    if version.ok:
+        if version.stdout.strip() == tmnfd_version:
+            print("Installed TMNF-Dedicated version is allready desired version")
+            return True
+    return False
+
+
+def tmnfd_zip_download(c):
+    print("Downloading TMNF-Dedicated ZIP")
+    c.run(f"curl {tmnfd_dl_url} --output {os.path.join(tmnfd_dir, tmnfd_zip)}")
+
+
+def tmnfd_zip_delete(c):
+    print("Removing TMNF-Dedicated ZIP")
+    c.run(f"rm {os.path.join(tmnfd_dir, tmnfd_zip)}", warn=True, hide=True)
+
+
+def tmnfd_zip_extract(c):
+    c.run(f"rm -rf {os.path.join(tmnfd_dir, 'dedicated')}", warn=True, hide=True)
+    print("Extracting TMNF-Dedicated ZIP")
+    c.run(f"7z x {os.path.join(tmnfd_dir, tmnfd_zip)} -o{os.path.join(tmnfd_dir, 'dedicated')}")
+    c.run(f"rm {os.path.join(tmnfd_dir, 'dedicated', 'TrackmaniaServer.exe')}")
+    c.run(f"echo '{tmnfd_version}' > {os.path.join(tmnfd_dir, 'version')}")
+
+
+def tmnfd_map_config(c):
+    c.run(f"rm {os.path.join(tmnfd_dir, 'dedicated_cfg.txt')}", warn=True, hide=True)
+    c.run(f"rm {os.path.join(tmnfd_dir, 'MatchSettings')}", warn=True, hide=True)
+    c.run(f"ln -s {os.path.join(tmnfd_dir, 'dedicated/GameData/Config/dedicated_cfg.txt')} {os.path.join(tmnfd_dir, 'dedicated_cfg.txt')}")
+    c.run(f"cp -r {os.path.join(tmnfd_dir, 'dedicated/GameData/Tracks/MatchSettings/Nations')} {os.path.join(tmnfd_dir, 'dedicated/GameData/Tracks/MatchSettings/TAS')}")
+    c.run(f"ln -s {os.path.join(tmnfd_dir, 'dedicated/GameData/Tracks/MatchSettings/TAS')} {os.path.join(tmnfd_dir, 'MatchSettings')}")
 
 
 def deploy_mongodb_pre(c):
@@ -191,6 +236,28 @@ def deploy_tas(c):
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
     c.run("systemctl daemon-reload")
     systemctl_start(c, tas_service)
+
+
+def deploy_tmnfd_pre(c):
+    install_apt_package(c, 'curl')
+    install_apt_package(c, 'p7zip-full')
+    create_directorys_tmnfd(c)
+
+
+def deploy_tmnfd_post(c):
+    tmnfd_zip_delete(c)
+
+
+@task(name="deploy-tmnfd")
+def deploy_tmnfd(c):
+    deploy_tmnfd_pre(c)
+
+    if not tmnfd_version_matches(c):
+        tmnfd_zip_download(c)
+        tmnfd_zip_extract(c)
+        tmnfd_map_config(c)
+
+    deploy_tmnfd_post(c)
 
 
 @task
