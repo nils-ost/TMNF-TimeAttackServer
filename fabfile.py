@@ -95,10 +95,10 @@ def cleanup_deploy_helpers(c):
 
 
 def upload_project_files(c):
-    for f in ["timeAttackServer.py", "nextChallenge.py", "requirements.txt"]:
+    for f in ["tas/backend/timeAttackServer.py", "tas/backend/nextChallenge.py", "tas/backend/requirements.txt"]:
         print(f"Uploading {f}")
         c.put(f, remote=os.path.join(project_dir, f))
-    for d in ["helpers", "static"]:
+    for d in ["tas/backend/helpers", "tas/backend/static"]:
         print(f"Uploading {d}")
         patchwork.transfers.rsync(c, d, project_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
 

@@ -1,6 +1,6 @@
 *.pyc
 venv/
 .envrc
-config.json
-static/ang
+tas/backend/config.json
+tas/backend/static/ang
 *.run
