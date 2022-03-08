@@ -34,14 +34,16 @@ def ng_build(c):
 
 @task(pre=[ng_build], name="create-bundle")
 def create_bundle(c):
-    c.run('rm -rf /tmp/tmnf-tas; mkdir -p /tmp/tmnf-tas/tas/backend; rm -rf tas/backend/helpers/__pycache__')
+    c.run('rm -rf /tmp/tmnf-tas; mkdir -p /tmp/tmnf-tas/tas/backend; mkdir -p /tmp/tmnf-tas/tmnfd; rm -rf tas/backend/helpers/__pycache__; rm -rf tmnfd/helpers/__pycache__')
     for item in ['tas/backend/timeAttackServer.py', 'tas/backend/nextChallenge.py', 'tas/backend/requirements.txt', 'tas/backend/helpers', 'tas/backend/static']:
         c.run(f"cp -r {item} /tmp/tmnf-tas/tas/backend/")
     for item in ['fabfile.py', 'install']:
         c.run(f"cp -r {item} /tmp/tmnf-tas/")
+    for item in ['tmnfd/cli.py', 'tmnfd/helpers']:
+        c.run(f"cp -r {item} /tmp/tmnf-tas/tmnfd/")
     c.run('cp install/bundle-installer.sh /tmp/tmnf-tas/installer.sh; chmod +x /tmp/tmnf-tas/installer.sh')
     c.run('makeself /tmp/tmnf-tas ./tmnf-tas-installer.run "Installer for TMNF-TimeAttacServer" ./installer.sh')
-    #c.run('rm -rf /tmp/tmnf-tas')
+    c.run('rm -rf /tmp/tmnf-tas')
 
 
 @task(name="testdata")

@@ -1,0 +1,18 @@
+[Unit]
+Description=TMNF-DedicatedServer
+
+[Service]
+Type=simple
+ExecStartPre=__project_dir__/cli.py --write-active
+ExecStart=__project_dir__/dedicated/TrackmaniaServer /dedicated_cfg=dedicated_cfg.txt /game_settings=MatchSettings/active.txt /lan /nodaemon
+KillSignal=SIGINT
+WorkingDirectory=__project_dir__/dedicated
+RestartSec=5
+Restart=always
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=tmnfd
+
+[Install]
+WantedBy=multi-user.target

@@ -4,3 +4,5 @@ venv/
 tas/backend/config.json
 tas/backend/static/ang
 *.run
+tmnfd/config.json
+tmnfd/testdata

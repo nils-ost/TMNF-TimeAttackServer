@@ -16,6 +16,7 @@ tmnfd_dl_url = "http://files2.trackmaniaforever.com/TrackmaniaServer_2011-02-21.
 tmnfd_dir = "/opt/middleware/tmnfd"
 tmnfd_version = "2011-02-21"
 tmnfd_zip = "dedicated.zip"
+tmnfd_service = "tmnfd.service"
 
 
 def docker_pull(c, image):
@@ -95,12 +96,27 @@ def cleanup_deploy_helpers(c):
 
 
 def upload_project_files(c):
-    for f in ["tas/backend/timeAttackServer.py", "tas/backend/nextChallenge.py", "tas/backend/requirements.txt"]:
+    for f in ["timeAttackServer.py", "nextChallenge.py", "requirements.txt"]:
         print(f"Uploading {f}")
-        c.put(f, remote=os.path.join(project_dir, f))
+        c.put(os.path.join('tas/backend', f), remote=os.path.join(project_dir, f))
     for d in ["tas/backend/helpers", "tas/backend/static"]:
         print(f"Uploading {d}")
         patchwork.transfers.rsync(c, d, project_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
+
+
+def upload_tmnfd_files(c):
+    for f in ["cli.py"]:
+        print(f"Uploading {f}")
+        c.put(os.path.join('tmnfd', f), remote=os.path.join(tmnfd_dir, f))
+    for d in ["tmnfd/helpers"]:
+        print(f"Uploading {d}")
+        patchwork.transfers.rsync(c, d, tmnfd_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
+
+
+def prepare_tmnfd_cli(c):
+    c.run(f"chmod 755 {os.path.join(tmnfd_dir, 'cli.py')}")
+    c.run(f"ln -s {os.path.join(tmnfd_dir, 'cli.py')} /usr/bin/tmnfd", warn=True, hide=True)
+    c.run(f"{os.path.join(tmnfd_dir, 'cli.py')} --init")
 
 
 def create_directorys_mongodb(c):
@@ -252,10 +268,16 @@ def deploy_tmnfd_post(c):
 def deploy_tmnfd(c):
     deploy_tmnfd_pre(c)
 
+    systemctl_stop(c, tmnfd_service)
     if not tmnfd_version_matches(c):
         tmnfd_zip_download(c)
         tmnfd_zip_extract(c)
         tmnfd_map_config(c)
+    upload_tmnfd_files(c)
+    prepare_tmnfd_cli(c)
+    systemctl_install_service(c, 'tmnfd.service', tmnfd_service, [('__project_dir__', tmnfd_dir)])
+    c.run("systemctl daemon-reload")
+    systemctl_start(c, tmnfd_service)
 
     deploy_tmnfd_post(c)
 
@@ -264,18 +286,29 @@ def deploy_tmnfd(c):
 def deploy(c):
     deploy_mongodb_pre(c)
     deploy_tas_pre(c)
+    deploy_tmnfd_pre(c)
 
     systemctl_stop(c, tas_service)
+    systemctl_stop(c, tmnfd_service)
     systemctl_stop(c, mongodb_service)
     upload_project_files(c)
     setup_virtualenv(c)
     install_rsyslog(c)
     install_logrotate(c)
+    if not tmnfd_version_matches(c):
+        tmnfd_zip_download(c)
+        tmnfd_zip_extract(c)
+        tmnfd_map_config(c)
+    upload_tmnfd_files(c)
+    prepare_tmnfd_cli(c)
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
+    systemctl_install_service(c, 'tmnfd.service', tmnfd_service, [('__project_dir__', tmnfd_dir)])
     systemctl_install_service(c, 'docker.service', mongodb_service, [('__additional__', ''), ('__storage__', storagedir_mongo + ':/data/db'), ('__port__', '27017:27017'), ('__image__', mongodb_image)])
     c.run("systemctl daemon-reload")
     systemctl_start(c, mongodb_service)
+    systemctl_start(c, tmnfd_service)
     wait_for_mongodb(c)
     systemctl_start(c, tas_service)
 
     deploy_mongodb_post(c)
+    deploy_tmnfd_post(c)
