@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 import argparse
 from helpers.config import get_config, save_config
@@ -28,3 +26,19 @@ if args.init or args.force_init:
 if args.write_active:
     ms = MatchSettings(get_config()['active_matchsetting'])
     ms.save(activate=True)
+
+"""Get Challenge Metadata
+
+from pygbx import Gbx, GbxType
+
+g = Gbx('A01-Race.Challenge.Gbx')
+challenge = g.get_class_by_id(GbxType.CHALLENGE)
+if not challenge:
+    quit()
+
+print(f'Map Name: {challenge.map_name}')
+print(f'Map Author: {challenge.map_author}')
+print(f'Environment: {challenge.environment}')
+print(f'UUID: {challenge.map_uid}')
+
+"""

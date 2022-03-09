@@ -77,11 +77,11 @@ def install_logrotate(c):
     c.run("chmod 644 /etc/logrotate.d/tmnf-tas")
 
 
-def setup_virtualenv(c):
-    print("Setup virtualenv for TMNF-TAS")
-    c.run(f"virtualenv -p /usr/bin/python3 {os.path.join(project_dir, 'venv')}")
-    print("Installing python requirements for TMNF-TAS")
-    c.run(f"{os.path.join(project_dir, 'venv/bin/pip')} install -r {os.path.join(project_dir, 'requirements.txt')}")
+def setup_virtualenv(c, pdir):
+    print(f"Setup virtualenv for {pdir}")
+    c.run(f"virtualenv -p /usr/bin/python3 {os.path.join(pdir, 'venv')}")
+    print(f"Installing python requirements for {pdir}")
+    c.run(f"{os.path.join(pdir, 'venv/bin/pip')} install -r {os.path.join(pdir, 'requirements.txt')}")
 
 
 def upload_deploy_helpers(c):
@@ -105,7 +105,7 @@ def upload_project_files(c):
 
 
 def upload_tmnfd_files(c):
-    for f in ["cli.py"]:
+    for f in ["cli.py", "requirements.txt"]:
         print(f"Uploading {f}")
         c.put(os.path.join('tmnfd', f), remote=os.path.join(tmnfd_dir, f))
     for d in ["tmnfd/helpers"]:
@@ -114,9 +114,9 @@ def upload_tmnfd_files(c):
 
 
 def prepare_tmnfd_cli(c):
-    c.run(f"chmod 755 {os.path.join(tmnfd_dir, 'cli.py')}")
-    c.run(f"ln -s {os.path.join(tmnfd_dir, 'cli.py')} /usr/bin/tmnfd", warn=True, hide=True)
-    c.run(f"{os.path.join(tmnfd_dir, 'cli.py')} --init")
+    c.run(f"echo -e '#!/bin/bash\n{os.path.join(tmnfd_dir, 'venv/bin/python')} {os.path.join(tmnfd_dir, 'cli.py')} $*' > /usr/bin/tmnfd")
+    c.run(f"chmod 755 /usr/bin/tmnfd")
+    c.run(f"{os.path.join(tmnfd_dir, 'venv/bin/python')} {os.path.join(tmnfd_dir, 'cli.py')} --init")
 
 
 def create_directorys_mongodb(c):
@@ -246,7 +246,7 @@ def deploy_tas(c):
 
     systemctl_stop(c, tas_service)
     upload_project_files(c)
-    setup_virtualenv(c)
+    setup_virtualenv(c, project_dir)
     install_rsyslog(c)
     install_logrotate(c)
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
@@ -257,6 +257,9 @@ def deploy_tas(c):
 def deploy_tmnfd_pre(c):
     install_apt_package(c, 'curl')
     install_apt_package(c, 'p7zip-full')
+    install_apt_package(c, 'liblzo2-dev')
+    install_apt_package(c, 'python3-dev')
+    install_apt_package(c, 'build-essential')
     create_directorys_tmnfd(c)
 
 
@@ -274,6 +277,7 @@ def deploy_tmnfd(c):
         tmnfd_zip_extract(c)
         tmnfd_map_config(c)
     upload_tmnfd_files(c)
+    setup_virtualenv(c, tmnfd_dir)
     prepare_tmnfd_cli(c)
     systemctl_install_service(c, 'tmnfd.service', tmnfd_service, [('__project_dir__', tmnfd_dir)])
     c.run("systemctl daemon-reload")
@@ -292,7 +296,7 @@ def deploy(c):
     systemctl_stop(c, tmnfd_service)
     systemctl_stop(c, mongodb_service)
     upload_project_files(c)
-    setup_virtualenv(c)
+    setup_virtualenv(c, project_dir)
     install_rsyslog(c)
     install_logrotate(c)
     if not tmnfd_version_matches(c):
@@ -300,6 +304,7 @@ def deploy(c):
         tmnfd_zip_extract(c)
         tmnfd_map_config(c)
     upload_tmnfd_files(c)
+    setup_virtualenv(c, tmnfd_dir)
     prepare_tmnfd_cli(c)
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
     systemctl_install_service(c, 'tmnfd.service', tmnfd_service, [('__project_dir__', tmnfd_dir)])
