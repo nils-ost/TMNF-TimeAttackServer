@@ -7,6 +7,7 @@ _config = {
     'config_path': 'dedicated/GameData/Config/dedicated_cfg.txt',
     'match_settings': 'dedicated/GameData/Tracks/MatchSettings/TAS',
     'active_path': 'dedicated/GameData/Tracks/MatchSettings/active.txt',
+    'challenges_path': 'dedicated/GameData/Tracks',
     'active_matchsetting': 'NationsWhite.txt'
 }
 
