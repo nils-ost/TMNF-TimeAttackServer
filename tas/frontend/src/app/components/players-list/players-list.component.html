@@ -3,12 +3,14 @@
         <tr>
             <th>id</th>
             <th>name</th>
+            <th>last_update</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-player>
         <tr>
             <td>{{player.id}}</td>
             <td>{{player.name}}</td>
+            <td>{{player.last_update * 1000 | date:'medium'}}</td>
         </tr>
     </ng-template>
 </p-table>
