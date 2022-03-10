@@ -37,5 +37,28 @@
                 </div>
             </a>
         </div>
+
+        <div class="connector-container flex">
+            <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+        </div>
+
+        <div class="card-container flex">
+            <a class="card" href="/de" pRipple *ngIf="uri.startsWith('/en/')">
+                <div class="icon">
+                    <i class="pi pi-flag"></i>
+                </div>
+                <div>
+                    Deutsch
+                </div>
+            </a>
+            <a class="card" href="/en" pRipple *ngIf="uri.startsWith('/de/')">
+                <div class="icon">
+                    <i class="pi pi-flag"></i>
+                </div>
+                <div>
+                    English
+                </div>
+            </a>
+        </div>
     </div>
 </div>

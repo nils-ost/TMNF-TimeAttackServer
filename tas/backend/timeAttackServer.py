@@ -1,5 +1,6 @@
 import cherrypy
 import cherrypy_cors
+from cherrypy.lib.static import serve_file
 import time
 import os
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, ranking_global, ranking_for
@@ -70,6 +71,16 @@ class Rankings():
             return ranking_for(challenge_id, challenge_id_get(current=True))
 
 
+def error_page_404(status, message, traceback, version):
+    path = message.split("'")
+    if len(path) == 3:
+        path = path[1].strip('/').split('/')
+        if path[0] in ['de', 'en']:
+            cherrypy.response.status = 200
+            return serve_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html'))
+    return "Page not found"
+
+
 if __name__ == '__main__':
     conf = {
         '/': {
@@ -79,15 +90,20 @@ if __name__ == '__main__':
             'tools.staticdir.dir': "ang/de",
             'tools.staticdir.index': "index.html"
         },
-        '/de': {
+        '/de/*': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang/de",
+            'tools.staticdir.index': "index.html"
+        },
+        '/en': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "ang/en",
             'tools.staticdir.index': "index.html"
         }
     }
     config = get_config('server')
     cherrypy_cors.install()
-    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
+    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True, 'error_page.404': error_page_404})
 
     start_tmnfd_connection()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)
