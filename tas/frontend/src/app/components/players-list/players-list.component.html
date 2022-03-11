@@ -1,4 +1,4 @@
-<p-table [value]="players">
+<p-table [value]="players" selectionMode="single" [(selection)]="selectedPlayer">
     <ng-template pTemplate="header">
         <tr>
             <th>id</th>
@@ -7,10 +7,11 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-player>
-        <tr>
+        <tr [pSelectableRow]="player">
             <td>{{player.id}}</td>
             <td>{{player.name}}</td>
             <td>{{player.last_update * 1000 | date:'medium'}}</td>
         </tr>
     </ng-template>
 </p-table>
+<app-players-challenge-list *ngIf="selectedPlayer"></app-players-challenge-list>
