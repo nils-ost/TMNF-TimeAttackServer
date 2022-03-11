@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { CardModule } from 'primeng/card';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -36,7 +37,8 @@ import { PlayersChallengeListComponent } from './components/players-challenge-li
     HttpClientModule,
     TableModule,
     RippleModule,
-    SpeedDialModule
+    SpeedDialModule,
+    CardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,2 +1,2 @@
-<app-players-list [players]="players"></app-players-list>
-
+<app-players-list [players]="players" (selectPlayerEvent)="selectPlayer($event)"></app-players-list>
+<app-players-challenge-list [playerRankings]="playerRankings" *ngIf="selectedPlayer"></app-players-challenge-list>

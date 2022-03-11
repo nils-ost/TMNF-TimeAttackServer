@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Player } from '../../interfaces/player';
 
 @Component({
@@ -9,11 +9,16 @@ import { Player } from '../../interfaces/player';
 export class PlayersListComponent implements OnInit {
 
   @Input() players!: Player[];
+  @Output() selectPlayerEvent = new EventEmitter<Player | null>();
   selectedPlayer?: Player;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  selectPlayer(player: Player | null) {
+    this.selectPlayerEvent.emit(player);
   }
 
 }

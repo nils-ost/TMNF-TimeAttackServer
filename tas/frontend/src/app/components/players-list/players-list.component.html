@@ -1,4 +1,4 @@
-<p-table [value]="players" selectionMode="single" [(selection)]="selectedPlayer">
+<p-table [value]="players" selectionMode="single" [(selection)]="selectedPlayer" (onRowSelect)="selectPlayer($event)" (onRowUnselect)="selectPlayer(null)">
     <ng-template pTemplate="header">
         <tr>
             <th>id</th>
@@ -14,4 +14,3 @@
         </tr>
     </ng-template>
 </p-table>
-<app-players-challenge-list *ngIf="selectedPlayer"></app-players-challenge-list>

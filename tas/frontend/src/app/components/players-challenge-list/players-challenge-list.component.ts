@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { PlayerRanking } from '../../interfaces/ranking';
 
 @Component({
   selector: 'app-players-challenge-list',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./players-challenge-list.component.scss']
 })
 export class PlayersChallengeListComponent implements OnInit {
+  @Input() playerRankings!: PlayerRanking[];
 
   constructor() { }
 

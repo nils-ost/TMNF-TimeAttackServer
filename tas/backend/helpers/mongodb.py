@@ -76,6 +76,10 @@ def player_all():
     return mongoDB().players.find({})
 
 
+def player_get(player_id):
+    return mongoDB().players.find_one({'_id': player_id})
+
+
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
@@ -132,6 +136,15 @@ def challenge_id_set(challenge_id, current=False, next=False):
         mongoDB().utils.replace_one({'_id': 'current_challenge_id'}, {'_id': 'current_challenge_id', 'value': challenge_id}, True)
     else:
         mongoDB().utils.replace_one({'_id': 'next_challenge_id'}, {'_id': 'next_challenge_id', 'value': challenge_id}, True)
+
+
+def ranking_player(player_id):
+    result = list()
+    for rp in mongoDB().rankings.find({'player_id': player_id}):
+        rp.pop('_id')
+        rp.pop('player_id')
+        result.append(rp)
+    return result
 
 
 def ranking_for(challenge_id, current_challenge_id=None):

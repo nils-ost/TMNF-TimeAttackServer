@@ -8,6 +8,14 @@ export interface ChallengeRanking {
     player_id: string;
     time: number;
     rank: number;
-    point: number;
+    points: number;
+    at: number;
+}
+
+export interface PlayerRanking {
+    challenge_id: string;
+    time: number;
+    rank: number;
+    points: number;
     at: number;
 }

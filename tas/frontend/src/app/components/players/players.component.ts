@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlayerRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
 import { PlayerService } from '../../services/player.service';
 
@@ -9,6 +10,8 @@ import { PlayerService } from '../../services/player.service';
 })
 export class PlayersComponent implements OnInit {
   players: Player[] = [];
+  selectedPlayer?: Player;
+  playerRankings: PlayerRanking[] = [];
 
   constructor(
     private playerService: PlayerService
@@ -16,6 +19,23 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshPlayers();
+  }
+
+  selectPlayer(event: any) {
+    if (event) {
+      this.selectedPlayer = event.data;
+      this.playerService
+        .getPlayerRankings(event.data.id)
+        .subscribe(
+          (pr: PlayerRanking[]) => {
+            this.playerRankings = pr;
+          }
+        );
+    }
+    else {
+      this.selectedPlayer = undefined;
+      this.playerRankings = [];
+    }
   }
 
   refreshPlayers() {

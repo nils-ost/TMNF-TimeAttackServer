@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../interfaces/player';
+import { PlayerRanking } from '../interfaces/ranking';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -30,5 +31,9 @@ export class PlayerService {
 
   public getPlayers(): Observable<Player[]> {
     return this.http.get<Player[]>(this.playerUrl).pipe(catchError(this.handleError));
+  }
+
+  public getPlayerRankings(player_id: string): Observable<PlayerRanking[]> {
+    return this.http.get<PlayerRanking[]>(this.playerUrl + player_id + '/rankings/').pipe(catchError(this.handleError));
   }
 }

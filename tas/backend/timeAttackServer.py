@@ -3,7 +3,7 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, ranking_global, ranking_for
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
@@ -45,14 +45,27 @@ class Challenges():
         return c
 
 
+@cherrypy.popargs('player_id', 'details')
 class Players():
     @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def index(self):
-        result = list()
-        for p in player_all():
-            result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update']})
-        return result
+    def index(self, player_id=None, details=None):
+        if not player_id:
+            result = list()
+            for p in player_all():
+                result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update']})
+            return result
+        else:
+            if not details:
+                result = player_get(player_id)
+                if result is not None:
+                    result['id'] = result.get('_id')
+                    result.pop('_id', None)
+                return result
+            elif details == 'rankings':
+                return ranking_player(player_id)
+            else:
+                return None
 
 
 @cherrypy.popargs('challenge_id')

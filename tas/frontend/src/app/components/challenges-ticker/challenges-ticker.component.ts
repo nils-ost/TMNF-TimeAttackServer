@@ -7,7 +7,7 @@ import { Subscription, timer, Observable } from 'rxjs';
   templateUrl: './challenges-ticker.component.html',
   styleUrls: ['./challenges-ticker.component.scss']
 })
-export class ChallengesTickerComponent implements OnInit {
+export class ChallengesTickerComponent implements OnInit, OnDestroy {
   @Input() challenges!: Challenge[];
   @Input() current_challenge_id!: string;
   @Input() next_challenge_id!: string;

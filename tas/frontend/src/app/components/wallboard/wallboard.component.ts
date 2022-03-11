@@ -13,7 +13,7 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './wallboard.component.html',
   styleUrls: ['./wallboard.component.scss']
 })
-export class WallboardComponent implements OnInit {
+export class WallboardComponent implements OnInit, OnDestroy {
   refreshPlayersTimer = timer(30000, 30000);
   refreshChallengesTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;

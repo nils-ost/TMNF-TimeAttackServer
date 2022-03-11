@@ -1,1 +1,20 @@
-<p>players-challenge-list works!</p>
+<p-table [value]="playerRankings">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>challenge_id</th>
+            <th>rank</th>
+            <th>points</th>
+            <th>time</th>
+            <th>at</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rp>
+        <tr>
+            <td>{{ rp.challenge_id }}</td>
+            <td>{{ rp.rank }}</td>
+            <td>{{ rp.points }}</td>
+            <td>{{ rp.time }}</td>
+            <td>{{ rp.at * 1000 | date:'medium' }}</td>
+        </tr>
+    </ng-template>
+</p-table>

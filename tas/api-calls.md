@@ -30,6 +30,21 @@
   * name
   * last_update
 
+`/players/<player_id>` gives details for player_id
+
+  * id
+  * name
+  * last_update
+  * current_uid
+
+`/players/<player_id>/rankings` gives all rankings for player_id
+
+  * challenge_id
+  * at
+  * rank
+  * time
+  * points
+
 `/rankings/<challenge_id>` gives ranking for challenge_id
 
   * player_id
