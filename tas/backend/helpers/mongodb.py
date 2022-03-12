@@ -62,6 +62,15 @@ def laptime_add(player_id, challenge_id, time):
     mongoDB().players.update_one({'_id': player_id}, {'$set': {'last_update': ts}})
 
 
+def laptime_filter(player_id=None, challenge_id=None):
+    f = dict('time': {'$ne': None})
+    if player_id is not None:
+        f['player_id'] = player_id
+    if challenge_id is not None:
+        f['challenge_id'] = challenge_id
+    return mongoDB().laptimes.find(f).sort('created_at', ASCENDING)
+
+
 def player_update(player_id, nickname, current_uid):
     ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)

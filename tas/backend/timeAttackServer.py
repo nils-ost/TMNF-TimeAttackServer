@@ -3,7 +3,7 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player, laptime_filter
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
@@ -45,11 +45,11 @@ class Challenges():
         return c
 
 
-@cherrypy.popargs('player_id', 'details')
+@cherrypy.popargs('player_id', 'details', 'challenge_id')
 class Players():
     @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def index(self, player_id=None, details=None):
+    def index(self, player_id=None, details=None, challenge_id=None):
         if not player_id:
             result = list()
             for p in player_all():
@@ -64,6 +64,22 @@ class Players():
                 return result
             elif details == 'rankings':
                 return ranking_player(player_id)
+            elif details == 'laptimes':
+                if challenge_id is None:
+                    result = list()
+                    for lt in laptime_filter(player_id=player_id):
+                        lt.pop('_id', None)
+                        lt.pop('player_id', None)
+                        result.append(lt)
+                    return result
+                else:
+                    result = list()
+                    for lt in laptime_filter(player_id=player_id, challenge_id=challenge_id):
+                        lt.pop('_id', None)
+                        lt.pop('player_id', None)
+                        lt.pop('challenge_id', None)
+                        result.append(lt)
+                    return result
             else:
                 return None
 

@@ -37,13 +37,24 @@
   * last_update
   * current_uid
 
-`/players/<player_id>/rankings` gives all rankings for player_id
+`/players/<player_id>/rankings` gives all rankings of player_id
 
   * challenge_id
   * at
   * rank
   * time
   * points
+
+`/players/<player_id>/laptimes` gives all laptimes of player_id
+
+  * challenge_id
+  * time
+  * created_at
+
+`/players/<player_id>/laptimes/<challenge_id>` gives all laptimes of player_id for challenge_id
+
+  * time
+  * created_at
 
 `/rankings/<challenge_id>` gives ranking for challenge_id
 
