@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Player } from '../interfaces/player';
 import { PlayerRanking } from '../interfaces/ranking';
 import { environment } from '../../environments/environment';
+import { PlayerChallengeLaptime } from '../interfaces/laptime';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class PlayerService {
 
   public getPlayerRankings(player_id: string): Observable<PlayerRanking[]> {
     return this.http.get<PlayerRanking[]>(this.playerUrl + player_id + '/rankings/').pipe(catchError(this.handleError));
+  }
+
+  public getPlayerChallengeLaptimes(player_id: string, challenge_id: string): Observable<PlayerChallengeLaptime[]> {
+    return this.http.get<PlayerChallengeLaptime[]>(this.playerUrl + player_id + '/laptimes/' + challenge_id).pipe(catchError(this.handleError));
   }
 }

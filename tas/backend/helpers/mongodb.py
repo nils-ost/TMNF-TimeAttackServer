@@ -63,7 +63,7 @@ def laptime_add(player_id, challenge_id, time):
 
 
 def laptime_filter(player_id=None, challenge_id=None):
-    f = dict('time': {'$ne': None})
+    f = dict({'time': {'$ne': None}})
     if player_id is not None:
         f['player_id'] = player_id
     if challenge_id is not None:

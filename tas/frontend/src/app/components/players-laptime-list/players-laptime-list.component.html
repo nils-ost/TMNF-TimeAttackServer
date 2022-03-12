@@ -1,0 +1,14 @@
+<p-table [value]="playerChallengeLaptimes">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>created_at</th>
+            <th>time</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-laptime>
+        <tr [ngClass]="{'best-laptime': laptime.created_at === bestLaptimeAt}">
+            <td>{{ laptime.created_at * 1000 | date:'medium' }}</td>
+            <td>{{ laptime.time / 1000 | number: '1.3-3' }}s</td>
+        </tr>
+    </ng-template>
+</p-table>

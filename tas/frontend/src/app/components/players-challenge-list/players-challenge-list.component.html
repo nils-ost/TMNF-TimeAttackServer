@@ -1,4 +1,4 @@
-<p-table [value]="playerRankings">
+<p-table [value]="playerRankings" selectionMode="single" [(selection)]="selectedPlayerRanking" (onRowSelect)="selectPlayerRanking($event)" (onRowUnselect)="selectPlayerRanking(null)">
     <ng-template pTemplate="header">
         <tr>
             <th>challenge_id</th>
@@ -9,11 +9,11 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rp>
-        <tr>
+        <tr [pSelectableRow]="rp">
             <td>{{ rp.challenge_id }}</td>
             <td>{{ rp.rank }}</td>
             <td>{{ rp.points }}</td>
-            <td>{{ rp.time }}</td>
+            <td>{{ rp.time / 1000 | number: '1.3-3' }}s</td>
             <td>{{ rp.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>
