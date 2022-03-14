@@ -13,7 +13,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-globalRanking>
-        <tr>
+        <tr [ngClass]="{'player-active': playerActive(globalRanking.player_id)}">
             <td>{{globalRanking.rank}}</td>
             <td>{{playerName(globalRanking.player_id)}}</td>
             <td>{{globalRanking.points}}</td>

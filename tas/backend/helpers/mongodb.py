@@ -226,3 +226,17 @@ def ranking_rebuild(challenge_id=None):
         mongoDB().rankings.drop()
         for challenge in challenge_all():
             ranking_for(challenge['_id'], challenge['_id'])
+
+
+def set_wallboard_players_max(c):
+    mongoDB().utils.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
+
+
+def get_wallboard_players_max():
+    r = mongoDB().utils.find_one({'_id': 'wallboard_players_max'})
+    if r is None:
+        wpmd = get_config('util')['wallboard_players_max_default']
+        set_wallboard_players_max(wpmd)
+        return wpmd
+    else:
+        return r['count']

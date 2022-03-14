@@ -72,4 +72,8 @@ if rebuild is false or omitted the global ranking is build entirely from cached 
   * rank
   * points
 
+`/settings` returns dynamic settings
+
+  * wallboard_players_max
+
 ## Private

@@ -21,6 +21,9 @@ config = {
     },
     'server': {
         'port': 8000
+    },
+    'util': {
+        'wallboard_players_max_default': 10
     }
 }
 

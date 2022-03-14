@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { GlobalRanking, ChallengeRanking } from '../../interfaces/ranking';
 import { Challenge } from '../../interfaces/challenge';
+import { Settings } from '../../interfaces/settings';
 import { PlayerService } from '../../services/player.service';
 import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
+import { SettingsService } from '../../services/settings.service';
 import { Subscription, timer, Subject } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 
@@ -16,11 +18,14 @@ import { MenuItem } from 'primeng/api';
 export class WallboardComponent implements OnInit, OnDestroy {
   refreshPlayersTimer = timer(30000, 30000);
   refreshChallengesTimer = timer(10000, 10000);
+  refreshSettingsTimer = timer(60000, 60000);
   refreshPlayersTimerSubscription: Subscription | undefined;
   refreshChallengesTimerSubscription: Subscription | undefined;
+  refreshSettingsTimerSubscription: Subscription | undefined;
   switchAutoRefreshSubscription: Subscription | undefined;
 
   players: Player[] = [];
+  settings!: Settings;
   globalRankings: GlobalRanking[] = [];
   challengeRankings: ChallengeRanking[] = [];
   challenges: Challenge[] = [];
@@ -33,10 +38,12 @@ export class WallboardComponent implements OnInit, OnDestroy {
   constructor(
     private playerService: PlayerService,
     private rankingService: RankingService,
-    private challengeService: ChallengeService
+    private challengeService: ChallengeService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
+    this.refreshSettings();
     this.refreshPlayers();
     this.refreshChallenges();
     this.enableAutoRefresh();
@@ -88,11 +95,13 @@ export class WallboardComponent implements OnInit, OnDestroy {
   enableAutoRefresh() {
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
     this.refreshChallengesTimerSubscription = this.refreshChallengesTimer.subscribe(() => this.refreshChallenges());
+    this.refreshSettingsTimerSubscription = this.refreshSettingsTimer.subscribe(() => this.refreshSettings());
   }
 
   disableAutoRefresh() {
     this.refreshPlayersTimerSubscription?.unsubscribe();
     this.refreshChallengesTimerSubscription?.unsubscribe();
+    this.refreshSettingsTimerSubscription?.unsubscribe();
   }
 
   refreshPlayers() {
@@ -111,14 +120,12 @@ export class WallboardComponent implements OnInit, OnDestroy {
         .getChallengeRankings(this.c_current.id)
         .subscribe(
           (rankings: ChallengeRanking[]) => {
-            rankings.sort((a, b) => a.rank - b.rank);
-            this.challengeRankings = rankings;
+            this.challengeRankings = this.alignChallengeRankings(rankings);
             this.rankingService
               .getGlobalRankings()
               .subscribe(
                 (rankings: GlobalRanking[]) => {
-                  rankings.sort((a, b) => a.rank - b.rank);
-                  this.globalRankings = rankings;
+                  this.globalRankings = this.alignGlobalRankings(rankings);
                 }
               );
           }
@@ -130,8 +137,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
         .getGlobalRankings()
         .subscribe(
           (rankings: GlobalRanking[]) => {
-            rankings.sort((a, b) => a.rank - b.rank);
-            this.globalRankings = rankings;
+            this.globalRankings = this.alignGlobalRankings(rankings);
           }
         );
     }
@@ -160,6 +166,64 @@ export class WallboardComponent implements OnInit, OnDestroy {
           this.refreshRankings();
         }
       );
+  }
+
+  refreshSettings() {
+    this.settingsService
+      .getSettings()
+      .subscribe(
+        (s: Settings) => {
+          this.settings = s;
+        }
+      );
+  }
+
+  alignChallengeRankings(rankings: ChallengeRanking[]): ChallengeRanking[] {
+    rankings.sort((a, b) => a.rank - b.rank);
+    let result: ChallengeRanking[] = [];
+    let i = 0;
+    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+      if (this.playerActive(rankings[i]['player_id'])) {
+        result.push(rankings[i]);
+      }
+      i++;
+    }
+    i = 0;
+    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+      if (!this.playerActive(rankings[i]['player_id'])) {
+        result.push(rankings[i]);
+      }
+      i++;
+    }
+    result.sort((a, b) => a.rank - b.rank);
+    return result;
+  }
+
+  alignGlobalRankings(rankings: GlobalRanking[]): GlobalRanking[] {
+    rankings.sort((a, b) => a.rank - b.rank);
+    let result: GlobalRanking[] = [];
+    let i = 0;
+    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+      if (this.playerActive(rankings[i]['player_id'])) {
+        result.push(rankings[i]);
+      }
+      i++;
+    }
+    i = 0;
+    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+      if (!this.playerActive(rankings[i]['player_id'])) {
+        result.push(rankings[i]);
+      }
+      i++;
+    }
+    result.sort((a, b) => a.rank - b.rank);
+    return result;
+  }
+
+  playerActive(player_id: string): boolean {
+    let p = this.players.find(p => p.id === player_id);
+    if (p) return (((Date.now() / 1000) - p.last_update) <= 60);
+    else return false;
   }
 
 }

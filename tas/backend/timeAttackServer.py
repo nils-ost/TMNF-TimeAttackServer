@@ -3,7 +3,7 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player, laptime_filter
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player, laptime_filter, get_wallboard_players_max
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
@@ -13,6 +13,16 @@ class TimeAttackServer():
         self.challenges = Challenges()
         self.players = Players()
         self.rankings = Rankings()
+        self.settings = Settings()
+
+
+class Settings():
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
+    def index(self):
+        result = dict()
+        result['wallboard_players_max'] = get_wallboard_players_max()
+        return result
 
 
 class Challenges():

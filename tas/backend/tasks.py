@@ -34,7 +34,7 @@ def generate_testdata(c):
 def generate_testdata_real(c):
     from helpers.mongodb import challenge_all, player_update, laptime_add
     from random import randrange
-    for p in range(1, 11):
+    for p in range(1, 31):
         player_update(f"p{p}", f"Player{p}", 248 - p)
     for c in challenge_all():
         rel_time = c['rel_time']
@@ -42,5 +42,5 @@ def generate_testdata_real(c):
             rel_time /= 3
         rel_time_s = rel_time - 5000
         rel_time += 5000
-        for p in range(1, 11):
+        for p in range(1, 31):
             laptime_add(f"p{p}", c['_id'], randrange(int(rel_time_s), int(rel_time), 1))
