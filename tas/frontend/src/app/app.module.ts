@@ -18,6 +18,8 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { PlayersComponent } from './components/players/players.component';
 import { PlayersChallengeListComponent } from './components/players-challenge-list/players-challenge-list.component';
 import { PlayersLaptimeListComponent } from './components/players-laptime-list/players-laptime-list.component';
+import { ChallengesComponent } from './components/challenges/challenges.component';
+import { ChallengesListComponent } from './components/challenges-list/challenges-list.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { PlayersLaptimeListComponent } from './components/players-laptime-list/p
     WelcomeComponent,
     PlayersComponent,
     PlayersChallengeListComponent,
-    PlayersLaptimeListComponent
+    PlayersLaptimeListComponent,
+    ChallengesComponent,
+    ChallengesListComponent
   ],
   imports: [
     BrowserModule,
