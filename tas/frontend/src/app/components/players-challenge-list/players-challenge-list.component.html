@@ -1,20 +1,20 @@
-<p-table [value]="playerRankings" selectionMode="single" [(selection)]="selectedPlayerRanking" (onRowSelect)="selectPlayerRanking($event)" (onRowUnselect)="selectPlayerRanking(null)">
+<p-table [value]="sortablePlayerRankings" [scrollable]="true" scrollHeight="calc(44vh - 0.5rem)" selectionMode="single" [(selection)]="selectedPlayerRanking" (onRowSelect)="selectPlayerRanking($event)" (onRowUnselect)="selectPlayerRanking(null)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
-            <th>challenge_id</th>
-            <th>rank</th>
-            <th>points</th>
-            <th>time</th>
-            <th>at</th>
+            <th pSortableColumn="challenge_name">challenge <p-sortIcon field="challenge_name"></p-sortIcon></th>
+            <th pSortableColumn="rank">rank <p-sortIcon field="rank"></p-sortIcon></th>
+            <th pSortableColumn="points">points <p-sortIcon field="points"></p-sortIcon></th>
+            <th pSortableColumn="time">time <p-sortIcon field="time"></p-sortIcon></th>
+            <th pSortableColumn="at">at <p-sortIcon field="at"></p-sortIcon></th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rp>
-        <tr [pSelectableRow]="rp">
-            <td>{{ rp.challenge_id }}</td>
-            <td>{{ rp.rank }}</td>
-            <td>{{ rp.points }}</td>
-            <td>{{ rp.time / 1000 | number: '1.3-3' }}s</td>
-            <td>{{ rp.at * 1000 | date:'medium' }}</td>
+    <ng-template pTemplate="body" let-spr>
+        <tr [pSelectableRow]="spr">
+            <td>{{ spr.challenge_name }}</td>
+            <td>{{ spr.rank }}</td>
+            <td>{{ spr.points }}</td>
+            <td>{{ spr.time / 1000 | number: '1.3-3' }}s</td>
+            <td>{{ spr.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>
 </p-table>

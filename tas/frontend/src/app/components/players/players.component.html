@@ -1,3 +1,35 @@
-<app-players-list [players]="players" (selectPlayerEvent)="selectPlayer($event)"></app-players-list>
-<app-players-challenge-list [playerRankings]="playerRankings" (selectPlayerRankingEvent)="selectPlayerRanking($event)" *ngIf="selectedPlayer"></app-players-challenge-list>
-<app-players-laptime-list [playerChallengeLaptimes]="playerChallengeLaptimes" [bestLaptimeAt]="selectedPlayerRanking.at" *ngIf="selectedPlayerRanking"></app-players-laptime-list>
+<div class="title-bar">
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        <span>
+            Players
+        </span>
+        <i class="pi pi-chevron-down"></i>
+    </div>
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        <span>
+            Challenges Stats
+        </span>
+        <i class="pi pi-chevron-down"></i>
+    </div>
+</div>
+
+<div class="lists-container">
+    <div class="players-list">
+        <div class="players-connector"></div>
+        <app-players-list [players]="players" [globalRankings]="globalRankings" (selectPlayerEvent)="selectPlayer($event)"></app-players-list>
+    </div>
+    <div class="challenges-spacer">
+        <div class="challenges-connector" *ngIf="selectedPlayer"></div>
+    </div>
+    <div class="challenges-container">
+        <div class="challenges-list">
+            <app-players-challenge-list [playerRankings]="playerRankings" [challenges]="challenges" (selectPlayerRankingEvent)="selectPlayerRanking($event)" *ngIf="selectedPlayer"></app-players-challenge-list>
+        </div>
+        <div class="laptimes-connector" *ngIf="selectedPlayerRanking"></div>
+        <div class="laptimes-list">
+            <app-players-laptime-list [playerChallengeLaptimes]="playerChallengeLaptimes" [bestLaptimeAt]="selectedPlayerRanking.at" *ngIf="selectedPlayerRanking"></app-players-laptime-list>
+        </div>
+    </div>
+</div>

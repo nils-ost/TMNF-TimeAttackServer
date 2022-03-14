@@ -82,7 +82,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
                 tooltipPosition: "top"
             },
             icon: 'pi pi-user',
-            routerLink: ['/player']
+            routerLink: ['/players']
         }
     ]
   }

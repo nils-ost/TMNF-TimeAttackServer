@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerRanking } from '../../interfaces/ranking';
+import { PlayerRanking, GlobalRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
+import { Challenge } from '../../interfaces/challenge';
 import { PlayerService } from '../../services/player.service';
+import { RankingService } from '../../services/ranking.service';
+import { ChallengeService } from '../../services/challenge.service';
 import { PlayerChallengeLaptime } from '../../interfaces/laptime';
 
 @Component({
@@ -11,16 +14,22 @@ import { PlayerChallengeLaptime } from '../../interfaces/laptime';
 })
 export class PlayersComponent implements OnInit {
   players: Player[] = [];
+  globalRankings: GlobalRanking[] = [];
   selectedPlayer?: Player;
   playerRankings: PlayerRanking[] = [];
+  challenges: Challenge[] = [];
   selectedPlayerRanking?: PlayerRanking;
   playerChallengeLaptimes: PlayerChallengeLaptime[] = [];
 
   constructor(
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private rankingService: RankingService,
+    private challengeService: ChallengeService
   ) { }
 
   ngOnInit(): void {
+    this.refreshChallenges();
+    this.refreshGlobalRanking();
     this.refreshPlayers();
   }
 
@@ -68,6 +77,26 @@ export class PlayersComponent implements OnInit {
       .subscribe(
         (players: Player[]) => {
           this.players = players;
+        }
+      );
+  }
+
+  refreshGlobalRanking() {
+    this.rankingService
+      .getGlobalRankings()
+      .subscribe(
+        (rankings: GlobalRanking[]) => {
+          this.globalRankings = rankings;
+        }
+      );
+  }
+
+  refreshChallenges() {
+    this.challengeService
+      .getChallenges()
+      .subscribe(
+        (challenges: Challenge[]) => {
+          this.challenges = challenges;
         }
       );
   }
