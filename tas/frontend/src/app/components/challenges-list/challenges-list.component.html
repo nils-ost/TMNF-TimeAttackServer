@@ -1,20 +1,18 @@
-<p-table [value]="challenges" [scrollable]="true" scrollHeight="88vh">
+<p-table [value]="sortableChallenges" [scrollable]="true" scrollHeight="88vh">
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="name">name <p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="id">id <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="name">challenge <p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="time_limit">time_limit <p-sortIcon field="time_limit"></p-sortIcon></th>
-            <th pSortableColumn="seen_count">seen_count <p-sortIcon field="seen_count"></p-sortIcon></th>
-            <th pSortableColumn="seen_last">seen_last <p-sortIcon field="seen_last"></p-sortIcon></th>
+            <th pSortableColumn="seen_last">seen <p-sortIcon field="seen_last"></p-sortIcon></th>
+            <th pSortableColumn="up_in">up <p-sortIcon field="up_in"></p-sortIcon></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-challenge>
         <tr>
-            <td>{{ challenge.name }}</td>
-            <td>{{ challenge.id }}</td>
-            <td>{{ challenge.time_limit }}</td>
-            <td>{{ challenge.seen_count }}</td>
-            <td>{{ challenge.seen_last * 1000 | date:'medium' }}</td>
+            <td>{{ challenge.name }}<br />{{ challenge.id }}</td>
+            <td>{{ challenge.time_limit / 1000 }}s</td>
+            <td>Count: {{ challenge.seen_count }}<br />Last: {{ (challenge.seen_last ? (challenge.seen_last * 1000 | date:'medium') : "---") }}</td>
+            <td>In: {{ (challenge.up_in < 1 ? "<" : "~") }}{{ (challenge.up_in < 1 ? 1 : challenge.up_in) }}m<br />At: {{ challenge.up_at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>
 </p-table>
