@@ -1,4 +1,4 @@
-<p-table [value]="sortableChallenges" [scrollable]="true" scrollHeight="88vh" selectionMode="single" [(selection)]="selectedChallenge" (onRowSelect)="selectChallenge($event)" (onRowUnselect)="selectChallenge(null)">
+<p-table [value]="sortableChallenges" sortField="up_in" [scrollable]="true" scrollHeight="88vh" selectionMode="single" [(selection)]="selectedChallenge" (onRowSelect)="selectChallenge($event)" (onRowUnselect)="selectChallenge(null)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="name">challenge <p-sortIcon field="name"></p-sortIcon></th>
@@ -8,7 +8,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-challenge>
-        <tr>
+        <tr [pSelectableRow]="challenge">
             <td>{{ challenge.name }}<br />{{ challenge.id }}</td>
             <td>{{ challenge.time_limit / 1000 }}s</td>
             <td>Count: {{ challenge.seen_count }}<br />Last: {{ (challenge.seen_last ? (challenge.seen_last * 1000 | date:'medium') : "---") }}</td>

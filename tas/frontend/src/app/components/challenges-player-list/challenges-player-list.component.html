@@ -1,4 +1,4 @@
-<p-table [value]="sortableChallengeRankings" sortField="rank" [scrollable]="true" scrollHeight="calc(44vh - 0.5rem)">
+<p-table [value]="sortableChallengeRankings" sortField="rank" [scrollable]="true" scrollHeight="calc(44vh - 0.5rem)" selectionMode="single" [(selection)]="selectedChallengeRanking" (onRowSelect)="selectChallengeRanking($event)" (onRowUnselect)="selectChallengeRanking(null)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="rank">rank <p-sortIcon field="rank"></p-sortIcon></th>

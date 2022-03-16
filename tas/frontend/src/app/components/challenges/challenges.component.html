@@ -1,1 +1,38 @@
-<app-challenges-list [challenges]="challenges" [currentChallenge]="currentChallenge" *ngIf="currentChallenge"></app-challenges-list>>
+
+
+
+<div class="title-bar">
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        <span>
+            Challenges
+        </span>
+        <i class="pi pi-chevron-down"></i>
+    </div>
+    <div class="title">
+        <i class="pi pi-chevron-down"></i>
+        <span>
+            Players Stats
+        </span>
+        <i class="pi pi-chevron-down"></i>
+    </div>
+</div>
+
+<div class="lists-container">
+    <div class="challenges-list">
+        <div class="challenges-connector"></div>
+        <app-challenges-list [challenges]="challenges" [currentChallenge]="currentChallenge" (selectChallengeEvent)="selectChallenge($event)" *ngIf="currentChallenge"></app-challenges-list>>
+    </div>
+    <div class="players-spacer">
+        <div class="players-connector" *ngIf="selectedChallenge"></div>
+    </div>
+    <div class="players-container">
+        <div class="players-list">
+            <app-challenges-player-list [challengeRankings]="challengeRankings" [players]="players" (selectChallengeRankingEvent)="selectChallengeRanking($event)" *ngIf="selectedChallenge"></app-challenges-player-list>
+        </div>
+        <div class="laptimes-connector" *ngIf="selectedChallengeRanking"></div>
+        <div class="laptimes-list">
+            <app-players-laptime-list [playerChallengeLaptimes]="playerChallengeLaptimes" [bestLaptimeAt]="selectedChallengeRanking.at" *ngIf="selectedChallengeRanking"></app-players-laptime-list>
+        </div>
+    </div>
+</div>
