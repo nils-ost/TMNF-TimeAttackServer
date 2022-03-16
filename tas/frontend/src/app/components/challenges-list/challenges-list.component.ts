@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Challenge } from '../../interfaces/challenge';
 
 interface SortableChallenge {
@@ -19,6 +19,8 @@ interface SortableChallenge {
 export class ChallengesListComponent implements OnInit, OnChanges {
   @Input() challenges!: Challenge[];
   @Input() currentChallenge!: Challenge;
+  @Output() selectChallengeEvent = new EventEmitter<Challenge | null>();
+  selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];
 
   constructor() { }
@@ -29,6 +31,10 @@ export class ChallengesListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     this.buildSortableChallenges();
+  }
+
+  selectChallenge(challenge: Challenge | null) {
+    this.selectChallengeEvent.emit(challenge);
   }
 
   buildSortableChallenges() {

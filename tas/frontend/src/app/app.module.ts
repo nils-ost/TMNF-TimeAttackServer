@@ -20,6 +20,7 @@ import { PlayersChallengeListComponent } from './components/players-challenge-li
 import { PlayersLaptimeListComponent } from './components/players-laptime-list/players-laptime-list.component';
 import { ChallengesComponent } from './components/challenges/challenges.component';
 import { ChallengesListComponent } from './components/challenges-list/challenges-list.component';
+import { ChallengesPlayerListComponent } from './components/challenges-player-list/challenges-player-list.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ChallengesListComponent } from './components/challenges-list/challenges
     PlayersChallengeListComponent,
     PlayersLaptimeListComponent,
     ChallengesComponent,
-    ChallengesListComponent
+    ChallengesListComponent,
+    ChallengesPlayerListComponent
   ],
   imports: [
     BrowserModule,

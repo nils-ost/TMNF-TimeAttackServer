@@ -65,7 +65,7 @@
   * points
 
 `/rankings?rebuild=<true|false>` gives global ranking
-if rebuild is true the cache for the current challenge is recaluculated befor global ranking is build
+if rebuild is true the cache for the current challenge is recaluculated before global ranking is build
 if rebuild is false or omitted the global ranking is build entirely from cached data
 
   * player_id
