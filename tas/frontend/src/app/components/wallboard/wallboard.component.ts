@@ -56,34 +56,50 @@ export class WallboardComponent implements OnInit, OnDestroy {
     );
 
     this.speeddail_menu = [
-        {
-            tooltipOptions: {
-                tooltipLabel: "Enable AutoRefresh",
-                tooltipPosition: "top"
-            },
-            icon: 'pi pi-refresh',
-            command: () => {
-                this.switchAutoRefreshSubject.next(true);
-            }
+      {
+        tooltipOptions: {
+          tooltipLabel: "Enable AutoRefresh",
+          tooltipPosition: "top"
         },
-        {
-            tooltipOptions: {
-                tooltipLabel: "Disable AutoRefresh",
-                tooltipPosition: "top"
-            },
-            icon: 'pi pi-trash',
-            command: () => {
-                this.switchAutoRefreshSubject.next(false);
-            }
-        },
-        {
-            tooltipOptions: {
-                tooltipLabel: "Open Players Screen",
-                tooltipPosition: "top"
-            },
-            icon: 'pi pi-user',
-            routerLink: ['/players']
+        icon: 'pi pi-refresh',
+        command: () => {
+          this.switchAutoRefreshSubject.next(true);
         }
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Disable AutoRefresh",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-trash',
+        command: () => {
+          this.switchAutoRefreshSubject.next(false);
+        }
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Challenges Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-list',
+        routerLink: ['/challenges']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Players Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-user',
+        routerLink: ['/players']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Home Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-home',
+        routerLink: ['/']
+      }
     ]
   }
 

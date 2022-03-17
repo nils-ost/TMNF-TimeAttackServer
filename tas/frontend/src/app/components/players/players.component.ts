@@ -6,6 +6,7 @@ import { PlayerService } from '../../services/player.service';
 import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
 import { PlayerChallengeLaptime } from '../../interfaces/laptime';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-players',
@@ -20,6 +21,7 @@ export class PlayersComponent implements OnInit {
   challenges: Challenge[] = [];
   selectedPlayerRanking?: PlayerRanking;
   playerChallengeLaptimes: PlayerChallengeLaptime[] = [];
+  speeddail_menu: MenuItem[] = [];
 
   constructor(
     private playerService: PlayerService,
@@ -31,6 +33,27 @@ export class PlayersComponent implements OnInit {
     this.refreshChallenges();
     this.refreshGlobalRanking();
     this.refreshPlayers();
+
+    this.speeddail_menu = [
+      {
+        tooltipOptions: {
+          tooltipLabel: "Refresh Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-refresh',
+        command: () => {
+          this.refreshAll();
+        }
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Home Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-home',
+        routerLink: ['/']
+      }
+    ]
   }
 
   selectPlayer(event: any) {
@@ -38,13 +61,7 @@ export class PlayersComponent implements OnInit {
     this.playerChallengeLaptimes = [];
     if (event) {
       this.selectedPlayer = event.data;
-      this.playerService
-        .getPlayerRankings(event.data.id)
-        .subscribe(
-          (pr: PlayerRanking[]) => {
-            this.playerRankings = pr;
-          }
-        );
+      this.refreshPlayerRankings();
     }
     else {
       this.selectedPlayer = undefined;
@@ -55,15 +72,7 @@ export class PlayersComponent implements OnInit {
   selectPlayerRanking(event: any) {
     if (event) {
       this.selectedPlayerRanking = event.data;
-      if (this.selectedPlayer) {
-        this.playerService
-          .getPlayerChallengeLaptimes(this.selectedPlayer.id, event.data.challenge_id)
-          .subscribe(
-            (laptimes: PlayerChallengeLaptime[]) => {
-              this.playerChallengeLaptimes = laptimes;
-            }
-          );
-      }
+      this.refreshPlayerChallengeLaptimes();
     }
     else {
       this.selectedPlayerRanking = undefined;
@@ -99,6 +108,38 @@ export class PlayersComponent implements OnInit {
           this.challenges = challenges;
         }
       );
+  }
+
+  refreshPlayerRankings() {
+    if (this.selectedPlayer) {
+      this.playerService
+        .getPlayerRankings(this.selectedPlayer.id)
+        .subscribe(
+          (pr: PlayerRanking[]) => {
+            this.playerRankings = pr;
+          }
+        );
+    }
+  }
+
+  refreshPlayerChallengeLaptimes() {
+    if (this.selectedPlayer && this.selectedPlayerRanking) {
+      this.playerService
+        .getPlayerChallengeLaptimes(this.selectedPlayer.id, this.selectedPlayerRanking.challenge_id)
+        .subscribe(
+          (laptimes: PlayerChallengeLaptime[]) => {
+            this.playerChallengeLaptimes = laptimes;
+          }
+        );
+    }
+  }
+
+  refreshAll() {
+    this.refreshPlayers();
+    this.refreshGlobalRanking();
+    this.refreshChallenges();
+    this.refreshPlayerRankings();
+    this.refreshPlayerChallengeLaptimes();
   }
 
 }
