@@ -29,6 +29,7 @@
   * id
   * name
   * last_update
+  * ip
 
 `/players/<player_id>` gives details for player_id
 
@@ -36,6 +37,23 @@
   * name
   * last_update
   * current_uid
+  * ip
+
+`/players/me/` GET returns player with the same IP as the request is made from; PATCH sets the IP of given player to the one the request is made from
+
+GET-Return:
+
+  * id
+  * name
+  * last_update
+  * current_uid
+  * ip
+
+PATCH-Data:
+
+`{"player_id": "<id>"}`
+
+! Ensure the trailing /
 
 `/players/<player_id>/rankings` gives all rankings of player_id
 

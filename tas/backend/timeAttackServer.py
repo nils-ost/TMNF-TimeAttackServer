@@ -69,9 +69,13 @@ class Players():
         elif player_id == 'me':
             player_ip = cherrypy.request.remote.ip
             if cherrypy.request.method == "GET":
-                return player_get(player_ip=player_ip)
+                result = player_get(player_ip=player_ip)
+                if result is not None:
+                    result['id'] = result.get('_id')
+                    result.pop('_id', None)
+                return result
             elif cherrypy.request.method == "PATCH":
-                player_id = cherrypy.request.get('json', dict()).get('player_id', None)
+                player_id = cherrypy.request.json.get('player_id', None)
                 if player_id is None:
                     return {'s': 1, 'm': 'player_id missing in request'}
                 s = player_update_ip(player_id=player_id, player_ip=player_ip)
