@@ -76,17 +76,39 @@ def player_update(player_id, nickname, current_uid):
     player_id = clean_player_id(player_id)
     player = mongoDB().players.find_one({'_id': player_id})
     if player is None:
-        mongoDB().players.insert_one({'_id': player_id, 'current_uid': current_uid, 'nickname': nickname, 'last_update': ts})
+        player_ip = None
+        if '/' in player_id:
+            _, player_ip = player_id.split('/', 1)
+            if not len(player_ip.split('.')) == 4:
+                player_ip = None
+        mongoDB().players.insert_one({'_id': player_id, 'current_uid': current_uid, 'nickname': nickname, 'last_update': ts, 'ip': player_ip})
     else:
         mongoDB().players.update_one({'_id': player_id}, {'$set': {'nickname': nickname, 'current_uid': current_uid, 'last_update': ts}})
+
+
+def player_update_ip(player_id, player_ip):
+    player = mongoDB().players.find_one({'_id': player_id})
+    if player is None:
+        return 1  # invalid player
+    if player.get('ip', None) is not None:
+        return 2  # player does allready have an IP assigned
+    player_w_ip = mongoDB().players.find_one({'ip': player_ip})
+    if player_w_ip is not None:
+        return 3  # IP allready assigned to different player
+    mongoDB().players.update_one({'_id': player_id}, {'$set': {'ip': player_ip}})
+    return 0  # OK
 
 
 def player_all():
     return mongoDB().players.find({})
 
 
-def player_get(player_id):
-    return mongoDB().players.find_one({'_id': player_id})
+def player_get(player_id=None, player_ip=None):
+    if player_id is not None:
+        return mongoDB().players.find_one({'_id': player_id})
+    if player_ip is not None:
+        return mongoDB().players.find_one({'ip': player_ip})
+    return None
 
 
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):

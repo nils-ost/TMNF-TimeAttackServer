@@ -3,7 +3,7 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, ranking_global, ranking_for, ranking_player, laptime_filter, get_wallboard_players_max
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, ranking_global, ranking_for, ranking_player, laptime_filter, get_wallboard_players_max
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
@@ -58,13 +58,35 @@ class Challenges():
 @cherrypy.popargs('player_id', 'details', 'challenge_id')
 class Players():
     @cherrypy.expose()
+    @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def index(self, player_id=None, details=None, challenge_id=None):
         if not player_id:
             result = list()
             for p in player_all():
-                result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update']})
+                result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update'], 'ip': p.get('ip', None)})
             return result
+        elif player_id == 'me':
+            player_ip = cherrypy.request.remote.ip
+            if cherrypy.request.method == "GET":
+                return player_get(player_ip=player_ip)
+            elif cherrypy.request.method == "PATCH":
+                player_id = cherrypy.request.get('json', dict()).get('player_id', None)
+                if player_id is None:
+                    return {'s': 1, 'm': 'player_id missing in request'}
+                s = player_update_ip(player_id=player_id, player_ip=player_ip)
+                if s == 0:
+                    return {'s': s, 'm': 'OK'}
+                elif s == 1:
+                    return {'s': s, 'm': 'invalid player'}
+                elif s == 2:
+                    return {'s': s, 'm': 'player does allready have an IP assigned'}
+                elif s == 3:
+                    return {'s': s, 'm': 'IP allready assigned to different player'}
+                else:
+                    return None
+            else:
+                return None
         else:
             if not details:
                 result = player_get(player_id)
