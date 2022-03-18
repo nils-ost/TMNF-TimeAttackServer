@@ -40,6 +40,7 @@
 
         <div class="connector-container flex">
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+            <div class="connector"></div>
         </div>
 
         <div class="card-container flex">
@@ -57,6 +58,14 @@
                 </div>
                 <div>
                     English
+                </div>
+            </a>
+            <a class="card" routerLink="/playerhud" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-user"></i>
+                </div>
+                <div>
+                    PlayerHUD
                 </div>
             </a>
         </div>

@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -21,6 +25,7 @@ import { PlayersLaptimeListComponent } from './components/players-laptime-list/p
 import { ChallengesComponent } from './components/challenges/challenges.component';
 import { ChallengesListComponent } from './components/challenges-list/challenges-list.component';
 import { ChallengesPlayerListComponent } from './components/challenges-player-list/challenges-player-list.component';
+import { PlayerhudComponent } from './components/playerhud/playerhud.component';
 
 @NgModule({
   declarations: [
@@ -37,16 +42,21 @@ import { ChallengesPlayerListComponent } from './components/challenges-player-li
     PlayersLaptimeListComponent,
     ChallengesComponent,
     ChallengesListComponent,
-    ChallengesPlayerListComponent
+    ChallengesPlayerListComponent,
+    PlayerhudComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     TableModule,
     RippleModule,
     SpeedDialModule,
-    CardModule
+    CardModule,
+    DialogModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]

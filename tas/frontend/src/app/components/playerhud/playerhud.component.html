@@ -1,0 +1,4 @@
+<p-dialog header="Title" [visible]="!playerMe" [modal]="true" [closable]="false">
+    Hallo vom Dialog<br />
+    <p-dropdown appendTo="body" [options]="players" [(ngModel)]="selectedPlayerID" optionLabel="name" optionValue="id"></p-dropdown>
+</p-dialog>
