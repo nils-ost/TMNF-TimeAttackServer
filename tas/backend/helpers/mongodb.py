@@ -250,6 +250,11 @@ def ranking_rebuild(challenge_id=None):
             ranking_for(challenge['_id'], challenge['_id'])
 
 
+"""
+Settings
+"""
+
+
 def set_wallboard_players_max(c):
     mongoDB().utils.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
 
@@ -262,3 +267,74 @@ def get_wallboard_players_max():
         return wpmd
     else:
         return r['count']
+
+
+def set_tmnfd_name(name):
+    mongoDB().utils.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
+
+
+def get_tmnfd_name():
+    r = mongoDB().utils.find_one({'_id': 'tmnfd_name'})
+    if r is None:
+        return '--unknown--'
+    return r.get('name', '--unknown--')
+
+
+"""
+Stats
+"""
+
+
+def get_players_count():
+    ts = int(datetime.now().timestamp())
+    r = mongoDB().utils.find_one({'_id': 'players_count'})
+    if r is None or ts - r.get('ts', 0) > 10:
+        count = mongoDB().players.count_documents({})
+        mongoDB().utils.replace_one({'_id': 'players_count'}, {'_id': 'players_count', 'ts': ts, 'count': count}, True)
+        return count
+    else:
+        return r.get('count', 0)
+
+
+def get_active_players_count():
+    ts = int(datetime.now().timestamp())
+    r = mongoDB().utils.find_one({'_id': 'active_players_count'})
+    if r is None or ts - r.get('ts', 0) > 10:
+        count = mongoDB().players.count_documents({'last_update': {'$gt': ts - 61}})
+        mongoDB().utils.replace_one({'_id': 'active_players_count'}, {'_id': 'active_players_count', 'ts': ts, 'count': count}, True)
+        return count
+    else:
+        return r.get('count', 0)
+
+
+def get_laptimes_count():
+    ts = int(datetime.now().timestamp())
+    r = mongoDB().utils.find_one({'_id': 'laptimes_count'})
+    if r is None or ts - r.get('ts', 0) > 10:
+        count = mongoDB().laptimes.count_documents({})
+        mongoDB().utils.replace_one({'_id': 'laptimes_count'}, {'_id': 'laptimes_count', 'ts': ts, 'count': count}, True)
+        return count
+    else:
+        return r.get('count', 0)
+
+
+def get_laptimes_sum():
+    ts = int(datetime.now().timestamp())
+    r = mongoDB().utils.find_one({'_id': 'laptimes_sum'})
+    if r is None or ts - r.get('ts', 0) > 10:
+        s = mongoDB().laptimes.aggregate([{"$group": {'_id': 'sum', 'time': {'$sum': '$time'}}}]).next()['time']
+        mongoDB().utils.replace_one({'_id': 'laptimes_sum'}, {'_id': 'laptimes_sum', 'ts': ts, 'sum': s}, True)
+        return s
+    else:
+        return r.get('sum', 0)
+
+
+def get_total_seen_count():
+    ts = int(datetime.now().timestamp())
+    r = mongoDB().utils.find_one({'_id': 'total_seen_count'})
+    if r is None or ts - r.get('ts', 0) > 10:
+        count = mongoDB().challenges.aggregate([{"$group": {'_id': 'sum', 'seen_count': {'$sum': '$seen_count'}}}]).next()['seen_count']
+        mongoDB().utils.replace_one({'_id': 'total_seen_count'}, {'_id': 'total_seen_count', 'ts': ts, 'count': count}, True)
+        return count
+    else:
+        return r.get('count', 0)

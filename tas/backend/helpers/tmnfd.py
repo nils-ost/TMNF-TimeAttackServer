@@ -5,7 +5,7 @@ from multiprocessing import Process, Queue
 from multiprocessing.managers import BaseManager
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_rebuild
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_rebuild, set_tmnfd_name
 import time
 import sys
 
@@ -126,6 +126,9 @@ def watcher_function():
             print("Connected to: TMNF - Dedicated Server")
             prepareChallenges(sender)
 
+            server_name = sender.callMethod('GetServerName')[0]
+            set_tmnfd_name(server_name)
+            print(f"TMNF - Dedicated Server Name: {server_name}")
             current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
             challenge_update(current_challenge['UId'], force_inc=False)
             print(f"Challenge current: {current_challenge['Name']}")

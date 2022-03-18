@@ -93,5 +93,14 @@ if rebuild is false or omitted the global ranking is build entirely from cached 
 `/settings` returns dynamic settings
 
   * wallboard_players_max
+  * tmnfd_name
+
+`/stats` returns current stats of stuff happening on server
+
+  * total_players  *- the number of individual players ever joined to server*
+  * active_players  *- the number of players currently playing on server*
+  * laptimes_count  *- the summed up count of all laptimes by all players on all challenges*
+  * laptimes_sum  *- the summed up time of all laptimes by all players on all challenges*
+  * challenges_total_seen_count  *- summed up see_count of all challenges*
 
 ## Private
