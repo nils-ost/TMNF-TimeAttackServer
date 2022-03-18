@@ -22,9 +22,22 @@ def wallboardPalyersMax():
         set_wallboard_players_max(int(selection))
 
 
+def clearPlayerIP():
+    from helpers.mongodb import mongoDB, player_get
+    player_id = input("\nEnter player_id: ")
+    player = player_get(player_id)
+    if player is None:
+        print('Invalid player_id!')
+        return
+    print(f"Player is currently assigned to IP: {player.get('ip')}")
+    if input('Wipe it? (y/N): ').strip() == 'y':
+        mongoDB().players.update_one({'_id': player_id}, {'$set': {'ip': None}})
+
+
 commands = [
     ('Next Challenge', nextChallenge),
-    ('Set Wallboard Players Max', wallboardPalyersMax)
+    ('Set Wallboard Players Max', wallboardPalyersMax),
+    ("Clear Player's IP", clearPlayerIP)
 ]
 
 index = 0

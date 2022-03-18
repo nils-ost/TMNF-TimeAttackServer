@@ -3,6 +3,7 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
+from urllib.parse import unquote
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, ranking_global, ranking_for, ranking_player, laptime_filter, get_wallboard_players_max
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
@@ -67,12 +68,14 @@ class Players():
                 result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update'], 'ip': p.get('ip', None)})
             return result
         elif player_id == 'me':
+            if cherrypy.request.method == 'OPTIONS':
+                cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
             player_ip = cherrypy.request.remote.ip
             if cherrypy.request.method == "GET":
                 result = player_get(player_ip=player_ip)
                 if result is not None:
-                    result['id'] = result.get('_id')
-                    result.pop('_id', None)
+                    result['id'] = result.pop('_id', None)
+                    result['name'] = result.pop('nickname', None)
                 return result
             elif cherrypy.request.method == "PATCH":
                 player_id = cherrypy.request.json.get('player_id', None)
@@ -92,11 +95,12 @@ class Players():
             else:
                 return None
         else:
+            player_id = unquote(player_id)
             if not details:
                 result = player_get(player_id)
                 if result is not None:
-                    result['id'] = result.get('_id')
-                    result.pop('_id', None)
+                    result['id'] = result.pop('_id', None)
+                    result['name'] = result.pop('nickname', None)
                 return result
             elif details == 'rankings':
                 return ranking_player(player_id)
@@ -149,7 +153,6 @@ def error_page_404(status, message, traceback, version):
 if __name__ == '__main__':
     conf = {
         '/': {
-            'tools.sessions.on': True,
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang/de",

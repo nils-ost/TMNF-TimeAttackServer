@@ -13,7 +13,8 @@
             <td>{{ cr.rank }}</td>
             <td>{{ cr.points }}</td>
             <td>{{ cr.player_name }}</td>
-            <td>{{ cr.time / 1000 | number: '1.3-3' }}s</td>
+            <td *ngIf="cr.time > 0">{{ cr.time / 1000 | number: '1.3-3' }}s</td>
+            <td *ngIf="cr.time <= 0">---</td>
             <td>{{ cr.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>

@@ -9,6 +9,7 @@ import { PlayerService } from '../../services/player.service';
 })
 export class PlayerhudComponent implements OnInit {
   players: Player[] = [];
+  filteredPlayers: Player[] = [];
   playerMe?: Player;
   selectedPlayerID?: string;
 
@@ -17,7 +18,7 @@ export class PlayerhudComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPlayerMe();
+    this.refreshPlayerMe();
   }
 
   refreshPlayers() {
@@ -26,11 +27,15 @@ export class PlayerhudComponent implements OnInit {
       .subscribe(
         (players: Player[]) => {
           this.players = players;
+          this.filteredPlayers = [];
+          for(let i = 0; i < players.length; i++) {
+            if (!players[i].ip) this.filteredPlayers.push(players[i]);
+          }
         }
       );
   }
 
-  getPlayerMe() {
+  refreshPlayerMe() {
     this.playerService
       .getPlayerMe()
       .subscribe(
@@ -46,7 +51,13 @@ export class PlayerhudComponent implements OnInit {
       );
   }
 
-  setPlayerMe(player_id: string) {
+  applyPlayerMe() {
+    if (this.selectedPlayerID) {
+      this.playerService
+        .setPlayerMe(this.selectedPlayerID)
+        .subscribe(() => {
+          this.refreshPlayerMe();
+        });
+    }
   }
-
 }

@@ -1,4 +1,8 @@
-<p-dialog header="Title" [visible]="!playerMe" [modal]="true" [closable]="false">
-    Hallo vom Dialog<br />
-    <p-dropdown appendTo="body" [options]="players" [(ngModel)]="selectedPlayerID" optionLabel="name" optionValue="id"></p-dropdown>
+<p-dialog header="Select who you are" [visible]="!playerMe" [modal]="true" [closable]="false">
+    <p>In this sceen you can live-track your progress.<br />For this to work I need to know who you are.</p>
+    <p-dropdown appendTo="body" [options]="filteredPlayers" [(ngModel)]="selectedPlayerID" optionLabel="name" optionValue="id" [filter]="true" filterBy="name"></p-dropdown>&nbsp;
+    <p-button label="Send" (onClick)="applyPlayerMe()"></p-button>
+    <p>If you can't find your playername in the dropdown,<br />please contact: --TBD--</p>
 </p-dialog>
+
+<span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>

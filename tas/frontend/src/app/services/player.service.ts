@@ -35,14 +35,23 @@ export class PlayerService {
   }
 
   public getPlayerRankings(player_id: string): Observable<PlayerRanking[]> {
-    return this.http.get<PlayerRanking[]>(this.playerUrl + player_id + '/rankings/').pipe(catchError(this.handleError));
+    return this.http.get<PlayerRanking[]>(this.playerUrl + encodeURIComponent(player_id) + '/rankings/').pipe(catchError(this.handleError));
   }
 
   public getPlayerChallengeLaptimes(player_id: string, challenge_id: string): Observable<PlayerChallengeLaptime[]> {
-    return this.http.get<PlayerChallengeLaptime[]>(this.playerUrl + player_id + '/laptimes/' + challenge_id).pipe(catchError(this.handleError));
+    return this.http.get<PlayerChallengeLaptime[]>(this.playerUrl + encodeURIComponent(player_id) + '/laptimes/' + challenge_id).pipe(catchError(this.handleError));
   }
 
   public getPlayerMe(): Observable<Player | null> {
-    return this.http.get<Player | null>(this.playerUrl + '/me/').pipe(catchError(this.handleError));
+    return this.http.get<Player | null>(this.playerUrl + 'me/').pipe(catchError(this.handleError));
+  }
+
+  public setPlayerMe(player_id: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this.http.patch<any>(this.playerUrl + 'me/', {'player_id': player_id}, httpOptions).pipe(catchError(this.handleError));
   }
 }

@@ -13,7 +13,8 @@
             <td>{{ spr.challenge_name }}</td>
             <td>{{ spr.rank }}</td>
             <td>{{ spr.points }}</td>
-            <td>{{ spr.time / 1000 | number: '1.3-3' }}s</td>
+            <td *ngIf="spr.time > 0">{{ spr.time / 1000 | number: '1.3-3' }}s</td>
+            <td *ngIf="spr.time <= 0">---</td>
             <td>{{ spr.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>

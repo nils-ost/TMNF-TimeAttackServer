@@ -10,6 +10,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -56,7 +57,8 @@ import { PlayerhudComponent } from './components/playerhud/playerhud.component';
     SpeedDialModule,
     CardModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
