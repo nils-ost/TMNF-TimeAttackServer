@@ -256,11 +256,11 @@ Settings
 
 
 def set_wallboard_players_max(c):
-    mongoDB().utils.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
+    mongoDB().settings.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
 
 
 def get_wallboard_players_max():
-    r = mongoDB().utils.find_one({'_id': 'wallboard_players_max'})
+    r = mongoDB().settings.find_one({'_id': 'wallboard_players_max'})
     if r is None:
         wpmd = get_config('util')['wallboard_players_max_default']
         set_wallboard_players_max(wpmd)
@@ -270,14 +270,36 @@ def get_wallboard_players_max():
 
 
 def set_tmnfd_name(name):
-    mongoDB().utils.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
+    mongoDB().settings.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
 
 
 def get_tmnfd_name():
-    r = mongoDB().utils.find_one({'_id': 'tmnfd_name'})
+    r = mongoDB().settings.find_one({'_id': 'tmnfd_name'})
     if r is None:
         return '--unknown--'
     return r.get('name', '--unknown--')
+
+
+def set_display_self_url(url):
+    mongoDB().settings.replace_one({'_id': 'display_self_url'}, {'_id': 'display_self_url', 'url': url}, True)
+
+
+def get_display_self_url():
+    r = mongoDB().settings.find_one({'_id': 'display_self_url'})
+    if r is None:
+        return '--unknown--'
+    return r.get('url', '--unknown--')
+
+
+def set_display_admin(admin):
+    mongoDB().settings.replace_one({'_id': 'display_admin'}, {'_id': 'display_admin', 'admin': admin}, True)
+
+
+def get_display_admin():
+    r = mongoDB().settings.find_one({'_id': 'display_admin'})
+    if r is None:
+        return 'Admin'
+    return r.get('admin', 'Admin')
 
 
 """

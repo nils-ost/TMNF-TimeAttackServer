@@ -94,6 +94,8 @@ if rebuild is false or omitted the global ranking is build entirely from cached 
 
   * wallboard_players_max
   * tmnfd_name
+  * display_self_url
+  * display_admin
 
 `/stats` returns current stats of stuff happening on server
 

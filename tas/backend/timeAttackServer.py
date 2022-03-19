@@ -5,7 +5,8 @@ import time
 import os
 from urllib.parse import unquote
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, ranking_global, ranking_for, ranking_player, laptime_filter
-from helpers.mongodb import get_wallboard_players_max, get_tmnfd_name, get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
+from helpers.mongodb import get_wallboard_players_max, get_tmnfd_name, get_display_self_url, get_display_admin
+from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
 
@@ -26,6 +27,8 @@ class Settings():
         result = dict()
         result['wallboard_players_max'] = get_wallboard_players_max()
         result['tmnfd_name'] = get_tmnfd_name()
+        result['display_self_url'] = get_display_self_url()
+        result['display_admin'] = get_display_admin()
         return result
 
 
