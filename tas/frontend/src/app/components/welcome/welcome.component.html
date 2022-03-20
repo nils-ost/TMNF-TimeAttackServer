@@ -39,11 +39,19 @@
         </div>
 
         <div class="connector-container flex">
-            <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
             <div class="connector"></div>
+            <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
         </div>
 
         <div class="card-container flex">
+            <a class="card" routerLink="/playerhud" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-user"></i>
+                </div>
+                <div>
+                    PlayerHUD
+                </div>
+            </a>
             <a class="card" href="/de" pRipple *ngIf="uri.startsWith('/en/')">
                 <div class="icon">
                     <i class="pi pi-flag"></i>
@@ -60,14 +68,39 @@
                     English
                 </div>
             </a>
-            <a class="card" routerLink="/playerhud" routerLinkActive="active" pRipple>
-                <div class="icon">
-                    <i class="pi pi-user"></i>
+        </div>
+
+        <div class="connector-container flex">
+            <div class="connector"></div>
+            <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+        </div>
+
+        <div class="info-container">
+            <div class="info-row">
+                <div class="settings">
+                    <p>Ingame Server Name: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+                    <p>Server Admin: <span class="highlight">{{ settings?.display_admin }}</span></p>
                 </div>
-                <div>
-                    PlayerHUD
+            </div>
+
+            <div class="info-row">
+                <div class="stats">
+                    <p>Laptimes Count: {{ stats?.laptimes_count }}</p>
+                    <p>Laptimes Sum: {{ laptimes_sum_h }}h {{ laptimes_sum_m }}m {{ laptimes_sum_s }}s</p>
+                    <p>Challenges Total Seen: {{ stats?.challenges_total_seen_count }}</p>
                 </div>
-            </a>
+
+                <div class="stats">
+                    <p>Total Players: {{ stats?.total_players }}</p>
+                    <p>Active Players: {{ stats?.active_players }}</p>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="settings">
+                    <p>Download latest compatible Client: <span class="highlight">--TBD--</span></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -56,9 +56,47 @@
                     }
                     margin-bottom: 0.6em;
                 }
-        
-                .p-ink {
-                    background: var(--primary-color);
+            }
+        }
+
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--surface-card);
+            border-radius: 0.5rem;
+            margin: 0rem 0.5rem 0rem 0.5rem;
+            padding: 2rem;
+            padding-bottom: 1.2rem;
+
+            .info-row {
+                display: flex;
+                flex-direction: row;
+            
+                .stats {
+                    font-family: var(--font-family);
+                    color: var(--text-color);
+                    text-align: left;
+                    vertical-align: top;
+                    width: 50%;
+                    padding: 0;
+                }
+
+                .settings {
+                    font-family: var(--font-family);
+                    color: var(--text-color);
+                    text-align: left;
+                    vertical-align: top;
+                    width: 100%;
+                    padding: 0;
+                }
+
+                p {
+                    margin: 0;
+                    margin-bottom: 0.7rem;
+
+                    .highlight {
+                        color: var(--primary-color);
+                    }
                 }
             }
         }

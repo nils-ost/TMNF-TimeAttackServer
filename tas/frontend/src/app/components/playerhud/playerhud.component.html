@@ -2,7 +2,7 @@
     <p>In this sceen you can live-track your progress.<br />For this to work I need to know who you are.</p>
     <p-dropdown appendTo="body" [options]="filteredPlayers" [(ngModel)]="selectedPlayerID" optionLabel="name" optionValue="id" [filter]="true" filterBy="name"></p-dropdown>&nbsp;
     <p-button label="Send" (onClick)="applyPlayerMe()"></p-button>
-    <p>If you can't find your playername in the dropdown,<br />please contact: --TBD--</p>
+    <p>If you can't find your playername in the dropdown,<br />please contact: {{ settings?.display_admin }}</p>
 </p-dialog>
 
 <span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>

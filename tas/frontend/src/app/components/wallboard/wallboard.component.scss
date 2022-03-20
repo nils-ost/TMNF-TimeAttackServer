@@ -99,3 +99,11 @@
         font-size: 0.9rem;
     }
 }
+
+:host ::ng-deep .self-url-msg {
+    display: flex;
+    position: absolute;
+    opacity: 80%;
+    left: 1rem;
+    bottom: 0rem;
+}

@@ -104,6 +104,13 @@ def upload_project_files(c):
         patchwork.transfers.rsync(c, d, project_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
 
 
+def prepare_tas_cli(c):
+    c.run(f"echo -e '#!/bin/bash\n{os.path.join(project_dir, 'venv/bin/python')} {os.path.join(project_dir, 'cli.py')} $*' > /usr/bin/tmnf-tas")
+    c.run(f"echo -e '#!/bin/bash\n{os.path.join(project_dir, 'venv/bin/python')} {os.path.join(project_dir, 'cli.py')} $*' > /usr/bin/tas")
+    c.run(f"chmod 755 /usr/bin/tmnf-tas")
+    c.run(f"chmod 755 /usr/bin/tas")
+
+
 def upload_tmnfd_files(c):
     for f in ["cli.py", "requirements.txt"]:
         print(f"Uploading {f}")
@@ -247,6 +254,7 @@ def deploy_tas(c):
     systemctl_stop(c, tas_service)
     upload_project_files(c)
     setup_virtualenv(c, project_dir)
+    prepare_tas_cli(c)
     install_rsyslog(c)
     install_logrotate(c)
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
@@ -297,6 +305,7 @@ def deploy(c):
     systemctl_stop(c, mongodb_service)
     upload_project_files(c)
     setup_virtualenv(c, project_dir)
+    prepare_tas_cli(c)
     install_rsyslog(c)
     install_logrotate(c)
     if not tmnfd_version_matches(c):

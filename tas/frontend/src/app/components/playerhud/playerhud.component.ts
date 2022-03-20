@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from '../../interfaces/player';
+import { Settings } from '../../interfaces/settings';
 import { PlayerService } from '../../services/player.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-playerhud',
@@ -12,13 +14,25 @@ export class PlayerhudComponent implements OnInit {
   filteredPlayers: Player[] = [];
   playerMe?: Player;
   selectedPlayerID?: string;
+  settings?: Settings;
 
   constructor(
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
     this.refreshPlayerMe();
+  }
+
+  refreshSettings() {
+    this.settingsService
+      .getSettings()
+      .subscribe(
+        (settings: Settings) => {
+          this.settings = settings
+        }
+      );
   }
 
   refreshPlayers() {
@@ -44,6 +58,7 @@ export class PlayerhudComponent implements OnInit {
             this.playerMe = player;
           }
           else {
+            this.refreshSettings();
             this.refreshPlayers();
             this.playerMe = undefined;
           }
