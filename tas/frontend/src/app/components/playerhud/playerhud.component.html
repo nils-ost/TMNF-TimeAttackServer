@@ -6,13 +6,6 @@
 </p-dialog>
 
 <span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>
-<p>
-    Best:
-    <span *ngFor="let name of bestChallengesNames">{{ name }}</span>
-</p>
-<p>
-    Worst:
-    <span *ngFor="let name of worstChallengesNames">{{ name }}</span>
-</p>
+<app-playerhud-info-card *ngIf="playerMe" [playerRankings]="playerRankings" [challenges]="challenges"></app-playerhud-info-card>
 <app-playerhud-current-list *ngIf="playerMe" [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
 <app-playerhud-global-list *ngIf="playerMe" [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>

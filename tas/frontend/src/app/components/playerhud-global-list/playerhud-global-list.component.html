@@ -1,4 +1,7 @@
-<p-table [value]="rankingDisplay" sortField="rank">
+<p-table responsiveLayout="scroll" [value]="rankingDisplay" sortField="rank">
+    <ng-template pTemplate="caption">
+        Global Ranking
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="rank">rank</th>

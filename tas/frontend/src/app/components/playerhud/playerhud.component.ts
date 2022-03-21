@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { Settings } from '../../interfaces/settings';
 import { ChallengeRanking, GlobalRanking, PlayerRanking } from '../../interfaces/ranking';
@@ -14,7 +14,7 @@ import { Subscription, timer } from 'rxjs';
   templateUrl: './playerhud.component.html',
   styleUrls: ['./playerhud.component.scss']
 })
-export class PlayerhudComponent implements OnInit {
+export class PlayerhudComponent implements OnInit, OnDestroy {
   refreshPlayersTimer = timer(30000, 30000);
   refreshRankingsTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
@@ -30,9 +30,6 @@ export class PlayerhudComponent implements OnInit {
   globalRankings: GlobalRanking[] = [];
   playerRankings: PlayerRanking[] = [];
   currentChallenge?: Challenge;
-  bestChallengesNames: string[] = [];
-  worstChallengesNames: string[] = [];
-  missingChallengesNames: string[] = [];
 
   constructor(
     private playerService: PlayerService,
@@ -44,6 +41,10 @@ export class PlayerhudComponent implements OnInit {
   ngOnInit(): void {
     this.refreshPlayerMe();
     this.refreshPlayers();
+  }
+
+  ngOnDestroy(): void {
+    this.disableAutoRefresh();
   }
 
   refreshSettings() {
@@ -129,7 +130,6 @@ export class PlayerhudComponent implements OnInit {
             .getPlayerRankings(this.playerMe.id)
             .subscribe((pr: PlayerRanking[]) => {
               this.playerRankings = pr;
-              this.buildBestWorstMissingChallenges();
             });
         }
       });
@@ -140,31 +140,8 @@ export class PlayerhudComponent implements OnInit {
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
   }
 
-  buildBestWorstMissingChallenges() {
-    let best: number = 9999;
-    let worst: number = 0;
-    let bestS: string[] = [];
-    let worstS: string[] = [];
-    for (let i = 0; i < this.playerRankings.length; i++) {
-      let pr: PlayerRanking = this.playerRankings[i];
-      if (pr.rank > worst) {
-        worst = pr.rank;
-        worstS = [];
-      }
-      if (pr.rank === worst) worstS.push(this.getChallengeNameById(pr.challenge_id));
-      if (pr.rank < best) {
-        best = pr.rank;
-        bestS = [];
-      }
-      if (pr.rank === best) bestS.push(this.getChallengeNameById(pr.challenge_id));
-    }
-    this.bestChallengesNames = bestS;
-    this.worstChallengesNames = worstS;
-  }
-
-  getChallengeNameById(challenge_id: string): string {
-    let c = this.challenges.find(c => c.id === challenge_id);
-    if (c) return c.name;
-    else return "--unknown--";
+  disableAutoRefresh() {
+    this.refreshPlayersTimerSubscription?.unsubscribe();
+    this.refreshRankingsTimerSubscription?.unsubscribe();
   }
 }
