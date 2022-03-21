@@ -29,6 +29,8 @@ import { ChallengesComponent } from './components/challenges/challenges.componen
 import { ChallengesListComponent } from './components/challenges-list/challenges-list.component';
 import { ChallengesPlayerListComponent } from './components/challenges-player-list/challenges-player-list.component';
 import { PlayerhudComponent } from './components/playerhud/playerhud.component';
+import { PlayerhudCurrentListComponent } from './components/playerhud-current-list/playerhud-current-list.component';
+import { PlayerhudGlobalListComponent } from './components/playerhud-global-list/playerhud-global-list.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { PlayerhudComponent } from './components/playerhud/playerhud.component';
     ChallengesComponent,
     ChallengesListComponent,
     ChallengesPlayerListComponent,
-    PlayerhudComponent
+    PlayerhudComponent,
+    PlayerhudCurrentListComponent,
+    PlayerhudGlobalListComponent
   ],
   imports: [
     BrowserModule,

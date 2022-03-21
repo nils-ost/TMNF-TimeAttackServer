@@ -6,3 +6,5 @@
 </p-dialog>
 
 <span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>
+<app-playerhud-current-list *ngIf="playerMe" [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
+<app-playerhud-global-list *ngIf="playerMe" [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>

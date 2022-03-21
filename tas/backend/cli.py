@@ -31,21 +31,21 @@ def clearDB():
     from helpers.mongodb import mongoDB
     if not input('Wipe all player, challenge and laptime data? (y/N): ').strip() == 'y':
         return
-    mongoDB.challenges.drop()
+    mongoDB().challenges.drop()
     print('Wiped Challenges')
-    mongoDB.players.drop()
+    mongoDB().players.drop()
     print('Wiped Players')
-    mongoDB.laptimes.drop()
+    mongoDB().laptimes.drop()
     print('Wiped Laptimes')
-    mongoDB.bestlaptimes.drop()
+    mongoDB().bestlaptimes.drop()
     print('Wiped Bestlaptimes')
-    mongoDB.rankings.drop()
+    mongoDB().rankings.drop()
     print('Wiped Rankings')
-    mongoDB.utils.drop()
+    mongoDB().utils.drop()
     print('Wiped Utils')
     if not input('Also wipe settings? (y/N): ').strip() == 'y':
         return
-    mongoDB.settings.drop()
+    mongoDB().settings.drop()
     print('Wiped Settings')
 
 

@@ -344,7 +344,10 @@ def get_laptimes_sum():
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'laptimes_sum'})
     if r is None or ts - r.get('ts', 0) > 10:
-        s = mongoDB().laptimes.aggregate([{"$group": {'_id': 'sum', 'time': {'$sum': '$time'}}}]).next()['time']
+        try:
+            s = mongoDB().laptimes.aggregate([{"$group": {'_id': 'sum', 'time': {'$sum': '$time'}}}]).next()['time']
+        except StopIteration:
+            s = 0
         mongoDB().utils.replace_one({'_id': 'laptimes_sum'}, {'_id': 'laptimes_sum', 'ts': ts, 'sum': s}, True)
         return s
     else:

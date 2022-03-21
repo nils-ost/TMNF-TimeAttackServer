@@ -1,0 +1,20 @@
+<p-table [value]="rankingDisplay" sortField="rank">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="rank">rank</th>
+            <th>player</th>
+            <th>time (diff)</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rd>
+        <tr [ngClass]="{'selected-player': rd.player_id === selectedPlayer.id}">
+            <td>{{ rd.rank }}</td>
+            <td>{{ rd.player_name }}</td>
+            <td *ngIf="rd.time > 0">
+                {{ rd.time / 1000 | number: '1.3-3' }}s
+                <span *ngIf="rd.time_diff" [ngClass]="{'positive-time': rd.time_diff > 0, 'negative-time': rd.time_diff < 0}">({{ rd.time_diff / 1000 | number: '1.3-3' }})</span>
+            </td>
+            <td *ngIf="rd.time <= 0">---</td>
+        </tr>
+    </ng-template>
+</p-table>

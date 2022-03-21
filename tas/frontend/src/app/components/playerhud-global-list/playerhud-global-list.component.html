@@ -1,0 +1,19 @@
+<p-table [value]="rankingDisplay" sortField="rank">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="rank">rank</th>
+            <th>player</th>
+            <th>points (diff)</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rd>
+        <tr [ngClass]="{'selected-player': rd.player_id === selectedPlayer.id}">
+            <td>{{ rd.rank }}</td>
+            <td>{{ rd.player_name }}</td>
+            <td>
+                {{ rd.points | number: '1.0-0' }}
+                <span *ngIf="rd.points_diff" [ngClass]="{'positive-points': rd.points_diff > 0, 'negative-points': rd.points_diff < 0}">({{ rd.points_diff | number: '1.0-0' }})</span>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
