@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { Settings } from '../../interfaces/settings';
-import { ChallengeRanking, GlobalRanking } from '../../interfaces/ranking';
+import { ChallengeRanking, GlobalRanking, PlayerRanking } from '../../interfaces/ranking';
 import { Challenge } from '../../interfaces/challenge';
 import { PlayerService } from '../../services/player.service';
 import { SettingsService } from '../../services/settings.service';
@@ -25,9 +25,14 @@ export class PlayerhudComponent implements OnInit {
   playerMe?: Player;
   selectedPlayerID?: string;
   settings?: Settings;
+  challenges: Challenge[] = [];
   challengeRankings: ChallengeRanking[] = [];
   globalRankings: GlobalRanking[] = [];
+  playerRankings: PlayerRanking[] = [];
   currentChallenge?: Challenge;
+  bestChallengesNames: string[] = [];
+  worstChallengesNames: string[] = [];
+  missingChallengesNames: string[] = [];
 
   constructor(
     private playerService: PlayerService,
@@ -51,6 +56,14 @@ export class PlayerhudComponent implements OnInit {
       );
   }
 
+  refreshChallenges() {
+    this.challengeService
+      .getChallenges()
+      .subscribe((c: Challenge[]) => {
+        this.challenges = c;
+      });
+  }
+
   refreshPlayers() {
     this.playerService
       .getPlayers()
@@ -72,6 +85,7 @@ export class PlayerhudComponent implements OnInit {
         (player: Player | null) => {
           if (player) {
             this.playerMe = player;
+            this.refreshChallenges();
             this.refreshRankings();
             this.enableAutoRefresh();
           }
@@ -110,11 +124,47 @@ export class PlayerhudComponent implements OnInit {
               this.globalRankings = gr;
             });
         }
+        if (this.playerMe) {
+          this.playerService
+            .getPlayerRankings(this.playerMe.id)
+            .subscribe((pr: PlayerRanking[]) => {
+              this.playerRankings = pr;
+              this.buildBestWorstMissingChallenges();
+            });
+        }
       });
   }
 
   enableAutoRefresh() {
     this.refreshRankingsTimerSubscription = this.refreshRankingsTimer.subscribe(() => this.refreshRankings());
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
+  }
+
+  buildBestWorstMissingChallenges() {
+    let best: number = 9999;
+    let worst: number = 0;
+    let bestS: string[] = [];
+    let worstS: string[] = [];
+    for (let i = 0; i < this.playerRankings.length; i++) {
+      let pr: PlayerRanking = this.playerRankings[i];
+      if (pr.rank > worst) {
+        worst = pr.rank;
+        worstS = [];
+      }
+      if (pr.rank === worst) worstS.push(this.getChallengeNameById(pr.challenge_id));
+      if (pr.rank < best) {
+        best = pr.rank;
+        bestS = [];
+      }
+      if (pr.rank === best) bestS.push(this.getChallengeNameById(pr.challenge_id));
+    }
+    this.bestChallengesNames = bestS;
+    this.worstChallengesNames = worstS;
+  }
+
+  getChallengeNameById(challenge_id: string): string {
+    let c = this.challenges.find(c => c.id === challenge_id);
+    if (c) return c.name;
+    else return "--unknown--";
   }
 }
