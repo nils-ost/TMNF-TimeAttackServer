@@ -53,6 +53,7 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.challenges.length; i++) {
       let c: Challenge = this.challenges[i];
       let cd: ChallengeDisplay = {
+        id: c.id,
         name: c.name,
         seen_count: c.seen_count,
         time_limit: Math.floor(c.time_limit / 1000),
@@ -77,6 +78,7 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
       for(let i = 0; i < current_index; i++) {
         let c: Challenge = this.challenges[i];
         let cd: ChallengeDisplay = {
+          id: c.id,
           name: c.name,
           seen_count: c.seen_count,
           time_limit: Math.floor(c.time_limit / 1000),

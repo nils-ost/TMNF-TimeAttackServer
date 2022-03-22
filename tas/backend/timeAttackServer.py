@@ -186,6 +186,10 @@ if __name__ == '__main__':
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang/en",
             'tools.staticdir.index': "index.html"
+        },
+        '/thumbnails': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "thumbnails"
         }
     }
     config = get_config('server')

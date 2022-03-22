@@ -7,6 +7,7 @@ export interface Challenge {
 }
 
 export interface ChallengeDisplay {
+  id: string;
   name: string;
   seen_count: number;
   time_limit: number;

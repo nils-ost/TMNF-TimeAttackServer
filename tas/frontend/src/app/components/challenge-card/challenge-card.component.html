@@ -1,7 +1,8 @@
 <div class="challenge-card">
     <div class="card-content">
         <div class="header">
-            {{ challenge.name }}
+            <p>{{ challenge.name }}</p>
+            <img src="{{ thumbnailUrl }}" />
         </div>
         <div class="stats">
             <p>Seen Count: {{ challenge.seen_count }}</p>
