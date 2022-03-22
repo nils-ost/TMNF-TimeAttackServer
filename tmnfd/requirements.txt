@@ -1,1 +1,2 @@
 pygbx==0.3
+opencv-python==4.5.5.64

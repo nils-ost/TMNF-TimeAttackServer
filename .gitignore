@@ -3,6 +3,7 @@ venv/
 .envrc
 tas/backend/config.json
 tas/backend/static/ang
+tas/backend/static/thumbnails
 *.run
 tmnfd/config.json
 tmnfd/testdata

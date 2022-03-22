@@ -8,7 +8,9 @@ _config = {
     'match_settings': 'dedicated/GameData/Tracks/MatchSettings/TAS',
     'active_path': 'dedicated/GameData/Tracks/MatchSettings/active.txt',
     'challenges_path': 'dedicated/GameData/Tracks',
-    'active_matchsetting': 'NationsWhite.txt'
+    'active_matchsetting': 'NationsWhite.txt',
+    'thumbnails_path': '/opt/middleware/tmnf-tas/static/thumbnails',
+    'thumbnail_generation_enabled': False
 }
 
 

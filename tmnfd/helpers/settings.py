@@ -48,3 +48,11 @@ class MatchSettings():
 
     def get_random_map_order(self):
         return (True if self.tree.find('filter').find('random_map_order').text == '1' else False)
+
+    def get_challenges(self):
+        result = list()
+        for c in self.tree.findall('challenge'):
+            ident = c.find('ident').text
+            path = c.find('file').text
+            result.append((ident, path))
+        return result

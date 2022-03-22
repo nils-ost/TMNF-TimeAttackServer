@@ -3,7 +3,7 @@ Description=TMNF-DedicatedServer
 
 [Service]
 Type=simple
-ExecStartPre=__project_dir__/venv/bin/python __project_dir__/cli.py --write-active
+ExecStartPre=__project_dir__/venv/bin/python __project_dir__/cli.py --prepare-start
 ExecStart=__project_dir__/dedicated/TrackmaniaServer /dedicated_cfg=dedicated_cfg.txt /game_settings=MatchSettings/active.txt /lan /nodaemon
 KillSignal=SIGINT
 WorkingDirectory=__project_dir__/dedicated
