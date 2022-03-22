@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerRanking, GlobalRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
 import { Challenge } from '../../interfaces/challenge';
@@ -14,6 +14,7 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./players.component.scss']
 })
 export class PlayersComponent implements OnInit {
+  @ViewChild('dt_players_list') players_table: any;
   players: Player[] = [];
   globalRankings: GlobalRanking[] = [];
   selectedPlayer?: Player;
@@ -43,6 +44,16 @@ export class PlayersComponent implements OnInit {
         icon: 'pi pi-refresh',
         command: () => {
           this.refreshAll();
+        }
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Export CSV",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-file',
+        command: () => {
+          this.players_table.exportCSV();
         }
       },
       {

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { GlobalRanking } from '../../interfaces/ranking';
 
@@ -20,8 +20,16 @@ export class PlayersListComponent implements OnInit, OnChanges {
   @Input() players!: Player[];
   @Input() globalRankings!: GlobalRanking[];
   @Output() selectPlayerEvent = new EventEmitter<Player | null>();
+  @ViewChild('dt') table: any;
   selectedPlayer?: Player;
   sortablePlayers: SortablePlayer[] = [];
+  cols: any[] = [
+    { field: 'rank', header: 'rank' },
+    { field: 'id', header: 'id' },
+    { field: 'name', header: 'name' },
+    { field: 'last_update', header: 'last_update' },
+    { field: 'points', header: 'points' }
+  ];
 
   constructor() { }
 
@@ -62,6 +70,10 @@ export class PlayersListComponent implements OnInit, OnChanges {
       new_sp.push(sp);
     }
     this.sortablePlayers = new_sp;
+  }
+
+  exportCSV() {
+    this.table.exportCSV();
   }
 
 }

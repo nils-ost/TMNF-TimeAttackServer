@@ -18,7 +18,7 @@
 <div class="lists-container">
     <div class="players-list">
         <div class="players-connector"></div>
-        <app-players-list [players]="players" [globalRankings]="globalRankings" (selectPlayerEvent)="selectPlayer($event)"></app-players-list>
+        <app-players-list #dt_players_list [players]="players" [globalRankings]="globalRankings" (selectPlayerEvent)="selectPlayer($event)"></app-players-list>
     </div>
     <div class="challenges-spacer">
         <div class="challenges-connector" *ngIf="selectedPlayer"></div>

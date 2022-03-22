@@ -1,20 +1,17 @@
-<p-table [value]="sortablePlayers" sortField="rank" [scrollable]="true" scrollHeight="88vh" selectionMode="single" [(selection)]="selectedPlayer" (onRowSelect)="selectPlayer($event)" (onRowUnselect)="selectPlayer(null)" styleClass="rounded-table">
-    <ng-template pTemplate="header">
+<p-table #dt [columns]="cols" [value]="sortablePlayers" sortField="rank" [scrollable]="true" scrollHeight="88vh" selectionMode="single" [(selection)]="selectedPlayer" (onRowSelect)="selectPlayer($event)" (onRowUnselect)="selectPlayer(null)" styleClass="rounded-table" exportFilename="player-ranking" csvSeparator=";">
+    <ng-template pTemplate="header" let-columns>
         <tr>
-            <th pSortableColumn="rank">rank <p-sortIcon field="rank"></p-sortIcon></th>
-            <th pSortableColumn="id">id <p-sortIcon field="id"></p-sortIcon></th>
-            <th pSortableColumn="name">name <p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="last_update">last_update <p-sortIcon field="last_update"></p-sortIcon></th>
-            <th pSortableColumn="points">points <p-sortIcon field="points"></p-sortIcon></th>
+            <th *ngFor="let col of columns" pSortableColumn="{{ col.field }}">
+                {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+            </th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-player>
-        <tr [pSelectableRow]="player">
-            <td>{{ player.rank }}</td>
-            <td>{{ player.id }}</td>
-            <td>{{ player.name }}</td>
-            <td>{{ player.last_update * 1000 | date:'medium' }}</td>
-            <td>{{ player.points }}</td>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                <span *ngSwitchCase="'last_update'">{{ rowData[col.field] * 1000 | date:'medium' }}</span>
+                <span *ngSwitchDefault>{{ rowData[col.field] }}</span>
+            </td>
         </tr>
     </ng-template>
 </p-table>
