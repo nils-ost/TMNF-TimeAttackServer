@@ -5,7 +5,34 @@
     <p>If you can't find your playername in the dropdown,<br />please contact: {{ settings?.display_admin }}</p>
 </p-dialog>
 
-<span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>
-<app-playerhud-info-card *ngIf="playerMe" [playerRankings]="playerRankings" [challenges]="challenges"></app-playerhud-info-card>
-<app-playerhud-current-list *ngIf="playerMe" [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
-<app-playerhud-global-list *ngIf="playerMe" [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>
+<div id="info-card">
+    <span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>
+    <app-playerhud-info-card *ngIf="playerMe" [playerRankings]="playerRankings" [challenges]="challenges"></app-playerhud-info-card>
+</div>
+
+<div id="challenge-rank" class="rank-short">
+    <div class="rank">
+        {{ meChallengeRank ? meChallengeRank : '---' }}
+    </div>
+    <div class="diff">
+        {{ meChallengeDiff ? meChallengeDiff / 1000 : '---' }}
+    </div>
+</div>
+
+<div id="gloabl-rank" class="rank-short">
+    <div class="rank">
+        {{ meGlobalRank ? meGlobalRank : '---' }}
+    </div>
+    <div class="diff">
+        {{ meGlobalDiff ? meGlobalDiff : '---' }}
+    </div>
+</div>
+
+<div id="ranking-card">
+    <div class="ranking-table">
+        <app-playerhud-current-list *ngIf="playerMe" [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
+    </div>
+    <div class="ranking-table">
+        <app-playerhud-global-list *ngIf="playerMe" [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>
+    </div>
+</div>

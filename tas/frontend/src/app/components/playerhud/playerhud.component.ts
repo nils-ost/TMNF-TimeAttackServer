@@ -30,6 +30,10 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   globalRankings: GlobalRanking[] = [];
   playerRankings: PlayerRanking[] = [];
   currentChallenge?: Challenge;
+  meChallengeRank: number | undefined;
+  meChallengeDiff: number | undefined;
+  meGlobalRank: number | undefined;
+  meGlobalDiff: number | undefined;
 
   constructor(
     private playerService: PlayerService,
@@ -118,11 +122,12 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
             .getChallengeRankings(this.currentChallenge.id)
             .subscribe((cr: ChallengeRanking[]) => {
               this.challengeRankings = cr;
-            });
-          this.rankingService
-            .getGlobalRankings()
-            .subscribe((gr: GlobalRanking[]) => {
-              this.globalRankings = gr;
+              this.rankingService
+                .getGlobalRankings()
+                .subscribe((gr: GlobalRanking[]) => {
+                  this.globalRankings = gr;
+                  this.buildMeRanks();
+                });
             });
         }
         if (this.playerMe) {
@@ -143,5 +148,31 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   disableAutoRefresh() {
     this.refreshPlayersTimerSubscription?.unsubscribe();
     this.refreshRankingsTimerSubscription?.unsubscribe();
+  }
+
+  buildMeRanks() {
+    if (this.playerMe) {
+      let meCR = this.challengeRankings.find(cr => cr.player_id === this.playerMe!.id);
+      if (meCR) {
+        this.meChallengeRank = meCR.rank;
+        if (meCR.rank > 1) {
+          let pCR = this.challengeRankings.find(cr => cr.rank === meCR!.rank - 1);
+          if (pCR) this.meChallengeDiff = meCR.time - pCR.time;
+          else this.meChallengeDiff = undefined;
+        }
+        else this.meChallengeDiff = undefined;
+      }
+      else this.meChallengeRank = undefined;
+      let meGR = this.globalRankings.find(gr => gr.player_id === this.playerMe!.id);
+      if (meGR) {
+        this.meGlobalRank = meGR.rank;
+        if (meGR.rank > 1) {
+          let pGR = this.globalRankings.find(gr => gr.rank === meGR!.rank - 1);
+          if (pGR) this.meGlobalDiff = meGR.points - pGR.points;
+          else this.meGlobalDiff = undefined;
+        }
+      }
+      else this.meGlobalRank = undefined;
+    }
   }
 }

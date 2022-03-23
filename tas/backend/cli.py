@@ -1,6 +1,7 @@
 #!venv/bin/python
 import sys
 from helpers.config import get_config
+from helpers.GbxRemote import GbxRemote
 
 
 def wallboardPalyersMax():
