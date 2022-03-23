@@ -7,12 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { SpeedDialModule } from 'primeng/speeddial';
-import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { ImageModule } from 'primeng/image';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -63,12 +63,12 @@ import { PlayerhudInfoCardComponent } from './components/playerhud-info-card/pla
     TableModule,
     RippleModule,
     SpeedDialModule,
-    CardModule,
     DialogModule,
     DropdownModule,
     ButtonModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    ImageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Challenge, ChallengeDisplay } from '../../interfaces/challenge';
 import { Subscription, timer, Observable } from 'rxjs';
 
@@ -12,6 +12,8 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
   @Input() current_challenge_id!: string;
   @Input() next_challenge_id!: string;
   @Input() switchAutoRefreshEvent!: Observable<boolean>;
+  @Output() onEnableRefresh = new EventEmitter();
+  @Output() onDisableRefresh = new EventEmitter();
   challengeDisplay: ChallengeDisplay[] = [];
 
   refreshChallengeDisplayTimer = timer(1000, 1000);

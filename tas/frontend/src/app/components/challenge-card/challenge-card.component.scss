@@ -27,7 +27,7 @@
                 font-size: 1.2em;
             }
             
-            img {
+            img:not(.p-image-preview) {
                 width: 64px;
                 height: 64px;
                 margin-bottom: 0.2rem;

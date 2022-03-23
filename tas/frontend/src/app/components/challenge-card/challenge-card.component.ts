@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ChallengeDisplay } from '../../interfaces/challenge';
 import { environment } from '../../../environments/environment';
 
@@ -9,6 +9,8 @@ import { environment } from '../../../environments/environment';
 })
 export class ChallengeCardComponent implements OnInit {
   @Input() challenge!: ChallengeDisplay;
+  @Output() onEnableRefresh = new EventEmitter();
+  @Output() onDisableRefresh = new EventEmitter();
   thumbnailUrl: string = "";
 
   constructor() { }

@@ -2,7 +2,7 @@
     <div class="card-content">
         <div class="header">
             <p>{{ challenge.name }}</p>
-            <img src="{{ thumbnailUrl }}" />
+            <p-image src="{{ thumbnailUrl }}" styleClass="challengeThumbnail" [preview]="true" (onShow)="onDisableRefresh.emit()" (onHide)="onEnableRefresh.emit()"></p-image>
         </div>
         <div class="stats">
             <p>Seen Count: {{ challenge.seen_count }}</p>
