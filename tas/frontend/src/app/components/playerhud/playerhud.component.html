@@ -5,26 +5,54 @@
     <p>If you can't find your playername in the dropdown,<br />please contact: {{ settings?.display_admin }}</p>
 </p-dialog>
 
-<div id="info-card">
-    <span style="color: red" *ngIf="playerMe">Hallo {{ playerMe.name }}</span>
-    <app-playerhud-info-card *ngIf="playerMe" [playerRankings]="playerRankings" [challenges]="challenges"></app-playerhud-info-card>
-</div>
+<div id="info-cards" *ngIf="playerMe">
+    <div id="player-name" class="info-card">
+        <span style="color: red">Hallo {{ playerMe.name }}</span>
+    </div>
 
-<div id="challenge-rank" class="rank-short">
-    <div class="rank">
-        {{ meChallengeRank ? meChallengeRank : '---' }}
+    <div id="best" class="info-card challenge-short" *ngIf="bestRank">
+        <div class="title">
+            Best (Rank: {{ bestRank }})
+        </div>
+        <p-listbox [options]="bestChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
     </div>
-    <div class="diff">
-        {{ meChallengeDiff ? meChallengeDiff / 1000 : '---' }}
-    </div>
-</div>
 
-<div id="gloabl-rank" class="rank-short">
-    <div class="rank">
-        {{ meGlobalRank ? meGlobalRank : '---' }}
+    <div id="worst" class="info-card challenge-short" *ngIf="worstRank">
+        <div class="title">
+            Worst (Rank: {{ worstRank }})
+        </div>
+        <p-listbox [options]="worstChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
     </div>
-    <div class="diff">
-        {{ meGlobalDiff ? meGlobalDiff : '---' }}
+
+    <div id="missing" class="info-card challenge-short">
+        <div class="title">
+            Missing Challenges
+        </div>
+        <p-listbox [options]="missingChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
+    </div>
+
+    <div id="challenge-rank" class="info-card rank-short">
+        <div class="title">
+            Challenge Rank
+        </div>
+        <div class="rank">
+            {{ meChallengeRank ? meChallengeRank : '---' }}
+        </div>
+        <div class="diff">
+            {{ meChallengeDiff ? meChallengeDiff / 1000 : '---' }}
+        </div>
+    </div>
+
+    <div id="gloabl-rank" class="info-card rank-short">
+        <div class="title">
+            Global Rank
+        </div>
+        <div class="rank">
+            {{ meGlobalRank ? meGlobalRank : '---' }}
+        </div>
+        <div class="diff">
+            {{ meGlobalDiff ? meGlobalDiff : '---' }}
+        </div>
     </div>
 </div>
 

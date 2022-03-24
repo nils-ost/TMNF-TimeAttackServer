@@ -34,6 +34,11 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   meChallengeDiff: number | undefined;
   meGlobalRank: number | undefined;
   meGlobalDiff: number | undefined;
+  bestChallengesNames: string[] = [];
+  worstChallengesNames: string[] = [];
+  missingChallengesNames: string[] = [];
+  bestRank: number | undefined;
+  worstRank: number | undefined;
 
   constructor(
     private playerService: PlayerService,
@@ -66,6 +71,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       .getChallenges()
       .subscribe((c: Challenge[]) => {
         this.challenges = c;
+        this.buildBestWorstMissingChallenges();
       });
   }
 
@@ -135,6 +141,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
             .getPlayerRankings(this.playerMe.id)
             .subscribe((pr: PlayerRanking[]) => {
               this.playerRankings = pr;
+              this.buildBestWorstMissingChallenges();
             });
         }
       });
@@ -157,7 +164,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
         this.meChallengeRank = meCR.rank;
         if (meCR.rank > 1) {
           let pCR = this.challengeRankings.find(cr => cr.rank === meCR!.rank - 1);
-          if (pCR) this.meChallengeDiff = meCR.time - pCR.time;
+          if (pCR) this.meChallengeDiff = pCR.time - meCR.time;
           else this.meChallengeDiff = undefined;
         }
         else this.meChallengeDiff = undefined;
@@ -174,5 +181,46 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       }
       else this.meGlobalRank = undefined;
     }
+  }
+
+  buildBestWorstMissingChallenges() {
+    let best: number = 9999;
+    let worst: number = 0;
+    let bestS: string[] = [];
+    let worstS: string[] = [];
+    for (let i = 0; i < this.playerRankings.length; i++) {
+      let pr: PlayerRanking = this.playerRankings[i];
+      if (pr.rank > worst) {
+        worst = pr.rank;
+        worstS = [];
+      }
+      if (pr.rank === worst) worstS.push(this.getChallengeNameById(pr.challenge_id));
+      if (pr.rank < best) {
+        best = pr.rank;
+        bestS = [];
+      }
+      if (pr.rank === best) bestS.push(this.getChallengeNameById(pr.challenge_id));
+    }
+
+    let missingS: string[] = [];
+    for (let i = 0; i < this.challenges.length; i++) {
+      let c: Challenge = this.challenges[i];
+      let pr = this.playerRankings.find(pr => pr.challenge_id === c.id);
+      if (!pr) missingS.push(c.name);
+    }
+
+    this.bestChallengesNames = bestS;
+    this.worstChallengesNames = worstS;
+    this.missingChallengesNames = missingS;
+    if (best != 9999) this.bestRank = best;
+    else this.bestRank = undefined;
+    if (worst != 0) this.worstRank = worst;
+    else this.worstRank = undefined;
+  }
+
+  getChallengeNameById(challenge_id: string): string {
+    let c = this.challenges.find(c => c.id === challenge_id);
+    if (c) return c.name;
+    else return "--unknown--";
   }
 }

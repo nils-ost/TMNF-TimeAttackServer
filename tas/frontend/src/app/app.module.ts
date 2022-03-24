@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ImageModule } from 'primeng/image';
+import { ListboxModule } from 'primeng/listbox';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -68,7 +69,8 @@ import { PlayerhudInfoCardComponent } from './components/playerhud-info-card/pla
     ButtonModule,
     MessagesModule,
     MessageModule,
-    ImageModule
+    ImageModule,
+    ListboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
