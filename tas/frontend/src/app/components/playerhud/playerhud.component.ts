@@ -48,6 +48,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.refreshSettings();
     this.refreshPlayerMe();
     this.refreshPlayers();
   }
@@ -101,7 +102,6 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
             this.enableAutoRefresh();
           }
           else {
-            this.refreshSettings();
             this.playerMe = undefined;
           }
         }

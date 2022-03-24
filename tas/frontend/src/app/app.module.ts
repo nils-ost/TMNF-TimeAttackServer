@@ -14,6 +14,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ImageModule } from 'primeng/image';
 import { ListboxModule } from 'primeng/listbox';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -32,7 +33,6 @@ import { ChallengesPlayerListComponent } from './components/challenges-player-li
 import { PlayerhudComponent } from './components/playerhud/playerhud.component';
 import { PlayerhudCurrentListComponent } from './components/playerhud-current-list/playerhud-current-list.component';
 import { PlayerhudGlobalListComponent } from './components/playerhud-global-list/playerhud-global-list.component';
-import { PlayerhudInfoCardComponent } from './components/playerhud-info-card/playerhud-info-card.component';
 
 @NgModule({
   declarations: [
@@ -52,8 +52,7 @@ import { PlayerhudInfoCardComponent } from './components/playerhud-info-card/pla
     ChallengesPlayerListComponent,
     PlayerhudComponent,
     PlayerhudCurrentListComponent,
-    PlayerhudGlobalListComponent,
-    PlayerhudInfoCardComponent
+    PlayerhudGlobalListComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +69,8 @@ import { PlayerhudInfoCardComponent } from './components/playerhud-info-card/pla
     MessagesModule,
     MessageModule,
     ImageModule,
-    ListboxModule
+    ListboxModule,
+    TooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

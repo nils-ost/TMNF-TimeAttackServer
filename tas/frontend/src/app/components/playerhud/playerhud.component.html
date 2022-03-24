@@ -7,7 +7,17 @@
 
 <div id="info-cards" *ngIf="playerMe">
     <div id="player-name" class="info-card">
-        <span style="color: red">Hallo {{ playerMe.name }}</span>
+        <div class="title">
+            Hello
+        </div>
+
+        <div class="name">
+            {{ playerMe.name }}
+        </div>
+
+        <div class="appendix">
+            Not you?&nbsp;<span class="pi pi-info-circle" pTooltip="Please contact: {{ settings?.display_admin ?? 'Admin' }}" tooltipPosition="bottom"></span>
+        </div>
     </div>
 
     <div id="best" class="info-card challenge-short" *ngIf="bestRank">
@@ -56,11 +66,11 @@
     </div>
 </div>
 
-<div id="ranking-card">
+<div id="ranking-card" *ngIf="playerMe">
     <div class="ranking-table">
-        <app-playerhud-current-list *ngIf="playerMe" [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
+        <app-playerhud-current-list [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-current-list>
     </div>
     <div class="ranking-table">
-        <app-playerhud-global-list *ngIf="playerMe" [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>
+        <app-playerhud-global-list [globalRankings]="globalRankings" [players]="players" [selectedPlayer]="playerMe"></app-playerhud-global-list>
     </div>
 </div>
