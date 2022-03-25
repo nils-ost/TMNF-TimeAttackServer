@@ -34,6 +34,26 @@ export class WallboardComponent implements OnInit, OnDestroy {
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
 
   speeddail_menu: MenuItem[] = [];
+  enable_menu_item: MenuItem = {
+    tooltipOptions: {
+      tooltipLabel: "Enable AutoRefresh",
+      tooltipPosition: "top"
+    },
+    icon: 'pi pi-refresh',
+    command: () => {
+      this.switchAutoRefreshSubject.next(true);
+    }
+  };
+  disable_menu_item: MenuItem = {
+    tooltipOptions: {
+      tooltipLabel: "Disable AutoRefresh",
+      tooltipPosition: "top"
+    },
+    icon: 'pi pi-trash',
+    command: () => {
+      this.switchAutoRefreshSubject.next(false);
+    }
+  };
 
   constructor(
     private playerService: PlayerService,
@@ -43,11 +63,6 @@ export class WallboardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.refreshSettings();
-    this.refreshPlayers();
-    this.refreshChallenges();
-    this.enableAutoRefresh();
-
     this.switchAutoRefreshSubscription = this.switchAutoRefreshSubject.subscribe(
       (switchOn) => {
         if (switchOn) this.enableAutoRefresh();
@@ -56,26 +71,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
     );
 
     this.speeddail_menu = [
-      {
-        tooltipOptions: {
-          tooltipLabel: "Enable AutoRefresh",
-          tooltipPosition: "top"
-        },
-        icon: 'pi pi-refresh',
-        command: () => {
-          this.switchAutoRefreshSubject.next(true);
-        }
-      },
-      {
-        tooltipOptions: {
-          tooltipLabel: "Disable AutoRefresh",
-          tooltipPosition: "top"
-        },
-        icon: 'pi pi-trash',
-        command: () => {
-          this.switchAutoRefreshSubject.next(false);
-        }
-      },
+      this.enable_menu_item,
       {
         tooltipOptions: {
           tooltipLabel: "Open Challenges Screen",
@@ -101,6 +97,11 @@ export class WallboardComponent implements OnInit, OnDestroy {
         routerLink: ['/']
       }
     ]
+
+    this.refreshSettings();
+    this.refreshPlayers();
+    this.refreshChallenges();
+    this.enableAutoRefresh();
   }
 
   ngOnDestroy(): void {
@@ -112,12 +113,20 @@ export class WallboardComponent implements OnInit, OnDestroy {
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
     this.refreshChallengesTimerSubscription = this.refreshChallengesTimer.subscribe(() => this.refreshChallenges());
     this.refreshSettingsTimerSubscription = this.refreshSettingsTimer.subscribe(() => this.refreshSettings());
+    this.speeddail_menu.reverse();
+    this.speeddail_menu.pop();
+    this.speeddail_menu.push(this.disable_menu_item);
+    this.speeddail_menu.reverse();
   }
 
   disableAutoRefresh() {
     this.refreshPlayersTimerSubscription?.unsubscribe();
     this.refreshChallengesTimerSubscription?.unsubscribe();
     this.refreshSettingsTimerSubscription?.unsubscribe();
+    this.speeddail_menu.reverse();
+    this.speeddail_menu.pop();
+    this.speeddail_menu.push(this.enable_menu_item);
+    this.speeddail_menu.reverse();
   }
 
   refreshPlayers() {
