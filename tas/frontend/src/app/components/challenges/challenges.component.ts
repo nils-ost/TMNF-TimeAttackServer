@@ -46,6 +46,30 @@ export class ChallengesComponent implements OnInit {
       },
       {
         tooltipOptions: {
+          tooltipLabel: "Open PlayerHUD",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-user',
+        routerLink: ['/playerhud']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Players Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-users',
+        routerLink: ['/players']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Wallboard",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-window-maximize',
+        routerLink: ['/wallboard']
+      },
+      {
+        tooltipOptions: {
           tooltipLabel: "Open Home Screen",
           tooltipPosition: "top"
         },

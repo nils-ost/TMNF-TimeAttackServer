@@ -128,3 +128,31 @@
             }
         }
 }
+
+:host ::ng-deep .p-speeddial-direction-left {
+    right: 1rem;
+    bottom: 1rem;
+
+    .p-speeddial-button {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .p-speeddial-action {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.35rem;
+        margin-right: 0.35rem;
+        text-decoration: none;
+    }
+
+    .p-speeddial-action-icon {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    #speeddail-menu {
+        display: none;
+    }
+}

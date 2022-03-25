@@ -74,6 +74,14 @@ export class WallboardComponent implements OnInit, OnDestroy {
       this.enable_menu_item,
       {
         tooltipOptions: {
+          tooltipLabel: "Open PlayerHUD",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-user',
+        routerLink: ['/playerhud']
+      },
+      {
+        tooltipOptions: {
           tooltipLabel: "Open Challenges Screen",
           tooltipPosition: "top"
         },

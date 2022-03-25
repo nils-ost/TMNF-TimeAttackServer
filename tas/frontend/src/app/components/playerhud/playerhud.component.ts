@@ -7,7 +7,8 @@ import { PlayerService } from '../../services/player.service';
 import { SettingsService } from '../../services/settings.service';
 import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, Subject } from 'rxjs';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-playerhud',
@@ -19,6 +20,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   refreshRankingsTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
   refreshRankingsTimerSubscription: Subscription | undefined;
+  switchAutoRefreshSubscription: Subscription | undefined;
   
   players: Player[] = [];
   filteredPlayers: Player[] = [];
@@ -39,6 +41,29 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   missingChallengesNames: string[] = [];
   bestRank: number | undefined;
   worstRank: number | undefined;
+  speeddail_menu: MenuItem[] = [];
+  switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
+
+  enable_menu_item: MenuItem = {
+    tooltipOptions: {
+      tooltipLabel: "Enable AutoRefresh",
+      tooltipPosition: "top"
+    },
+    icon: 'pi pi-refresh',
+    command: () => {
+      this.switchAutoRefreshSubject.next(true);
+    }
+  };
+  disable_menu_item: MenuItem = {
+    tooltipOptions: {
+      tooltipLabel: "Disable AutoRefresh",
+      tooltipPosition: "top"
+    },
+    icon: 'pi pi-trash',
+    command: () => {
+      this.switchAutoRefreshSubject.next(false);
+    }
+  };
 
   constructor(
     private playerService: PlayerService,
@@ -48,6 +73,49 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.switchAutoRefreshSubscription = this.switchAutoRefreshSubject.subscribe(
+      (switchOn) => {
+        if (switchOn) this.enableAutoRefresh();
+        else this.disableAutoRefresh();
+      }
+    );
+
+    this.speeddail_menu = [
+      this.enable_menu_item,
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Challenges Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-list',
+        routerLink: ['/challenges']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Players Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-users',
+        routerLink: ['/players']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Wallboard",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-window-maximize',
+        routerLink: ['/wallboard']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: "Open Home Screen",
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-home',
+        routerLink: ['/']
+      }
+    ]
+
     this.refreshSettings();
     this.refreshPlayerMe();
     this.refreshPlayers();
@@ -150,11 +218,19 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   enableAutoRefresh() {
     this.refreshRankingsTimerSubscription = this.refreshRankingsTimer.subscribe(() => this.refreshRankings());
     this.refreshPlayersTimerSubscription = this.refreshPlayersTimer.subscribe(() => this.refreshPlayers());
+    this.speeddail_menu.reverse();
+    this.speeddail_menu.pop();
+    this.speeddail_menu.push(this.disable_menu_item);
+    this.speeddail_menu.reverse();
   }
 
   disableAutoRefresh() {
     this.refreshPlayersTimerSubscription?.unsubscribe();
     this.refreshRankingsTimerSubscription?.unsubscribe();
+    this.speeddail_menu.reverse();
+    this.speeddail_menu.pop();
+    this.speeddail_menu.push(this.enable_menu_item);
+    this.speeddail_menu.reverse();
   }
 
   buildMeRanks() {
