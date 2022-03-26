@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Challenge } from '../../interfaces/challenge';
+import { environment } from '../../../environments/environment';
 
 interface SortableChallenge {
   id: string;
@@ -22,10 +23,12 @@ export class ChallengesListComponent implements OnInit, OnChanges {
   @Output() selectChallengeEvent = new EventEmitter<Challenge | null>();
   selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];
+  thumbnailUrlBase: string = "";
 
   constructor() { }
 
   ngOnInit(): void {
+    this.thumbnailUrlBase = environment.apiUrl + '/thumbnails/';
     this.buildSortableChallenges();
   }
 

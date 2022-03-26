@@ -10,7 +10,7 @@
     <ng-template pTemplate="body" let-challenge>
         <tr [pSelectableRow]="challenge">
             <td>{{ challenge.name }}<br />{{ challenge.id }}</td>
-            <td>{{ challenge.time_limit / 1000 }}s</td>
+            <td><img class="cimg" src="{{ thumbnailUrlBase }}{{ challenge.id }}.jpg" />{{ challenge.time_limit / 1000 }}s</td>
             <td>Count: {{ challenge.seen_count }}<br />Last: {{ (challenge.seen_last ? (challenge.seen_last * 1000 | date:'medium') : "---") }}</td>
             <td>In: {{ (challenge.up_in < 1 ? "<" : "~") }}{{ (challenge.up_in < 1 ? 1 : challenge.up_in) }}m<br />At: {{ challenge.up_at * 1000 | date:'medium' }}</td>
         </tr>

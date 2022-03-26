@@ -1,0 +1,13 @@
+:host ::ng-deep .cimg {
+    display: none;
+    width: 64px;
+    height: 64px;
+    z-index: 1001;
+    position: absolute;
+}
+
+:host ::ng-deep table tr:hover {
+    .cimg {
+        display: inline-block;
+    }
+}
