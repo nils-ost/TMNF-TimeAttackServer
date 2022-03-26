@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="tableHeaderPlayerRank" datatype="html">
         <source> rank </source>
@@ -86,32 +86,101 @@
         <note priority="1" from="description">Title of the global rankings table on wallboard screen</note>
         <note priority="1" from="meaning">global ranking table title</note>
       </trans-unit>
-      <trans-unit id="welcomeWallboardLinkText" datatype="html">
+      <trans-unit id="WallboardScreenLinkText" datatype="html">
         <source> Wallboard </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">19,21</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to wallboard on welcome screen</note>
-        <note priority="1" from="meaning">Wallboard Linkcard Text</note>
+        <note priority="1" from="description">Text of link to wallboard screen</note>
       </trans-unit>
-      <trans-unit id="welcomePlayersLinkText" datatype="html">
+      <trans-unit id="PlayersScreenLinkText" datatype="html">
         <source> Players </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">27,29</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to players hub on welcome screen</note>
-        <note priority="1" from="meaning">Players Linkcard Text</note>
+        <note priority="1" from="description">Text of link to players scrren</note>
       </trans-unit>
-      <trans-unit id="welcomeChallengesLinkText" datatype="html">
+      <trans-unit id="ChallengesScreenLinkText" datatype="html">
         <source> Challenges </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">35,37</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to challenges hub on welcome screen</note>
-        <note priority="1" from="meaning">Challenged Linkcard Text</note>
+        <note priority="1" from="description">Text of link to challenges screen</note>
+      </trans-unit>
+      <trans-unit id="PlayerHUDScreenLinkText" datatype="html">
+        <source> PlayerHUD </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to PlayerHUD screen</note>
+      </trans-unit>
+      <trans-unit id="LabelIngameServerName" datatype="html">
+        <source>Ingame Server Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Ingame Server Name</note>
+      </trans-unit>
+      <trans-unit id="LabelServerAdmin" datatype="html">
+        <source>Server Admin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Server Admin</note>
+      </trans-unit>
+      <trans-unit id="LabelLaptimesCount" datatype="html">
+        <source>Laptimes Count</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Laptimes Count</note>
+      </trans-unit>
+      <trans-unit id="LabelLaptimesSum" datatype="html">
+        <source>Laptimes Sum</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Laptimes Sum</note>
+      </trans-unit>
+      <trans-unit id="LabelChallengesTotalSeenCount" datatype="html">
+        <source>Challenges Total Seen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
+      </trans-unit>
+      <trans-unit id="LabelTotalPlayers" datatype="html">
+        <source>Total Players</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Total Players</note>
+      </trans-unit>
+      <trans-unit id="LabelActivePlayers" datatype="html">
+        <source>Active Players</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Active Players</note>
+      </trans-unit>
+      <trans-unit id="LabelClientDownloadURL" datatype="html">
+        <source>Download latest compatible Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>
     </body>
   </file>

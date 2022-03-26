@@ -1,0 +1,7 @@
+{
+  "locales": ["de"],
+  "editor": {
+    "messageLocations": ["src/locales/messages.xlf"],
+    "translationFileNamePattern": "${name}.${lang}"
+  }
+}

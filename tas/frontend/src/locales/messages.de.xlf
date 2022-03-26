@@ -1,128 +1,206 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+  <file source-language="en" target-language="de" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="tableHeaderPlayerRank" datatype="html">
-        <source> rank </source>
-        <target> Platzierung </target>
+        <source>rank</source>
+        <target state="signed-off">Platzierung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">4,6</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">4,6</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <note priority="1" from="description">Header for column challenge rank in ranking challenge table on wallboard screen</note>
         <note priority="1" from="meaning">table header player rank</note>
       </trans-unit>
       <trans-unit id="tableHeaderPlayerPoints" datatype="html">
-        <source> points </source>
-        <target> Punkte </target>
+        <source>points</source>
+        <target state="signed-off">Punkte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">7,9</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Header for column challenge points in ranking challenge table on wallboard screen</note>
         <note priority="1" from="meaning">table header player points</note>
       </trans-unit>
       <trans-unit id="tableHeaderPlayerName" datatype="html">
-        <source> player </source>
-        <target> Spieler </target>
+        <source>player</source>
+        <target state="signed-off">Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">7,9</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">Header for column playername in ranking challenge table on wallboard screen</note>
         <note priority="1" from="meaning">table header player name</note>
       </trans-unit>
       <trans-unit id="tableHeaderPlayerLaptime" datatype="html">
-        <source> time </source>
-        <target> Rundenzeit </target>
+        <source>time</source>
+        <target state="signed-off">Rundenzeit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Header for column laptime in ranking challenge table on wallboard screen</note>
         <note priority="1" from="meaning">table header player laptime</note>
       </trans-unit>
       <trans-unit id="tableHeaderPlayerLaptimeAt" datatype="html">
-        <source> at </source>
-        <target> gefahren um </target>
+        <source>at</source>
+        <target state="signed-off">gefahren um</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">16,18</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">Header for column at which player drove laptime in ranking challenge table on wallboard screen</note>
         <note priority="1" from="meaning">table header player drove laptime at</note>
       </trans-unit>
       <trans-unit id="wallboardCurrentChallengeTitle" datatype="html">
-        <source> Current Challenge </source>
-        <target> Aktuelle Strecke </target>
+        <source>Current Challenge</source>
+        <target state="signed-off">Aktuelle Strecke</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">6,8</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Title of the current challenge ranking table on wallboard screen</note>
         <note priority="1" from="meaning">current challenge ranking table title</note>
       </trans-unit>
       <trans-unit id="wallboardChallegenScheduleTitle" datatype="html">
-        <source> Challenge Schedule </source>
-        <target> Rennkalender </target>
+        <source>Challenge Schedule</source>
+        <target state="signed-off">Rennkalender</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">13,15</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Title of the challenge schedule ticker on wallboard screen</note>
         <note priority="1" from="meaning">challenge schedule ticker title</note>
       </trans-unit>
       <trans-unit id="wallboardGlobalRankingTitle" datatype="html">
-        <source> Global Ranking </source>
-        <target> Gesamtergebnis </target>
+        <source>Global Ranking</source>
+        <target state="signed-off">Gesamtergebnis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">20,22</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <note priority="1" from="description">Title of the global rankings table on wallboard screen</note>
         <note priority="1" from="meaning">global ranking table title</note>
       </trans-unit>
-      <trans-unit id="welcomeWallboardLinkText" datatype="html">
-        <source> Wallboard </source>
-        <target> Wallboard </target>
+      <trans-unit id="WallboardScreenLinkText" datatype="html">
+        <source>Wallboard</source>
+        <target state="signed-off">Wallboard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">19,21</context>
+          <context context-type="linenumber">19</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to wallboard on welcome screen</note>
-        <note priority="1" from="meaning">Wallboard Linkcard Text</note>
+        <note priority="1" from="description">Text of link to wallboard screen</note>
       </trans-unit>
-      <trans-unit id="welcomePlayersLinkText" datatype="html">
-        <source> Players </source>
-        <target> Spieler </target>
+      <trans-unit id="PlayersScreenLinkText" datatype="html">
+        <source>Players</source>
+        <target state="signed-off">Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">27,29</context>
+          <context context-type="linenumber">27</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to players hub on welcome screen</note>
-        <note priority="1" from="meaning">Players Linkcard Text</note>
+        <note priority="1" from="description">Text of link to players scrren</note>
       </trans-unit>
-      <trans-unit id="welcomeChallengesLinkText" datatype="html">
-        <source> Challenges </source>
-        <target> Strecken </target>
+      <trans-unit id="ChallengesScreenLinkText" datatype="html">
+        <source>Challenges</source>
+        <target state="signed-off">Strecken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">35</context>
         </context-group>
-        <note priority="1" from="description">Text of linkcard to challenges hub on welcome screen</note>
-        <note priority="1" from="meaning">Challenged Linkcard Text</note>
+        <note priority="1" from="description">Text of link to challenges screen</note>
+      </trans-unit>
+      <trans-unit id="PlayerHUDScreenLinkText" datatype="html">
+        <source>PlayerHUD</source>
+        <target state="signed-off">Cockpit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to PlayerHUD screen</note>
+      </trans-unit>
+      <trans-unit id="LabelServerAdmin" datatype="html">
+        <source>Server Admin</source>
+        <target state="signed-off">Server Admin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Server Admin</note>
+      </trans-unit>
+      <trans-unit id="LabelLaptimesCount" datatype="html">
+        <source>Laptimes Count</source>
+        <target state="signed-off">Anzahl Rundenzeiten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Laptimes Count</note>
+      </trans-unit>
+      <trans-unit id="LabelLaptimesSum" datatype="html">
+        <source>Laptimes Sum</source>
+        <target state="signed-off">Summe Rundenzeiten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Laptimes Sum</note>
+      </trans-unit>
+      <trans-unit id="LabelActivePlayers" datatype="html">
+        <source>Active Players</source>
+        <target state="signed-off">Aktive Spieler</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Active Players</note>
+      </trans-unit>
+      <trans-unit id="LabelTotalPlayers" datatype="html">
+        <source>Total Players</source>
+        <target state="signed-off">Anzahl Spieler</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Total Players</note>
+      </trans-unit>
+      <trans-unit id="LabelIngameServerName" datatype="html">
+        <source>Ingame Server Name</source>
+        <target state="signed-off">Servername im Spiel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Ingame Server Name</note>
+      </trans-unit>
+      <trans-unit id="LabelChallengesTotalSeenCount" datatype="html">
+        <source>Challenges Total Seen</source>
+        <target state="signed-off">Strecken insgesamt gesehen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
+      </trans-unit>
+      <trans-unit id="LabelClientDownloadURL" datatype="html">
+        <source>Download latest compatible Client</source>
+        <target state="signed-off">Neuste kompatible Spieleversion herunterladen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>
     </body>
   </file>

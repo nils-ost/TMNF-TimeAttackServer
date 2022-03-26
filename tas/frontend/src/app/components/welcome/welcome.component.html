@@ -16,7 +16,7 @@
                 <div class="icon">
                     <i class="pi pi-window-maximize"></i>
                 </div>
-                <div i18n="Wallboard Linkcard Text|Text of linkcard to wallboard on welcome screen@@welcomeWallboardLinkText">
+                <div i18n="Text of link to wallboard screen@@WallboardScreenLinkText">
                     Wallboard
                 </div>
             </a>
@@ -24,7 +24,7 @@
                 <div class="icon">
                     <i class="pi pi-users"></i>
                 </div>
-                <div i18n="Players Linkcard Text|Text of linkcard to players hub on welcome screen@@welcomePlayersLinkText">
+                <div i18n="Text of link to players scrren@@PlayersScreenLinkText">
                     Players
                 </div>
             </a>
@@ -32,7 +32,7 @@
                 <div class="icon">
                     <i class="pi pi-list"></i>
                 </div>
-                <div i18n="Challenged Linkcard Text|Text of linkcard to challenges hub on welcome screen@@welcomeChallengesLinkText">
+                <div i18n="Text of link to challenges screen@@ChallengesScreenLinkText">
                     Challenges
                 </div>
             </a>
@@ -48,7 +48,7 @@
                 <div class="icon">
                     <i class="pi pi-user"></i>
                 </div>
-                <div>
+                <div i18n="Text of link to PlayerHUD screen@@PlayerHUDScreenLinkText">
                     PlayerHUD
                 </div>
             </a>
@@ -78,27 +78,27 @@
         <div class="info-container">
             <div class="info-row">
                 <div class="settings">
-                    <p>Ingame Server Name: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
-                    <p>Server Admin: <span class="highlight">{{ settings?.display_admin }}</span></p>
+                    <p><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+                    <p><ng-container i18n="Label prefixing Server Admin@@LabelServerAdmin">Server Admin</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
                 </div>
             </div>
 
             <div class="info-row">
                 <div class="stats">
-                    <p>Laptimes Count: {{ stats?.laptimes_count }}</p>
-                    <p>Laptimes Sum: {{ laptimes_sum_h }}h {{ laptimes_sum_m }}m {{ laptimes_sum_s }}s</p>
-                    <p>Challenges Total Seen: {{ stats?.challenges_total_seen_count }}</p>
+                    <p><ng-container i18n="Label prefixing Laptimes Count@@LabelLaptimesCount">Laptimes Count</ng-container>: {{ stats?.laptimes_count }}</p>
+                    <p><ng-container i18n="Label prefixing Laptimes Sum@@LabelLaptimesSum">Laptimes Sum</ng-container>: {{ laptimes_sum_h }}h {{ laptimes_sum_m }}m {{ laptimes_sum_s }}s</p>
+                    <p><ng-container i18n="Label prefixing Challenges Total Seen Count@@LabelChallengesTotalSeenCount">Challenges Total Seen</ng-container>: {{ stats?.challenges_total_seen_count }}</p>
                 </div>
 
                 <div class="stats">
-                    <p>Total Players: {{ stats?.total_players }}</p>
-                    <p>Active Players: {{ stats?.active_players }}</p>
+                    <p><ng-container i18n="Label prefixing Total Players@@LabelTotalPlayers">Total Players</ng-container>: {{ stats?.total_players }}</p>
+                    <p><ng-container i18n="Label prefixing Active Players@@LabelActivePlayers">Active Players</ng-container>: {{ stats?.active_players }}</p>
                 </div>
             </div>
 
             <div class="info-row">
                 <div class="settings">
-                    <p>Download latest compatible Client: <span class="highlight">--TBD--</span></p>
+                    <p><ng-container i18n="Label prefixing TMNF Client Download URL@@LabelClientDownloadURL">Download latest compatible Client</ng-container>: <span class="highlight">--TBD--</span></p>
                 </div>
             </div>
         </div>
