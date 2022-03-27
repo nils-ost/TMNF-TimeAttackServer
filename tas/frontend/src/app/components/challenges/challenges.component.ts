@@ -36,7 +36,7 @@ export class ChallengesComponent implements OnInit {
     this.speeddail_menu = [
       {
         tooltipOptions: {
-          tooltipLabel: "Refresh Screen",
+          tooltipLabel: $localize `:Text for link to refresh screen@@LinkTextRefreshScreen:Refresh Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-refresh',
@@ -46,7 +46,7 @@ export class ChallengesComponent implements OnInit {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open PlayerHUD",
+          tooltipLabel: $localize `:Text for link to open PlayerHUD@@LinkTextOpenPlayerHUD:Open PlayerHUD`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-user',
@@ -54,7 +54,7 @@ export class ChallengesComponent implements OnInit {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Players Screen",
+          tooltipLabel: $localize `:Text for link to open Players Screen@@LinkTextOpenPlayersScreen:Open Players Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-users',
@@ -62,7 +62,7 @@ export class ChallengesComponent implements OnInit {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Wallboard",
+          tooltipLabel: $localize `:Text for link to open Wallboard Screen@@LinkTextOpenWallboardScreen:Open Wallboard`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-window-maximize',
@@ -70,7 +70,7 @@ export class ChallengesComponent implements OnInit {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Home Screen",
+          tooltipLabel: $localize `:Text for link to open Home Screen@@LinkTextOpenHomeScreen:Open Home Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-home',

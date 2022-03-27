@@ -13,7 +13,7 @@
             <td>{{ ranking.rank }}</td>
             <td>{{ ranking.points }}</td>
             <td>{{ playerName(ranking.player_id) }}</td>
-            <td>{{ (!ranking.time ? "---" : (ranking.time / 1000).toFixed(3).toString() + "s") }}</td>
+            <td>{{ (!ranking.time ? "---" : (ranking.time / 1000 | number: '1.2-2') + "s") }}</td>
             <td>{{ ranking.at * 1000 | date:'medium' }}</td>
         </tr>
     </ng-template>

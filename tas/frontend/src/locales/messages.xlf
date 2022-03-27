@@ -10,13 +10,13 @@
         </context-group>
         <note priority="1" from="description">Header for Seen Count in Tables</note>
       </trans-unit>
-      <trans-unit id="tableHeaderTimeLimit" datatype="html">
+      <trans-unit id="labelTimeLimit" datatype="html">
         <source>Time Limit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <note priority="1" from="description">Header for Time Limit in Tables</note>
+        <note priority="1" from="description">Label for time limit in challenge-ticker</note>
       </trans-unit>
       <trans-unit id="tableHeaderUpIn" datatype="html">
         <source>Up in</source>
@@ -50,8 +50,84 @@
         </context-group>
         <note priority="1" from="description">Label for loading challenge in challenge-ticker</note>
       </trans-unit>
+      <trans-unit id="tableHeaderChallengeName" datatype="html">
+        <source>challenge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Header for column challenge name in tables</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderTimeLimit" datatype="html">
+        <source>time limit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Header for column time limit in tables</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderSeen" datatype="html">
+        <source>seen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Header for column seen in tables</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderUp" datatype="html">
+        <source>up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Header for column up in tables</note>
+      </trans-unit>
+      <trans-unit id="labelCount" datatype="html">
+        <source>Count</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Label for seen count in challenges screen</note>
+      </trans-unit>
+      <trans-unit id="labelLast" datatype="html">
+        <source>Last</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Label for seen last in challenges screen</note>
+      </trans-unit>
+      <trans-unit id="labelIn" datatype="html">
+        <source>In</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Label for up in in challenges screen</note>
+      </trans-unit>
+      <trans-unit id="labelAt" datatype="html">
+        <source>At</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Label for at in challenges screen</note>
+      </trans-unit>
       <trans-unit id="tableHeaderRank" datatype="html">
         <source>rank</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
           <context context-type="linenumber">27</context>
@@ -66,16 +142,36 @@
         </context-group>
         <note priority="1" from="description">Header for column rank in tables</note>
       </trans-unit>
-      <trans-unit id="tableHeaderPlayerID" datatype="html">
-        <source>id</source>
+      <trans-unit id="tableHeaderPoints" datatype="html">
+        <source>points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">31</context>
         </context-group>
-        <note priority="1" from="description">Header for column player id in tables</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Header for column points in tables</note>
       </trans-unit>
       <trans-unit id="tableHeaderPlayerName" datatype="html">
         <source>player</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
           <context context-type="linenumber">29</context>
@@ -90,6 +186,138 @@
         </context-group>
         <note priority="1" from="description">Header for column player name in tables</note>
       </trans-unit>
+      <trans-unit id="tableHeaderTime" datatype="html">
+        <source>time</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-laptime-list/players-laptime-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Header for column time in tables</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderAt" datatype="html">
+        <source>at</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-laptime-list/players-laptime-list.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Header for column at in tables</note>
+      </trans-unit>
+      <trans-unit id="challengesChallengesTitle" datatype="html">
+        <source> Challenges </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+        <note priority="1" from="description">Title of challenges table on challenges screen</note>
+      </trans-unit>
+      <trans-unit id="challengesPlayersTitle" datatype="html">
+        <source> Players Stats </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.html</context>
+          <context context-type="linenumber">11,13</context>
+        </context-group>
+        <note priority="1" from="description">Title of players table on challenges screen</note>
+      </trans-unit>
+      <trans-unit id="LinkTextRefreshScreen" datatype="html">
+        <source>Refresh Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to refresh screen</note>
+      </trans-unit>
+      <trans-unit id="LinkTextOpenPlayerHUD" datatype="html">
+        <source>Open PlayerHUD</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to open PlayerHUD</note>
+      </trans-unit>
+      <trans-unit id="LinkTextOpenPlayersScreen" datatype="html">
+        <source>Open Players Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to open Players Screen</note>
+      </trans-unit>
+      <trans-unit id="LinkTextOpenWallboardScreen" datatype="html">
+        <source>Open Wallboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to open Wallboard Screen</note>
+      </trans-unit>
+      <trans-unit id="LinkTextOpenHomeScreen" datatype="html">
+        <source>Open Home Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to open Home Screen</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderPlayerID" datatype="html">
+        <source>id</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <note priority="1" from="description">Header for column player id in tables</note>
+      </trans-unit>
       <trans-unit id="tableHeaderLastUpdate" datatype="html">
         <source>last update</source>
         <context-group purpose="location">
@@ -97,22 +325,6 @@
           <context context-type="linenumber">30</context>
         </context-group>
         <note priority="1" from="description">Header for column last update in tables</note>
-      </trans-unit>
-      <trans-unit id="tableHeaderPoints" datatype="html">
-        <source>points</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <note priority="1" from="description">Header for column points in tables</note>
       </trans-unit>
       <trans-unit id="playersPlayersTitle" datatype="html">
         <source> Players </source>
@@ -130,14 +342,6 @@
         </context-group>
         <note priority="1" from="description">Title of challenges table on players screen</note>
       </trans-unit>
-      <trans-unit id="LinkTextRefreshScreen" datatype="html">
-        <source>Refresh Screen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-        <note priority="1" from="description">Text for link to refresh screen</note>
-      </trans-unit>
       <trans-unit id="LinkTextExportCSV" datatype="html">
         <source>Export CSV</source>
         <context-group purpose="location">
@@ -145,18 +349,6 @@
           <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Text for link to export csv</note>
-      </trans-unit>
-      <trans-unit id="LinkTextOpenPlayerHUD" datatype="html">
-        <source>Open PlayerHUD</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-        <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
       <trans-unit id="LinkTextOpenChallengesScreen" datatype="html">
         <source>Open Challenges Screen</source>
@@ -169,42 +361,6 @@
           <context context-type="linenumber">85</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
-      </trans-unit>
-      <trans-unit id="LinkTextOpenWallboardScreen" datatype="html">
-        <source>Open Wallboard</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-        <note priority="1" from="description">Text for link to open Wallboard Screen</note>
-      </trans-unit>
-      <trans-unit id="LinkTextOpenHomeScreen" datatype="html">
-        <source>Open Home Screen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <note priority="1" from="description">Text for link to open Home Screen</note>
-      </trans-unit>
-      <trans-unit id="tableHeaderTime" datatype="html">
-        <source>time</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <note priority="1" from="description">Header for column time in tables</note>
-      </trans-unit>
-      <trans-unit id="tableHeaderAt" datatype="html">
-        <source>at</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <note priority="1" from="description">Header for column at in tables</note>
       </trans-unit>
       <trans-unit id="wallboardCurrentChallengeTitle" datatype="html">
         <source> Current Challenge </source>
@@ -256,14 +412,6 @@
           <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
-      </trans-unit>
-      <trans-unit id="LinkTextOpenPlayersScreen" datatype="html">
-        <source>Open Players Screen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
       <trans-unit id="WallboardScreenLinkText" datatype="html">
         <source> Wallboard </source>

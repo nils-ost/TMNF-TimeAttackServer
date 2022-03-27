@@ -1,11 +1,11 @@
 <p-table [value]="sortableChallengeRankings" sortField="rank" [scrollable]="true" scrollHeight="calc(44vh - 0.5rem)" selectionMode="single" [(selection)]="selectedChallengeRanking" (onRowSelect)="selectChallengeRanking($event)" (onRowUnselect)="selectChallengeRanking(null)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="rank">rank <p-sortIcon field="rank"></p-sortIcon></th>
-            <th pSortableColumn="points">points <p-sortIcon field="points"></p-sortIcon></th>
-            <th pSortableColumn="player_name">player <p-sortIcon field="player_name"></p-sortIcon></th>
-            <th pSortableColumn="time">time <p-sortIcon field="time"></p-sortIcon></th>
-            <th pSortableColumn="at">at <p-sortIcon field="at"></p-sortIcon></th>
+            <th pSortableColumn="rank"><ng-container i18n="Header for column rank in tables@@tableHeaderRank">rank</ng-container> <p-sortIcon field="rank"></p-sortIcon></th>
+            <th pSortableColumn="points"><ng-container i18n="Header for column points in tables@@tableHeaderPoints">points</ng-container> <p-sortIcon field="points"></p-sortIcon></th>
+            <th pSortableColumn="player_name"><ng-container i18n="Header for column player name in tables@@tableHeaderPlayerName">player</ng-container> <p-sortIcon field="player_name"></p-sortIcon></th>
+            <th pSortableColumn="time"><ng-container i18n="Header for column time in tables@@tableHeaderTime">time</ng-container> <p-sortIcon field="time"></p-sortIcon></th>
+            <th pSortableColumn="at"><ng-container i18n="Header for column at in tables@@tableHeaderAt">at</ng-container> <p-sortIcon field="at"></p-sortIcon></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-cr>
@@ -13,7 +13,7 @@
             <td>{{ cr.rank }}</td>
             <td>{{ cr.points }}</td>
             <td>{{ cr.player_name }}</td>
-            <td *ngIf="cr.time > 0">{{ cr.time / 1000 | number: '1.3-3' }}s</td>
+            <td *ngIf="cr.time > 0">{{ cr.time / 1000 | number: '1.2-2' }}s</td>
             <td *ngIf="cr.time <= 0">---</td>
             <td>{{ cr.at * 1000 | date:'medium' }}</td>
         </tr>
