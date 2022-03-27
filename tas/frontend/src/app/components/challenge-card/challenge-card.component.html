@@ -5,19 +5,19 @@
             <p-image src="{{ thumbnailUrl }}" styleClass="challengeThumbnail" [preview]="true" (onShow)="onDisableRefresh.emit()" (onHide)="onEnableRefresh.emit()"></p-image>
         </div>
         <div class="stats">
-            <p>Seen Count: {{ challenge.seen_count }}</p>
-            <p>Time Limit: {{ challenge.time_limit }}</p>
+            <p><ng-container i18n="Header for Seen Count in Tables@@tableHeaderSeenCount">Seen Count</ng-container>: {{ challenge.seen_count }}</p>
+            <p><ng-container i18n="Header for Time Limit in Tables@@tableHeaderTimeLimit">Time Limit</ng-container>: {{ challenge.time_limit }}</p>
             <p *ngIf="!challenge.is_current && !challenge.is_next && !challenge.is_loading">
-                Up in: {{ challenge.up_in }}
+                <ng-container i18n="Header for Up In in Tables@@tableHeaderUpIn">Up in</ng-container>: {{ challenge.up_in }}
             </p>
             <p *ngIf="challenge.is_current">
-                Current
+                <ng-container i18n="Label for current challenge in challenge-ticker@@labelCurrent">Current</ng-container>
             </p>
             <p *ngIf="challenge.is_next && !challenge.is_loading">
-                Next in: {{ challenge.up_in }}
+                <ng-container i18n="Label for next challenge in challenge-ticker@@labelNextIn">Next in</ng-container>: {{ challenge.up_in }}
             </p>
             <p *ngIf="challenge.is_loading">
-                Loading
+                <ng-container i18n="Label for loading challenge in challenge-ticker@@labelLoading">Loading</ng-container>
             </p>
         </div>
     </div>

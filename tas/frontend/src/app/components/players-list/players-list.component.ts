@@ -24,11 +24,11 @@ export class PlayersListComponent implements OnInit, OnChanges {
   selectedPlayer?: Player;
   sortablePlayers: SortablePlayer[] = [];
   cols: any[] = [
-    { field: 'rank', header: 'rank' },
-    { field: 'id', header: 'id' },
-    { field: 'name', header: 'name' },
-    { field: 'last_update', header: 'last_update' },
-    { field: 'points', header: 'points' }
+    { field: 'rank', header: $localize `:Header for column rank in tables@@tableHeaderRank:rank` },
+    { field: 'id', header: $localize `:Header for column player id in tables@@tableHeaderPlayerID:id` },
+    { field: 'name', header: $localize `:Header for column player name in tables@@tableHeaderPlayerName:player` },
+    { field: 'last_update', header: $localize `:Header for column last update in tables@@tableHeaderLastUpdate:last update` },
+    { field: 'points', header: $localize `:Header for column points in tables@@tableHeaderPoints:points` }
   ];
 
   constructor() { }
