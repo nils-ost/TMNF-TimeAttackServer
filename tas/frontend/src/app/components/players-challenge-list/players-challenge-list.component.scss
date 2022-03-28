@@ -1,0 +1,16 @@
+:host ::ng-deep .cimg {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+}
+
+:host ::ng-deep .cimg:hover {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        z-index: 1001;
+}
+
+:host ::ng-deep table td {
+    min-height: calc(33px + 2rem);
+}

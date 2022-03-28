@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { PlayerRanking } from '../../interfaces/ranking';
 import { Challenge } from '../../interfaces/challenge';
+import { environment } from '../../../environments/environment';
 
 interface SortablePlayerRanking {
     challenge_id: string;
@@ -22,10 +23,12 @@ export class PlayersChallengeListComponent implements OnInit, OnChanges {
   @Output() selectPlayerRankingEvent = new EventEmitter<PlayerRanking | null>();
   selectedPlayerRanking?: PlayerRanking;
   sortablePlayerRankings: SortablePlayerRanking[] = [];
+  thumbnailUrlBase: string = "";
 
   constructor() { }
 
   ngOnInit(): void {
+    this.thumbnailUrlBase = environment.apiUrl + '/thumbnails/';
     this.buildSortablePlayerRankings();
   }
 
