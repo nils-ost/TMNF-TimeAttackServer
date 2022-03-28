@@ -2,17 +2,22 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     border-radius: 0.5rem;
     background-color: var(--surface-card);
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    margin-top: 1rem;
+    height: calc(12vh - 3rem);
 
     .title {
         font-family: var(--font-family);
         color: var(--primary-color);
         font-size: 1.5rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding: 0;
+        margin: 0;
+        margin-top: -4px;
+        line-height: 1;
 
         i {
             font-size: 1.2rem;
@@ -86,16 +91,20 @@
     padding: 0;
     border-radius: 0.5rem;
     background-color: var(--surface-card);
-    
-        tr, tr th {
-            background-color: rgba(255, 255, 255, 0);
-        }
 
-        tr:last-child {
-            td {
-                border-bottom: 0;
-            }
+    .p-datatable-table {
+        border-collapse: inherit;
+    }
+    
+    tr, tr th, .p-datatable-header {
+        background-color: rgba(255, 255, 255, 0);
+    }
+
+    tr:last-child {
+        td {
+            border-bottom: 0;
         }
+    }
 }
 
 :host ::ng-deep .p-speeddial-direction-left {
