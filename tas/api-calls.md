@@ -82,9 +82,7 @@ PATCH-Data:
   * time
   * points
 
-`/rankings?rebuild=<true|false>` gives global ranking
-if rebuild is true the cache for the current challenge is recaluculated before global ranking is build
-if rebuild is false or omitted the global ranking is build entirely from cached data
+`/rankings` gives global ranking for all players
 
   * player_id
   * rank

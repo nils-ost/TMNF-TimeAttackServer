@@ -3,8 +3,10 @@ import cherrypy_cors
 from cherrypy.lib.static import serve_file
 import time
 import os
+from multiprocessing import Process
 from urllib.parse import unquote
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, ranking_global, ranking_for, ranking_player, laptime_filter
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, laptime_filter
+from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_tmnfd_name, get_display_self_url, get_display_admin
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
@@ -147,16 +149,13 @@ class Players():
 class Rankings():
     @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def index(self, challenge_id=None, rebuild='false'):
+    def index(self, challenge_id=None):
         if challenge_id is None:
-            if rebuild == 'true':
-                return ranking_global(challenge_id_get(current=True))
-            else:
-                return ranking_global()
+            return ranking_global()
         elif challenge_get(challenge_id) is None:
             return {'m': 'invalid challenge_id'}
         else:
-            return ranking_for(challenge_id, challenge_id_get(current=True))
+            return ranking_challenge(challenge_id)
 
 
 def error_page_404(status, message, traceback, version):
@@ -167,6 +166,14 @@ def error_page_404(status, message, traceback, version):
             cherrypy.response.status = 200
             return serve_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html'))
     return "Page not found"
+
+
+def periodic_ranking_rebuild_function():
+    while True:
+        time.sleep(5)
+        current_challenge = challenge_id_get(current=True)
+        if current_challenge is not None:
+            ranking_rebuild(current_challenge)
 
 
 if __name__ == '__main__':
@@ -197,4 +204,6 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True, 'error_page.404': error_page_404})
 
     start_tmnfd_connection()
+    periodic_ranking_rebuild_process = Process(target=periodic_ranking_rebuild_function, daemon=True)
+    periodic_ranking_rebuild_process.start()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)

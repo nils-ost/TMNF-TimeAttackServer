@@ -5,7 +5,7 @@ from multiprocessing import Process, Queue
 from multiprocessing.managers import BaseManager
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_rebuild, set_tmnfd_name
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_clear, ranking_rebuild, set_tmnfd_name
 import time
 import sys
 
@@ -41,6 +41,7 @@ def prepareChallenges(sender):
             starting_index += infos_returned
         else:
             break
+    ranking_clear()
     ranking_rebuild()
 
 
@@ -76,8 +77,10 @@ def worker_function(msg_queue, sender):
             prepareNextChallenge(sender)
 
         elif func == 'TrackMania.EndRace':
-            ranking_rebuild(challenge_id_get(current=True))  # triggers a last cache-rebuild
+            old_challenge = challenge_id_get(current=True)
             challenge_id_set(None, current=True)
+            if old_challenge is not None:
+                ranking_rebuild(old_challenge)
             print(f"Challenge end: {params[1]['Name']}")
 
         elif func == 'TrackMania.PlayerInfoChanged':

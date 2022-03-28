@@ -178,8 +178,36 @@ def ranking_player(player_id):
     return result
 
 
-def ranking_for(challenge_id, current_challenge_id=None):
-    if challenge_id == current_challenge_id:
+def ranking_challenge(challenge_id):
+    result = list()
+    for rc in mongoDB().rankings.find({'challenge_id': challenge_id}).sort('rank', ASCENDING):
+        rc.pop('_id')
+        rc.pop('challenge_id')
+        result.append(rc)
+    return result
+
+
+def ranking_global():
+    result = list()
+    rank = 0
+    step = 1
+    points = None
+    for player in mongoDB().rankings.aggregate([{"$group": {'_id': '$player_id', 'points': {'$sum': '$points'}}}, {'$sort': {'points': DESCENDING}}]):
+        if player['points'] == points:
+            step += 1
+        else:
+            rank += step
+            step = 1
+            points = player['points']
+        result.append({'player_id': player['_id'], 'rank': rank, 'points': points})
+    return result
+
+
+def ranking_rebuild(challenge_id=None):
+    """
+    Rebuilds ranking cache for all challenges (or a single challenge)
+    """
+    if challenge_id is not None:
         players = dict()
         players_none = list()
         for lt in mongoDB().bestlaptimes.find({'challenge_id': challenge_id, 'time': None}):
@@ -201,53 +229,23 @@ def ranking_for(challenge_id, current_challenge_id=None):
         for p in players_none:
             players[p]['rank'] = len(players)
             players[p]['points'] = 0
-        result = list()
         for p in players:
             if p not in players_none:
                 players[p]['points'] = len(players) - (players[p]['rank'] - 1)
             rc = players[p]
             rc['player_id'] = p
-            result.append(dict(rc))
             rc['challenge_id'] = challenge_id
             mongoDB().rankings.replace_one({'challenge_id': challenge_id, 'player_id': p}, rc, True)
-        return result
     else:
-        result = list()
-        for rc in mongoDB().rankings.find({'challenge_id': challenge_id}).sort('rank', ASCENDING):
-            rc.pop('_id')
-            rc.pop('challenge_id')
-            result.append(rc)
-        return result
-
-
-def ranking_global(current_challenge_id=None):
-    if current_challenge_id is not None:
-        ranking_for(current_challenge_id, current_challenge_id)  # forces ranking for current challenge to be rebuild
-    result = list()
-    rank = 0
-    step = 1
-    points = None
-    for player in mongoDB().rankings.aggregate([{"$group": {'_id': '$player_id', 'points': {'$sum': '$points'}}}, {'$sort': {'points': DESCENDING}}]):
-        if player['points'] == points:
-            step += 1
-        else:
-            rank += step
-            step = 1
-            points = player['points']
-        result.append({'player_id': player['_id'], 'rank': rank, 'points': points})
-    return result
-
-
-def ranking_rebuild(challenge_id=None):
-    """
-    Clears out ranking cache and rebuilds it for all challenges (or a singel challenge)
-    """
-    if challenge_id is not None:
-        ranking_for(challenge_id, challenge_id)
-    else:
-        mongoDB().rankings.drop()
         for challenge in challenge_all():
-            ranking_for(challenge['_id'], challenge['_id'])
+            ranking_rebuild(challenge['_id'])
+
+
+def ranking_clear():
+    """
+    Clears whole ranking cache
+    """
+    mongoDB().rankings.drop()
 
 
 """
