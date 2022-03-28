@@ -5,13 +5,13 @@
 }
 
 :host ::ng-deep .positive-time {
-    color: var(--info);
+    color: #66d9e8;
     opacity: 90%;
     font-size: 0.8em;
 }
 
 :host ::ng-deep .negative-time {
-    color: var(--danger);
+    color: #f03e3e;
     opacity: 90%;
     font-size: 0.8em;
 }

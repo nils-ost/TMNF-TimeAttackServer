@@ -6,7 +6,7 @@
         </div>
         <div class="stats">
             <p><ng-container i18n="Header for Seen Count in Tables@@tableHeaderSeenCount">Seen Count</ng-container>: {{ challenge.seen_count }}</p>
-            <p><ng-container i18n="Label for time limit in challenge-ticker@@labelTimeLimit">Time Limit</ng-container>: {{ challenge.time_limit }}</p>
+            <p><ng-container i18n="Label for time limit in challenge-ticker@@labelTimeLimit">Time Limit</ng-container>: {{ challenge.time_limit | number: '1.0-0' }}s</p>
             <p *ngIf="!challenge.is_current && !challenge.is_next && !challenge.is_loading">
                 <ng-container i18n="Header for Up In in Tables@@tableHeaderUpIn">Up in</ng-container>: {{ challenge.up_in }}
             </p>

@@ -24,16 +24,19 @@ export class ChallengesListComponent implements OnInit, OnChanges {
   selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];
   thumbnailUrlBase: string = "";
+  unpredictedUpIn: boolean = true;
 
   constructor() { }
 
   ngOnInit(): void {
     this.thumbnailUrlBase = environment.apiUrl + '/thumbnails/';
     this.buildSortableChallenges();
+    this.calculateUnpredictedUpIn();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.buildSortableChallenges();
+    this.calculateUnpredictedUpIn();
   }
 
   selectChallenge(challenge: Challenge | null) {
@@ -85,6 +88,12 @@ export class ChallengesListComponent implements OnInit, OnChanges {
       }
       this.sortableChallenges = scs;
     }
+  }
+
+  calculateUnpredictedUpIn() {
+    let c = this.challenges.find(c => c.seen_count === 0);
+    if (c) this.unpredictedUpIn = true;
+    else this.unpredictedUpIn = false;
   }
 
 }

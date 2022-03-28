@@ -100,10 +100,17 @@
     }
 }
 
-:host ::ng-deep .self-url-msg {
-    display: flex;
+:host ::ng-deep .msg-container {
     position: absolute;
-    opacity: 80%;
-    left: 1rem;
-    bottom: 0rem;
+    left: 0.5rem;
+    bottom: 0.5rem;
+
+    .msg-box {
+        display: flex;
+        opacity: 80%;
+
+        .p-message {
+            margin: 0.5rem 0 0 0;
+        }
+    }
 }

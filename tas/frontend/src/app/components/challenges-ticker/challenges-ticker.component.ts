@@ -16,7 +16,7 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
   @Output() onDisableRefresh = new EventEmitter();
   challengeDisplay: ChallengeDisplay[] = [];
 
-  refreshChallengeDisplayTimer = timer(1000, 1000);
+  refreshChallengeDisplayTimer = timer(1000, 10000);
   refreshChallengeDisplayTimerSubscription: Subscription | undefined;
   switchAutoRefreshSubscription: Subscription | undefined;
 
@@ -68,8 +68,8 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
         current_index = i;
         up_in = (c.time_limit / 1000) - (Math.floor(Date.now()/1000) - c.seen_last);
       } else if (current_index != -1) {
-        if (up_in > 300) cd.up_in = "~" + Math.floor(up_in / 60).toString() + "m";
-        else cd.up_in = "~" + Math.floor(up_in).toString() + "s";
+        if (up_in > 60) cd.up_in = "~" + Math.floor(up_in / 60).toString() + "m";
+        else cd.up_in = "<1m";
         if (up_in < 0) cd.is_loading = true;
         up_in += c.time_limit / 1000;
       }
@@ -89,8 +89,8 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
           is_loading: false,
           up_in: ""
         } as ChallengeDisplay;
-        if (up_in > 300) cd.up_in = "~" + Math.floor(up_in / 60).toString() + "m";
-        else cd.up_in = "~" + Math.floor(up_in).toString() + "s";
+        if (up_in > 60) cd.up_in = "~" + Math.floor(up_in / 60).toString() + "m";
+        else cd.up_in = "<1m";
         if (up_in < 0) cd.is_loading = true;
         up_in += cd.time_limit;
         if (tmp.length < max_elements) tmp.push(cd);

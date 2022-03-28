@@ -32,6 +32,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
   c_current!: Challenge;
   c_next!: Challenge;
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
+  unpredictedUpIn: boolean = true;
 
   speeddail_menu: MenuItem[] = [];
   enable_menu_item: MenuItem = {
@@ -194,6 +195,9 @@ export class WallboardComponent implements OnInit, OnDestroy {
             .subscribe(
               (challenges: Challenge[]) => {
                 this.challenges = challenges;
+                let c = this.challenges.find(c => c.seen_count === 0);
+                if (c) this.unpredictedUpIn = true;
+                else this.unpredictedUpIn = false;
               }
             );
           this.refreshRankings();
