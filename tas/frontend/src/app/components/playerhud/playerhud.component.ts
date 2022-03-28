@@ -238,22 +238,21 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       let meCR = this.challengeRankings.find(cr => cr.player_id === this.playerMe!.id);
       if (meCR) {
         this.meChallengeRank = meCR.rank;
-        if (meCR.rank > 1) {
-          let pCR = this.challengeRankings.find(cr => cr.rank === meCR!.rank - 1);
-          if (pCR) this.meChallengeDiff = pCR.time - meCR.time;
-          else this.meChallengeDiff = undefined;
-        }
+        let pCR = undefined;
+        if (meCR.rank > 1) pCR = this.challengeRankings.find(cr => cr.rank === meCR!.rank - 1);
+        else pCR = this.challengeRankings.find(cr => cr.rank === 2);
+        if (pCR) this.meChallengeDiff = pCR.time - meCR.time;
         else this.meChallengeDiff = undefined;
       }
       else this.meChallengeRank = undefined;
       let meGR = this.globalRankings.find(gr => gr.player_id === this.playerMe!.id);
       if (meGR) {
         this.meGlobalRank = meGR.rank;
-        if (meGR.rank > 1) {
-          let pGR = this.globalRankings.find(gr => gr.rank === meGR!.rank - 1);
-          if (pGR) this.meGlobalDiff = meGR.points - pGR.points;
-          else this.meGlobalDiff = undefined;
-        }
+        let pGR = undefined;
+        if (meGR.rank > 1) pGR = this.globalRankings.find(gr => gr.rank === meGR!.rank - 1);
+        else pGR = this.globalRankings.find(gr => gr.rank === 2);
+        if (pGR) this.meGlobalDiff = meGR.points - pGR.points;
+        else this.meGlobalDiff = undefined;
       }
       else this.meGlobalRank = undefined;
     }

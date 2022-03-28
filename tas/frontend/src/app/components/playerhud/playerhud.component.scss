@@ -37,10 +37,16 @@
             flex-grow: 1;
         }
     
-        .diff {
+        .diff-neg {
             display: flex;
             justify-content: center;
             color: #f03e3e;
+        }
+
+        .diff-pos {
+            display: flex;
+            justify-content: center;
+            color: #66d9e8;
         }
     }
 

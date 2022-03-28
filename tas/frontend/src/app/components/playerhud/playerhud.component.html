@@ -48,7 +48,7 @@
         <div class="rank">
             {{ meChallengeRank ? meChallengeRank : '---' }}
         </div>
-        <div class="diff">
+        <div class="diff-{{ (meChallengeRank || 0) === 1 ? 'pos' : 'neg' }}">
             {{ meChallengeDiff ? meChallengeDiff / 1000 : '---' }}
         </div>
     </div>
@@ -60,7 +60,7 @@
         <div class="rank">
             {{ meGlobalRank ? meGlobalRank : '---' }}
         </div>
-        <div class="diff">
+        <div class="diff-{{ (meGlobalRank || 0) === 1 ? 'pos' : 'neg' }}">
             {{ meGlobalDiff ? meGlobalDiff : '---' }}
         </div>
     </div>

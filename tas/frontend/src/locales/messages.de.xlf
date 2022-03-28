@@ -166,16 +166,16 @@
         <target state="signed-off">Diese Seite (und vieles mehr) kann erreicht werden über</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">50</context>
         </context-group>
-        <note priority="1" from="description">Info box contentetn for this page can be found at</note>
+        <note priority="1" from="description">Info box content for this page can be found at</note>
       </trans-unit>
       <trans-unit id="LinkTextEnableAutorefresh" datatype="html">
         <source>Enable AutoRefresh</source>
         <target state="signed-off">Automatische Aktualisierung aktivieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <note priority="1" from="description">Text for link to enable autorefresh</note>
       </trans-unit>
@@ -184,7 +184,7 @@
         <target state="signed-off">Automatisch Aktualisierung deaktivieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
       </trans-unit>
@@ -201,7 +201,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
@@ -214,7 +214,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
       </trans-unit>
@@ -227,7 +227,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
@@ -244,7 +244,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Home Screen</note>
       </trans-unit>
@@ -558,6 +558,19 @@
           <context context-type="linenumber">4</context>
         </context-group>
         <note priority="1" from="description">Title of challenges table on challenges screen</note>
+      </trans-unit>
+      <trans-unit id="infoBoxUnpredictedUpIn" datatype="html">
+        <source>&apos;Up in&apos; times might vary as not all time limits are finally calculated yet!</source>
+        <target state="signed-off">'Dran in' Zeiten könnten abweichen da noch nicht alle Zeitlimits berechnet wurden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <note priority="1" from="description">Info box content for warning, that not all up in times are savely predicted</note>
       </trans-unit>
     </body>
   </file>
