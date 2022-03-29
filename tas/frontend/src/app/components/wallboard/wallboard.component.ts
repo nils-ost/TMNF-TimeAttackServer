@@ -33,6 +33,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
   c_next?: Challenge;
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
   unpredictedUpIn: boolean = true;
+  displayPageFoundAtURL: boolean = true;
 
   speeddail_menu: MenuItem[] = [];
   enable_menu_item: MenuItem = {
@@ -73,6 +74,21 @@ export class WallboardComponent implements OnInit, OnDestroy {
 
     this.speeddail_menu = [
       this.enable_menu_item,
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to hide Page-URL Message on bottom of screen@@LinkTextHidePageURL:Hide Page-URL Message`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-minus-circle',
+        command: () => {
+          this.displayPageFoundAtURL = false;
+          this.speeddail_menu.reverse();
+          let b = this.speeddail_menu.pop();
+          this.speeddail_menu.pop();
+          if (b) this.speeddail_menu.push(b);
+          this.speeddail_menu.reverse();
+        }
+      },
       {
         tooltipOptions: {
           tooltipLabel: $localize `:Text for link to open PlayerHUD@@LinkTextOpenPlayerHUD:Open PlayerHUD`,

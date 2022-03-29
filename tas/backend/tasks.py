@@ -1,4 +1,5 @@
 from invoke import task, call
+import time
 
 
 @task(name="testdata")
@@ -43,4 +44,8 @@ def generate_testdata_real(c):
         rel_time_s = rel_time - 5000
         rel_time += 5000
         for p in range(1, 31):
-            laptime_add(f"p{p}", c['_id'], randrange(int(rel_time_s), int(rel_time), 1))
+            laptime_add(f"p{p}", c['_id'], randrange(int(rel_time_s / 10), int(rel_time / 10), 1) * 10)
+    time.sleep(1)
+    player_update('mid', 'MiddleMan', 100)
+    for c in challenge_all():
+        laptime_add("mid", c['_id'], c['rel_time'])

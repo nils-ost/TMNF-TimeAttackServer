@@ -51,7 +51,7 @@
         </ng-template>
     </p-messages>
     
-    <p-messages severity="success" styleClass="msg-box">
+    <p-messages severity="success" styleClass="msg-box" *ngIf="displayPageFoundAtURL">
         <ng-template pTemplate>
             <span class="custom-message"><ng-container i18n="Info box content for this page can be found at@@infoBoxPageFoundAt">This page (and a lot more) can be found at</ng-container>: {{ settings ? settings.display_self_url : '???' }}</span>
         </ng-template>

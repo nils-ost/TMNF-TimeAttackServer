@@ -115,6 +115,30 @@ def player_get(player_id=None, player_ip=None):
     return None
 
 
+def player_merge(survivor, merged):
+    if player_get(survivor) is None or player_get(merged) is None:
+        return
+    for laptime in mongoDB().laptimes.find({'player_id': merged}):
+        mongoDB().laptimebackups.replace_one({'_id': laptime['_id']}, laptime, True)
+    mongoDB().laptimes.update_many({'player_id': merged}, {'$set': {'player_id': survivor}})
+    s_bests = dict()
+    for blt in mongoDB().bestlaptimes.find({'player_id': survivor}):
+        s_bests[blt['challenge_id']] = blt
+    for blt in mongoDB().bestlaptimes.find({'player_id': merged}):
+        if blt['challenge_id'] in s_bests:
+            s_blt = s_bests[blt['challenge_id']]
+            if s_blt['time'] > blt['time']:
+                mongoDB().bestlaptimes.update_one({'_id': blt['_id']}, {'$set': {'player_id': survivor}})
+                mongoDB().bestlaptimes.delete_one({'_id': s_blt['_id']})
+            else:
+                mongoDB().bestlaptimes.delete_one({'_id': blt['_id']})
+        else:
+            mongoDB().bestlaptimes.update_one({'_id': blt['_id']}, {'$set': {'player_id': survivor}})
+    mongoDB().players.delete_one({'_id': merged})
+    ranking_clear()
+    ranking_rebuild()
+
+
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:

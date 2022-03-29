@@ -73,13 +73,44 @@ def clearPlayerIP():
         mongoDB().players.update_one({'_id': player_id}, {'$set': {'ip': None}})
 
 
+def mergePlayers():
+    from helpers.mongodb import player_get, player_merge
+    from datetime import datetime
+    p1 = input("PlayerID 1: ")
+    p1 = player_get(player_id=p1)
+    if p1 is None:
+        print("Does not exist!")
+        return
+    print(f"Last Update: {datetime.fromtimestamp(p1['last_update']).isoformat()}\n")
+    p2 = input("PlayerID 2: ")
+    p2 = player_get(player_id=p2)
+    if p2 is None:
+        print("Does not exist!")
+        return
+    print(f"Last Update: {datetime.fromtimestamp(p2['last_update']).isoformat()}\n")
+    p1, p2 = ((p1, p2) if p1['last_update'] > p2['last_update'] else (p2, p1))
+    survivor = input(f"How survives? ({p1['_id']}): ")
+    if survivor == "":
+        pass
+    elif not survivor == p1['_id'] and not survivor == p2['_id']:
+        print("Invalid input!")
+        return
+    else:
+        p1, p2 = ((p1, p2) if survivor == p1['_id'] else (p2, p1))
+    print(f"{p2['_id']} is merged into {p1['_id']}")
+    if input("Execute? (y/N): ") == 'y':
+        player_merge(p1['_id'], p2['_id'])
+        print('done')
+
+
 commands = [
     ('Set Wallboard Players Max', wallboardPalyersMax),
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),
-    ("Clear Player's IP", clearPlayerIP)
+    ("Clear Player's IP", clearPlayerIP),
+    ("Merge Players", mergePlayers)
 ]
 
 index = 0
