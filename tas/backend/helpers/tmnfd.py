@@ -5,7 +5,8 @@ from multiprocessing import Process, Queue
 from multiprocessing.managers import BaseManager
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set, player_update, ranking_clear, ranking_rebuild, set_tmnfd_name
+from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set
+from helpers.mongodb import player_update, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
 import time
 import sys
 
@@ -53,6 +54,32 @@ def prepareNextChallenge(sender):
     print(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")
 
 
+def sendLaptimeNotice(sender, player_login, player_time=None):
+    def timetos(time):
+        if time is None:
+            return '---'
+        m = int(abs(time) / 10)
+        ms = int(m % 100)
+        m = int(m / 100)
+        s = int(m % 60)
+        m = int(m / 60)
+        return f"{'-' if time < 0 else ''}{m}:{'0' if s < 10 else ''}{s}.{'0' if ms < 10 else ''}{ms}"
+    best = bestlaptime_get(player_id=clean_player_id(player_login), challenge_id=challenge_id_get(current=True))
+    msg = None
+    if best is None:
+        msg = "You don't have a PB on this Challenge yet"
+    elif player_time is None:
+        msg = f"Your PB on this Challenge is: {timetos(best['time'])}"
+    elif player_time == 0:
+        pass
+    elif player_time == best['time']:
+        msg = f"You drove a PB with: {timetos(best['time'])}"
+    elif best['time'] is not None:
+        msg = f"You drove {timetos(player_time)} thats {timetos(player_time - best['time'])} behind your PB ({timetos(best['time'])})"
+    if msg:
+        sender.callMethod('SendNoticeToLogin', player_login, msg, '', 20)
+
+
 def worker_function(msg_queue, sender):
     while True:
         func, params = msg_queue.get()
@@ -64,6 +91,7 @@ def worker_function(msg_queue, sender):
                 laptime_add(player_login, current_challenge, player_time)
                 if player_time > 0:
                     print(f"{player_login} drove: {player_time / 1000}")
+                sendLaptimeNotice(sender, player_login, player_time)
 
         elif func == 'TrackMania.BeginRace':
             challenge_db = challenge_get(params[0]['UId'])
@@ -75,6 +103,8 @@ def worker_function(msg_queue, sender):
             challenge_id_set(params[0]['UId'], current=True)
             print(f"Challenge begin: {params[0]['Name']}")
             prepareNextChallenge(sender)
+            for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
+                sendLaptimeNotice(sender, p['Login'])
 
         elif func == 'TrackMania.EndRace':
             old_challenge = challenge_id_get(current=True)
@@ -89,6 +119,7 @@ def worker_function(msg_queue, sender):
 
         elif func == 'TrackMania.PlayerConnect':
             print(f"{params[0]} connected")
+            sendLaptimeNotice(sender, params[0])
 
         elif func == 'TrackMania.PlayerDisconnect':
             print(f"{params[0]} disconnected")

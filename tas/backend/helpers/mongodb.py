@@ -71,6 +71,10 @@ def laptime_filter(player_id=None, challenge_id=None):
     return mongoDB().laptimes.find(f).sort('created_at', ASCENDING)
 
 
+def bestlaptime_get(player_id, challenge_id):
+    return mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
+
+
 def player_update(player_id, nickname, current_uid):
     ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
