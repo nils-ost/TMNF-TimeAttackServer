@@ -1,12 +1,10 @@
 <p-table responsiveLayout="scroll" [value]="rankingDisplay" sortField="rank" styleClass="ranking-table-style">
-    <ng-template pTemplate="caption">
-        Current Challenge
-    </ng-template>
+    <ng-template pTemplate="caption" i18n="Title of the current challenge ranking table@@tableCurrentChallengeTitle">Current Challenge</ng-template>
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="rank">rank</th>
-            <th>player</th>
-            <th>time (diff)</th>
+            <th pSortableColumn="rank"><ng-container i18n="Header for column rank in tables@@tableHeaderRank">rank</ng-container></th>
+            <th><ng-container i18n="Header for column player name in tables@@tableHeaderPlayerName">player</ng-container></th>
+            <th><ng-container i18n="Header for column time in tables@@tableHeaderTime">time</ng-container> (<ng-container i18n="Header for column diff in tables@@tableHeaderDiff">diff</ng-container>)</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rd>

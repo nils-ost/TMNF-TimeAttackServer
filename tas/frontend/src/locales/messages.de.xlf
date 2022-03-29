@@ -10,6 +10,14 @@
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-list/players-list.component.ts</context>
           <context context-type="linenumber">29</context>
         </context-group>
@@ -23,39 +31,19 @@
         </context-group>
         <note priority="1" from="description">Header for column player name in tables</note>
       </trans-unit>
-      <trans-unit id="wallboardCurrentChallengeTitle" datatype="html">
-        <source>Current Challenge</source>
-        <target state="signed-off">Aktuelle Strecke</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <note priority="1" from="description">Title of the current challenge ranking table on wallboard screen</note>
-        <note priority="1" from="meaning">current challenge ranking table title</note>
-      </trans-unit>
       <trans-unit id="wallboardChallegenScheduleTitle" datatype="html">
         <source>Challenge Schedule</source>
         <target state="signed-off">Rennkalender</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Title of the challenge schedule ticker on wallboard screen</note>
         <note priority="1" from="meaning">challenge schedule ticker title</note>
       </trans-unit>
-      <trans-unit id="wallboardGlobalRankingTitle" datatype="html">
-        <source>Global Ranking</source>
-        <target state="signed-off">Gesamtergebnis</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-        <note priority="1" from="description">Title of the global rankings table on wallboard screen</note>
-        <note priority="1" from="meaning">global ranking table title</note>
-      </trans-unit>
       <trans-unit id="WallboardScreenLinkText" datatype="html">
         <source>Wallboard</source>
-        <target state="signed-off">Wallboard</target>
+        <target state="signed-off">Anzeigetafel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">19</context>
@@ -166,7 +154,7 @@
         <target state="signed-off">Diese Seite (und vieles mehr) kann erreicht werden über</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Info box content for this page can be found at</note>
       </trans-unit>
@@ -174,17 +162,25 @@
         <source>Enable AutoRefresh</source>
         <target state="signed-off">Automatische Aktualisierung aktivieren</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <note priority="1" from="description">Text for link to enable autorefresh</note>
       </trans-unit>
       <trans-unit id="LinkTextDisableAutorefresh" datatype="html">
         <source>Disable AutoRefresh</source>
-        <target state="signed-off">Automatisch Aktualisierung deaktivieren</target>
+        <target state="signed-off">Automatische Aktualisierung deaktivieren</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
       </trans-unit>
@@ -201,7 +197,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
@@ -209,12 +205,16 @@
         <source>Open Challenges Screen</source>
         <target state="signed-off">Strecken Liste öffnen</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
           <context context-type="linenumber">69</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
       </trans-unit>
@@ -226,8 +226,12 @@
           <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
@@ -239,12 +243,16 @@
           <context context-type="linenumber">73</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
           <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Home Screen</note>
       </trans-unit>
@@ -344,10 +352,14 @@
       </trans-unit>
       <trans-unit id="LinkTextOpenWallboardScreen" datatype="html">
         <source>Open Wallboard</source>
-        <target state="signed-off">Wallboard öffnen</target>
+        <target state="signed-off">Anzeigetafel öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
           <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -361,6 +373,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
@@ -397,6 +417,10 @@
           <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
@@ -419,6 +443,10 @@
         <target state="signed-off">Rundenzeit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
@@ -568,9 +596,187 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <note priority="1" from="description">Info box content for warning, that not all up in times are savely predicted</note>
+      </trans-unit>
+      <trans-unit id="infoBoxLostConnection" datatype="html">
+        <source>Lost connection to dedicated gameserver! Please contact</source>
+        <target state="signed-off">Verbindung zum dedizierten Spieleserver verloren! Bitte kontaktiere</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Info box content for error, that the connection to tmnfd got lost</note>
+      </trans-unit>
+      <trans-unit id="LinkTextHidePageURL" datatype="html">
+        <source>Hide Page-URL Message</source>
+        <target state="signed-off">Seiten-URL Nachricht ausblenden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to hide Page-URL Message on bottom of screen</note>
+      </trans-unit>
+      <trans-unit id="playerhudSelectTitle:" datatype="html">
+        <source>Select who you are</source>
+        <target state="signed-off">Wähle aus wer du bist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Title for dialog to select who you are</note>
+      </trans-unit>
+      <trans-unit id="playerhudSelectExplanation" datatype="html">
+        <source>In this sceen you can live-track your progress. For this to work I need to know who you are.</source>
+        <target state="signed-off">In dieser Ansicht kannst du deinen Fortschritt live mitverfolgen. Hierfür muss ich wissen wer du bist.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Explains the user why he needs to select who he is</note>
+      </trans-unit>
+      <trans-unit id="playerhudSelectSend" datatype="html">
+        <source>Send</source>
+        <target state="signed-off">Abschicken</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">send button label for select who you are dialog</note>
+      </trans-unit>
+      <trans-unit id="playerhudSelectAdditionalInfo" datatype="html">
+        <source>If you can&apos;t find your playername in the dropdown, please contact</source>
+        <target state="signed-off">Wenn du deinen Spielernamen in der Auswahlbox nicht finden kannst, kontaktiere bitte</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Says what the user needs to do if he can&amp;amp;amp;amp;apos;t find his username</note>
+      </trans-unit>
+      <trans-unit id="tableCurrentChallengeTitle" datatype="html">
+        <source>Current Challenge</source>
+        <target state="signed-off">Aktuelle Strecke</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Title of the current challenge ranking table</note>
+      </trans-unit>
+      <trans-unit id="tableGlobalRankingTitle" datatype="html">
+        <source>Global Ranking</source>
+        <target state="signed-off">Gesamtergebnis</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Title of the global rankings table</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderDiff" datatype="html">
+        <source>diff</source>
+        <target state="signed-off">Unterschied</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Header for column diff in tables</note>
+      </trans-unit>
+      <trans-unit id="tooltipPleaseContactAdmin" datatype="html">
+        <source>Please contact:  <x id="INTERPOLATION" equiv-text="{{ settings?.display_admin ?? &apos;Admin&apos; }}"/></source>
+        <target state="signed-off">Kontaktiere bitte:  <x id="INTERPOLATION" equiv-text="{{ settings?.display_admin ?? &apos;Admin&apos; }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip for contacting admin</note>
+      </trans-unit>
+      <trans-unit id="titleHello" datatype="html">
+        <source>Hello</source>
+        <target state="signed-off">Hallo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Hello Title</note>
+      </trans-unit>
+      <trans-unit id="questionNotYou" datatype="html">
+        <source>Not you?</source>
+        <target state="signed-off">Das bist nicht du?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Not you question</note>
+      </trans-unit>
+      <trans-unit id="titleBestRank" datatype="html">
+        <source>Best</source>
+        <target state="signed-off">Beste</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Best Rank Title</note>
+      </trans-unit>
+      <trans-unit id="labelRank" datatype="html">
+        <source>Rank</source>
+        <target state="signed-off">Platz</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Rank Label</note>
+      </trans-unit>
+      <trans-unit id="titleWorstRank" datatype="html">
+        <source>Worst</source>
+        <target state="signed-off">Schlechteste</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Worst Rank Title</note>
+      </trans-unit>
+      <trans-unit id="titleMissingChallenges" datatype="html">
+        <source>Missing Challenges</source>
+        <target state="signed-off">Fehlende Strecken</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Missing Challenges Title</note>
+      </trans-unit>
+      <trans-unit id="titleChallengeRank" datatype="html">
+        <source>Challenge Rank</source>
+        <target state="signed-off">Strecken Platzierung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Challenge Rank Title</note>
+      </trans-unit>
+      <trans-unit id="titleGlobalRank" datatype="html">
+        <source>Global Rank</source>
+        <target state="signed-off">Globale Platzierung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <note priority="1" from="description">Global Rank Title</note>
       </trans-unit>
     </body>
   </file>

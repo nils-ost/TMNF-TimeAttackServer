@@ -46,7 +46,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
 
   enable_menu_item: MenuItem = {
     tooltipOptions: {
-      tooltipLabel: "Enable AutoRefresh",
+      tooltipLabel: $localize `:Text for link to enable autorefresh@@LinkTextEnableAutorefresh:Enable AutoRefresh`,
       tooltipPosition: "top"
     },
     icon: 'pi pi-refresh',
@@ -56,7 +56,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   };
   disable_menu_item: MenuItem = {
     tooltipOptions: {
-      tooltipLabel: "Disable AutoRefresh",
+      tooltipLabel: $localize `:Text for link to disable autorefresh@@LinkTextDisableAutorefresh:Disable AutoRefresh`,
       tooltipPosition: "top"
     },
     icon: 'pi pi-trash',
@@ -84,7 +84,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       this.enable_menu_item,
       {
         tooltipOptions: {
-          tooltipLabel: "Open Challenges Screen",
+          tooltipLabel: $localize `:Text for link to open Challenges Screen@@LinkTextOpenChallengesScreen:Open Challenges Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-list',
@@ -92,7 +92,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Players Screen",
+          tooltipLabel: $localize `:Text for link to open Players Screen@@LinkTextOpenPlayersScreen:Open Players Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-users',
@@ -100,7 +100,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Wallboard",
+          tooltipLabel: $localize `:Text for link to open Wallboard Screen@@LinkTextOpenWallboardScreen:Open Wallboard`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-window-maximize',
@@ -108,7 +108,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       },
       {
         tooltipOptions: {
-          tooltipLabel: "Open Home Screen",
+          tooltipLabel: $localize `:Text for link to open Home Screen@@LinkTextOpenHomeScreen:Open Home Screen`,
           tooltipPosition: "top"
         },
         icon: 'pi pi-home',

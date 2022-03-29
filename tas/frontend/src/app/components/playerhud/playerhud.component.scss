@@ -1,3 +1,7 @@
+:host ::ng-deep .select-dialog {
+    max-width: 15vw;
+}
+
 :host ::ng-deep #info-cards {
     display: flex;
     flex-direction: row;

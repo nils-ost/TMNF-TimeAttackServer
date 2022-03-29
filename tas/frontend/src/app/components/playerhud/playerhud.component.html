@@ -1,50 +1,40 @@
-<p-dialog header="Select who you are" [visible]="!playerMe" [modal]="true" [closable]="false">
-    <p>In this sceen you can live-track your progress.<br />For this to work I need to know who you are.</p>
+<p-dialog i18n-header="Title for dialog to select who you are@@playerhudSelectTitle:" header="Select who you are" [visible]="!playerMe" [modal]="true" [closable]="false" styleClass="select-dialog">
+    <p i18n="Explains the user why he needs to select who he is@@playerhudSelectExplanation">In this sceen you can live-track your progress. For this to work I need to know who you are.</p>
     <p-dropdown appendTo="body" [options]="filteredPlayers" [(ngModel)]="selectedPlayerID" optionLabel="name" optionValue="id" [filter]="true" filterBy="name"></p-dropdown>&nbsp;
-    <p-button label="Send" (onClick)="applyPlayerMe()"></p-button>
-    <p>If you can't find your playername in the dropdown,<br />please contact: {{ settings?.display_admin }}</p>
+    <p-button i18n-label="send button label for select who you are dialog@@playerhudSelectSend" label="Send" (onClick)="applyPlayerMe()"></p-button>
+    <p><ng-container i18n="Says what the user needs to do if he can't find his username@@playerhudSelectAdditionalInfo">If you can't find your playername in the dropdown, please contact</ng-container>: {{ settings?.display_admin }}</p>
 </p-dialog>
 
 <div id="info-cards" *ngIf="playerMe">
     <div id="player-name" class="info-card">
-        <div class="title">
-            Hello
-        </div>
+        <div class="title" i18n="Hello Title@@titleHello">Hello</div>
 
         <div class="name">
             {{ playerMe.name }}
         </div>
 
         <div class="appendix">
-            Not you?&nbsp;<span class="pi pi-info-circle" pTooltip="Please contact: {{ settings?.display_admin ?? 'Admin' }}" tooltipPosition="bottom"></span>
+            <ng-container i18n="Not you question@@questionNotYou">Not you?</ng-container>&nbsp;<span class="pi pi-info-circle" i18n-pTooltip="Tooltip for contacting admin@@tooltipPleaseContactAdmin" pTooltip="Please contact: {{ settings?.display_admin ?? 'Admin' }}" tooltipPosition="bottom"></span>
         </div>
     </div>
 
     <div id="best" class="info-card challenge-short" *ngIf="bestRank">
-        <div class="title">
-            Best (Rank: {{ bestRank }})
-        </div>
+        <div class="title"><ng-container i18n="Best Rank Title@@titleBestRank">Best</ng-container> (<ng-container i18n="Rank Label@@labelRank">Rank</ng-container>: {{ bestRank }})</div>
         <p-listbox [options]="bestChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
     </div>
 
     <div id="worst" class="info-card challenge-short" *ngIf="worstRank">
-        <div class="title">
-            Worst (Rank: {{ worstRank }})
-        </div>
+        <div class="title"><ng-container i18n="Worst Rank Title@@titleWorstRank">Worst</ng-container> (<ng-container i18n="Rank Label@@labelRank">Rank</ng-container>: {{ worstRank }})</div>
         <p-listbox [options]="worstChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
     </div>
 
     <div id="missing" class="info-card challenge-short">
-        <div class="title">
-            Missing Challenges
-        </div>
+        <div class="title" i18n="Missing Challenges Title@@titleMissingChallenges">Missing Challenges</div>
         <p-listbox [options]="missingChallengesNames" [disabled]="true" styleClass="challenge-list" [listStyle]="{'max-height':'10rem'}"></p-listbox>
     </div>
 
     <div id="challenge-rank" class="info-card rank-short">
-        <div class="title">
-            Challenge Rank
-        </div>
+        <div class="title" i18n="Challenge Rank Title@@titleChallengeRank">Challenge Rank</div>
         <div class="rank">
             {{ meChallengeRank ? meChallengeRank : '---' }}
         </div>
@@ -54,9 +44,7 @@
     </div>
 
     <div id="gloabl-rank" class="info-card rank-short">
-        <div class="title">
-            Global Rank
-        </div>
+        <div class="title" i18n="Global Rank Title@@titleGlobalRank">Global Rank</div>
         <div class="rank">
             {{ meGlobalRank ? meGlobalRank : '---' }}
         </div>
