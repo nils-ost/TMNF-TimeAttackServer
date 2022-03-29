@@ -184,7 +184,7 @@ if __name__ == '__main__':
             'tools.staticdir.dir': "ang/de",
             'tools.staticdir.index': "index.html"
         },
-        '/de/*': {
+        '/de': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "ang/de",
             'tools.staticdir.index': "index.html"
