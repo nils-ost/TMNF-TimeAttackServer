@@ -114,8 +114,9 @@ export class ChallengesComponent implements OnInit {
     this.challengeService
       .getChallengeCurrent()
       .subscribe(
-        (c: Challenge) => {
-          this.currentChallenge = c;
+        (c: Challenge | null) => {
+          if (c) this.currentChallenge = c;
+          else this.currentChallenge = undefined;
         }
       );
   }

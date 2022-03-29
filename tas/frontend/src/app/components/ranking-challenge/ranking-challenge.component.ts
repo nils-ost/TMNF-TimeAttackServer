@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChallengeRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
+import { Challenge } from '../../interfaces/challenge';
 
 @Component({
   selector: 'app-ranking-challenge',
@@ -10,6 +11,8 @@ import { Player } from '../../interfaces/player';
 export class RankingChallengeComponent implements OnInit {
   @Input() challengeRankings!: ChallengeRanking[];
   @Input() players!: Player[];
+  @Input() currentChallenge?: Challenge;
+  @Input() nextChallenge?: Challenge;
 
   constructor() { }
 

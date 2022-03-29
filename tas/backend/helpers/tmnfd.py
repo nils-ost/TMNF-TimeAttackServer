@@ -100,6 +100,8 @@ def receiver_function(msg_queue, receiver):
             msg_queue.put(receiver.receiveCallback())
         except ConnectionResetError:
             print("Lost connection to: TMNF - Dedicated Server")
+            challenge_id_set(None, current=True)
+            challenge_id_set(None, next=True)
             return
 
 

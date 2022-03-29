@@ -189,11 +189,11 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
   refreshRankings() {
     this.challengeService
       .getChallengeCurrent()
-      .subscribe((c: Challenge) => {
-        this.currentChallenge = c;
-        if (this.currentChallenge) {
+      .subscribe((c: Challenge | null) => {
+        if (c) {
+          this.currentChallenge = c;
           this.rankingService
-            .getChallengeRankings(this.currentChallenge.id)
+            .getChallengeRankings(c.id)
             .subscribe((cr: ChallengeRanking[]) => {
               this.challengeRankings = cr;
               this.rankingService
@@ -204,6 +204,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
                 });
             });
         }
+        else this.currentChallenge = undefined;
         if (this.playerMe) {
           this.playerService
             .getPlayerRankings(this.playerMe.id)

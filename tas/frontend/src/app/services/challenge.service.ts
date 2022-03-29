@@ -32,11 +32,11 @@ export class ChallengeService {
     return this.http.get<Challenge[]>(this.challengeUrl).pipe(catchError(this.handleError));
   }
 
-  getChallengeCurrent(): Observable<Challenge> {
+  getChallengeCurrent(): Observable<Challenge | null> {
     return this.http.get<Challenge>(this.challengeUrl + "current").pipe(catchError(this.handleError));
   }
 
-  getChallengeNext(): Observable<Challenge> {
+  getChallengeNext(): Observable<Challenge | null> {
     return this.http.get<Challenge>(this.challengeUrl + "next").pipe(catchError(this.handleError));
   }
 }

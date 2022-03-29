@@ -78,6 +78,11 @@
         }
 }
 
+:host ::ng-deep .ranking-table-done {
+    @extend .ranking-table;
+    background-color: #301e1e;
+}
+
 :host ::ng-deep .p-speeddial-direction-left {
     right: 1rem;
     bottom: 1rem;

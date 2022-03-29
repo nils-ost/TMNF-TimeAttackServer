@@ -25,12 +25,12 @@ export class WallboardComponent implements OnInit, OnDestroy {
   switchAutoRefreshSubscription: Subscription | undefined;
 
   players: Player[] = [];
-  settings!: Settings;
+  settings?: Settings;
   globalRankings: GlobalRanking[] = [];
   challengeRankings: ChallengeRanking[] = [];
   challenges: Challenge[] = [];
-  c_current!: Challenge;
-  c_next!: Challenge;
+  c_current?: Challenge;
+  c_next?: Challenge;
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
   unpredictedUpIn: boolean = true;
 
@@ -155,52 +155,44 @@ export class WallboardComponent implements OnInit, OnDestroy {
         .subscribe(
           (rankings: ChallengeRanking[]) => {
             this.challengeRankings = this.alignChallengeRankings(rankings);
-            this.rankingService
-              .getGlobalRankings()
-              .subscribe(
-                (rankings: GlobalRanking[]) => {
-                  this.globalRankings = this.alignGlobalRankings(rankings);
-                }
-              );
           }
         );
     }
-    else {
-      this.challengeRankings = [];
-      this.rankingService
-        .getGlobalRankings()
-        .subscribe(
-          (rankings: GlobalRanking[]) => {
-            this.globalRankings = this.alignGlobalRankings(rankings);
-          }
-        );
-    }
+    this.rankingService
+      .getGlobalRankings()
+      .subscribe(
+        (rankings: GlobalRanking[]) => {
+          this.globalRankings = this.alignGlobalRankings(rankings);
+        }
+      );
   }
 
   refreshChallenges() {
     this.challengeService
       .getChallengeCurrent()
       .subscribe(
-        (c: Challenge) => {
-          this.c_current = c;
-          this.challengeService
-            .getChallengeNext()
-            .subscribe(
-              (c: Challenge) => {
-                this.c_next = c;
-              }
-            );
-          this.challengeService
-            .getChallenges()
-            .subscribe(
-              (challenges: Challenge[]) => {
-                this.challenges = challenges;
-                let c = this.challenges.find(c => c.seen_count === 0);
-                if (c) this.unpredictedUpIn = true;
-                else this.unpredictedUpIn = false;
-              }
-            );
+        (c: Challenge | null) => {
+          if (c) this.c_current = c;
+          else this.c_current = undefined;
           this.refreshRankings();
+        }
+      );
+    this.challengeService
+      .getChallengeNext()
+      .subscribe(
+        (c: Challenge | null) => {
+          if (c) this.c_next = c;
+          else this.c_next = undefined;
+        }
+      );
+    this.challengeService
+      .getChallenges()
+      .subscribe(
+        (challenges: Challenge[]) => {
+          this.challenges = challenges;
+          let c = this.challenges.find(c => c.seen_count === 0);
+          if (c) this.unpredictedUpIn = true;
+          else this.unpredictedUpIn = false;
         }
       );
   }
@@ -216,44 +208,48 @@ export class WallboardComponent implements OnInit, OnDestroy {
   }
 
   alignChallengeRankings(rankings: ChallengeRanking[]): ChallengeRanking[] {
-    rankings.sort((a, b) => a.rank - b.rank);
     let result: ChallengeRanking[] = [];
-    let i = 0;
-    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-      if (this.playerActive(rankings[i]['player_id'])) {
-        result.push(rankings[i]);
+    if (this.settings) {
+      rankings.sort((a, b) => a.rank - b.rank);
+      let i = 0;
+      while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+        if (this.playerActive(rankings[i]['player_id'])) {
+          result.push(rankings[i]);
+        }
+        i++;
       }
-      i++;
-    }
-    i = 0;
-    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-      if (!this.playerActive(rankings[i]['player_id'])) {
-        result.push(rankings[i]);
+      i = 0;
+      while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+        if (!this.playerActive(rankings[i]['player_id'])) {
+          result.push(rankings[i]);
+        }
+        i++;
       }
-      i++;
+      result.sort((a, b) => a.rank - b.rank);
     }
-    result.sort((a, b) => a.rank - b.rank);
     return result;
   }
 
   alignGlobalRankings(rankings: GlobalRanking[]): GlobalRanking[] {
-    rankings.sort((a, b) => a.rank - b.rank);
     let result: GlobalRanking[] = [];
-    let i = 0;
-    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-      if (this.playerActive(rankings[i]['player_id'])) {
-        result.push(rankings[i]);
+    if (this.settings) {
+      rankings.sort((a, b) => a.rank - b.rank);
+      let i = 0;
+      while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+        if (this.playerActive(rankings[i]['player_id'])) {
+          result.push(rankings[i]);
+        }
+        i++;
       }
-      i++;
-    }
-    i = 0;
-    while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-      if (!this.playerActive(rankings[i]['player_id'])) {
-        result.push(rankings[i]);
+      i = 0;
+      while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
+        if (!this.playerActive(rankings[i]['player_id'])) {
+          result.push(rankings[i]);
+        }
+        i++;
       }
-      i++;
+      result.sort((a, b) => a.rank - b.rank);
     }
-    result.sort((a, b) => a.rank - b.rank);
     return result;
   }
 
