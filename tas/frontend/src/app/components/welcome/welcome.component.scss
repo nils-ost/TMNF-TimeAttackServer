@@ -97,6 +97,15 @@
                     .highlight {
                         color: var(--primary-color);
                     }
+
+                    a {
+                        color: var(--primary-color);
+                        text-decoration: underline;
+                    }
+
+                    a:hover {
+                        text-decoration: none;
+                    }
                 }
             }
         }

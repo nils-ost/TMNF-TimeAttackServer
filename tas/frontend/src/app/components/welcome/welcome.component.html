@@ -96,9 +96,9 @@
                 </div>
             </div>
 
-            <div class="info-row">
+            <div class="info-row" *ngIf="client_download_url">
                 <div class="settings">
-                    <p><ng-container i18n="Label prefixing TMNF Client Download URL@@LabelClientDownloadURL">Download latest compatible Client</ng-container>: <span class="highlight">--TBD--</span></p>
+                    <p><a href="{{ client_download_url }}" i18n="Label prefixing TMNF Client Download URL@@LabelClientDownloadURL">Download latest compatible Client</a></p>
                 </div>
             </div>
         </div>

@@ -23,7 +23,8 @@ config = {
         'port': 8000
     },
     'util': {
-        'wallboard_players_max_default': 10
+        'wallboard_players_max_default': 10,
+        'wallboard_challenges_max_default': 8
     }
 }
 

@@ -91,9 +91,11 @@ PATCH-Data:
 `/settings` returns dynamic settings
 
   * wallboard_players_max
+  * wallboard_challenges_max
   * tmnfd_name
   * display_self_url
   * display_admin
+  * client_download_url
 
 `/stats` returns current stats of stuff happening on server
 

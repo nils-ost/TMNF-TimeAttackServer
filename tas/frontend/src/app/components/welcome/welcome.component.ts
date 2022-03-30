@@ -3,6 +3,7 @@ import { Settings } from '../../interfaces/settings';
 import { Stats } from '../../interfaces/stats';
 import { SettingsService } from '../../services/settings.service';
 import { StatsService } from '../../services/stats.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-welcome',
@@ -16,6 +17,7 @@ export class WelcomeComponent implements OnInit {
   laptimes_sum_h: number = 0;
   laptimes_sum_m: number = 0;
   laptimes_sum_s: number = 0;
+  client_download_url?: string;
 
   constructor(
     private settingsService: SettingsService,
@@ -33,6 +35,11 @@ export class WelcomeComponent implements OnInit {
       .subscribe(
         (settings: Settings) => {
           this.settings = settings
+          if (settings.client_download_url) {
+            if (settings.client_download_url.startsWith('http')) this.client_download_url = settings.client_download_url;
+            else this.client_download_url = environment.apiUrl + settings.client_download_url;
+          }
+          else this.client_download_url = undefined;
         }
       );
   }

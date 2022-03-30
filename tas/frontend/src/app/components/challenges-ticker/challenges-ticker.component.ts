@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Challenge, ChallengeDisplay } from '../../interfaces/challenge';
 import { Subscription, timer, Observable } from 'rxjs';
+import { Settings } from '../../interfaces/settings';
 
 @Component({
   selector: 'app-challenges-ticker',
@@ -9,6 +10,7 @@ import { Subscription, timer, Observable } from 'rxjs';
 })
 export class ChallengesTickerComponent implements OnInit, OnDestroy {
   @Input() challenges!: Challenge[];
+  @Input() settings?: Settings;
   @Input() current_challenge?: Challenge;
   @Input() next_challenge?: Challenge;
   @Input() switchAutoRefreshEvent!: Observable<boolean>;
@@ -49,7 +51,8 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
 
   refreshChallengeDisplay() {
     if (this.current_challenge && this.next_challenge) {
-      let max_elements = 8;
+      let max_elements = 4;
+      if (this.settings) max_elements = this.settings.wallboard_challenges_max;
       let tmp: ChallengeDisplay[] = [];
       let current_index: number = -1;
       let up_in: number = 0;

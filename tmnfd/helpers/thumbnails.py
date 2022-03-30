@@ -1,5 +1,5 @@
 from pygbx import Gbx
-import cv2
+import subprocess
 
 
 def extract_thumbnail(challenge_file, thumbnail_file):
@@ -23,9 +23,7 @@ def extract_thumbnail(challenge_file, thumbnail_file):
                     thumb = g.root_parser.read(thumb_size)
                     with open(thumbnail_file, 'wb') as f:
                         f.write(thumb)
-                    image = cv2.imread(thumbnail_file)
-                    flippedimage = cv2.flip(image, 0)
-                    cv2.imwrite(thumbnail_file, flippedimage)
+                    subprocess.call(f"convert {thumbnail_file} -flip {thumbnail_file}", shell=True)
             elif cid == 0x03043005:
                 g.root_parser.read_string()
             else:

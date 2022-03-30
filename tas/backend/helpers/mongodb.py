@@ -295,6 +295,20 @@ def get_wallboard_players_max():
         return r['count']
 
 
+def set_wallboard_challenges_max(c):
+    mongoDB().settings.replace_one({'_id': 'wallboard_challenges_max'}, {'_id': 'wallboard_challenges_max', 'count': int(c)}, True)
+
+
+def get_wallboard_challenges_max():
+    r = mongoDB().settings.find_one({'_id': 'wallboard_challenges_max'})
+    if r is None:
+        wcmd = get_config('util')['wallboard_challenges_max_default']
+        set_wallboard_challenges_max(wcmd)
+        return wcmd
+    else:
+        return r['count']
+
+
 def set_tmnfd_name(name):
     mongoDB().settings.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
 
@@ -326,6 +340,17 @@ def get_display_admin():
     if r is None:
         return 'Admin'
     return r.get('admin', 'Admin')
+
+
+def set_client_download_url(url=None):
+    mongoDB().settings.replace_one({'_id': 'client_download_url'}, {'_id': 'client_download_url', 'url': url}, True)
+
+
+def get_client_download_url():
+    r = mongoDB().settings.find_one({'_id': 'client_download_url'})
+    if r is None:
+        return None
+    return r.get('url', None)
 
 
 """

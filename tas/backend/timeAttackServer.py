@@ -7,7 +7,7 @@ from multiprocessing import Process
 from urllib.parse import unquote
 from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, laptime_filter
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
-from helpers.mongodb import get_wallboard_players_max, get_tmnfd_name, get_display_self_url, get_display_admin
+from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name, get_display_self_url, get_display_admin, get_client_download_url
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
@@ -28,9 +28,11 @@ class Settings():
     def index(self):
         result = dict()
         result['wallboard_players_max'] = get_wallboard_players_max()
+        result['wallboard_challenges_max'] = get_wallboard_challenges_max()
         result['tmnfd_name'] = get_tmnfd_name()
         result['display_self_url'] = get_display_self_url()
         result['display_admin'] = get_display_admin()
+        result['client_download_url'] = get_client_download_url()
         return result
 
 
@@ -197,6 +199,10 @@ if __name__ == '__main__':
         '/thumbnails': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "thumbnails"
+        },
+        '/download': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "download"
         }
     }
     config = get_config('server')

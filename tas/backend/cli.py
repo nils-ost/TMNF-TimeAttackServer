@@ -12,6 +12,14 @@ def wallboardPalyersMax():
         set_wallboard_players_max(int(selection))
 
 
+def wallboardChallengesMax():
+    from helpers.mongodb import get_wallboard_challenges_max, set_wallboard_challenges_max
+    current = get_wallboard_challenges_max()
+    selection = input(f"\nSet new wallboard challenges max ({current}): ")
+    if not selection == "" and not int(selection) == current and int(selection) > 0:
+        set_wallboard_challenges_max(int(selection))
+
+
 def displayAdmin():
     from helpers.mongodb import get_display_admin, set_display_admin
     current = get_display_admin()
@@ -28,6 +36,21 @@ def displaySelfUrl():
         set_display_self_url(selection)
 
 
+def clientDownloadURL():
+    from helpers.mongodb import get_client_download_url, set_client_download_url
+    if input('Disable Client Download URL? (y/N): ') == 'y':
+        set_client_download_url()
+        return
+    current = get_client_download_url()
+    if current is None:
+        current = '/download/tmnf_client.exe'
+    selection = input(f"\nSet new client download url ({current}): ")
+    if selection == "":
+        set_client_download_url(current)
+    else:
+        set_client_download_url(selection)
+
+
 def clearDB():
     from helpers.mongodb import mongoDB
     if not input('Wipe all player, challenge and laptime data? (y/N): ').strip() == 'y':
@@ -38,6 +61,8 @@ def clearDB():
     print('Wiped Players')
     mongoDB().laptimes.drop()
     print('Wiped Laptimes')
+    mongoDB().laptimebackups.drop()
+    print('Wiped Laptimebackups')
     mongoDB().bestlaptimes.drop()
     print('Wiped Bestlaptimes')
     mongoDB().rankings.drop()
@@ -105,8 +130,10 @@ def mergePlayers():
 
 commands = [
     ('Set Wallboard Players Max', wallboardPalyersMax),
+    ('Set Wallboard Challenges Max', wallboardChallengesMax),
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
+    ('Set Client Download URL', clientDownloadURL),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
