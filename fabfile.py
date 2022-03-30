@@ -268,7 +268,7 @@ def deploy_tmnfd_pre(c):
     install_apt_package(c, 'liblzo2-dev')
     install_apt_package(c, 'python3-dev')
     install_apt_package(c, 'build-essential')
-    install_apt_package(c, 'libgl1')  # only for rotating image, maybe this could be made better
+    install_apt_package(c, 'imagemagick')
     create_directorys_tmnfd(c)
 
 
