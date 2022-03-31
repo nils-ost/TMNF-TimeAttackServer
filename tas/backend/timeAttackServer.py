@@ -166,7 +166,9 @@ def error_page_404(status, message, traceback, version):
         path = path[1].strip('/').split('/')
         if path[0] in ['de', 'en']:
             cherrypy.response.status = 200
-            return serve_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html'))
+            f = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html')
+            print("Serve: " + f)
+            return serve_file(f)
     return "Page not found"
 
 
@@ -183,7 +185,7 @@ if __name__ == '__main__':
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang/de",
+            'tools.staticdir.dir': "ang/en",
             'tools.staticdir.index': "index.html"
         },
         '/de': {

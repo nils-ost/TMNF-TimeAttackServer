@@ -139,7 +139,7 @@ def create_directorys_mongodb(c):
 
 
 def create_directorys_tas(c):
-    for d in [project_dir + '/static']:
+    for d in [project_dir + '/static/thumbnails']:
         print(f"Creating {d}")
         c.run(f"mkdir -p {d}", warn=True, hide=True)
 
