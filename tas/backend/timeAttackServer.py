@@ -5,7 +5,7 @@ import time
 import os
 from multiprocessing import Process
 from urllib.parse import unquote
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, laptime_filter
+from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, laptime_filter
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name, get_display_self_url, get_display_admin, get_client_download_url
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
@@ -210,6 +210,7 @@ if __name__ == '__main__':
     cherrypy_cors.install()
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True, 'error_page.404': error_page_404})
 
+    wait_for_mongodb_server()
     start_tmnfd_connection()
     periodic_ranking_rebuild_process = Process(target=periodic_ranking_rebuild_function, daemon=True)
     periodic_ranking_rebuild_process.start()

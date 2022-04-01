@@ -87,17 +87,6 @@ def setup_virtualenv(c, pdir):
     c.run(f"{os.path.join(pdir, 'venv/bin/pip')} install -r {os.path.join(pdir, 'requirements.txt')}")
 
 
-def upload_deploy_helpers(c):
-    print("Creating deploy helpers")
-    c.run("mkdir -p /tmp/tmnf-tas-deploy")
-    c.put("install/wait_for_mongodb.py", remote=os.path.join("/tmp/tmnf-tas-deploy", "wait_for_mongodb.py"))
-
-
-def cleanup_deploy_helpers(c):
-    print("Removing deploy helpers")
-    c.run("rm -rf /tmp/tmnf-tas-deploy")
-
-
 def upload_project_files(c):
     for f in ["timeAttackServer.py", "cli.py", "requirements.txt"]:
         print(f"Uploading {f}")
@@ -171,11 +160,6 @@ def install_docker(c):
         print('Docker allready installed')
 
 
-def wait_for_mongodb(c):
-    print("Waiting for MongoDB to be started")
-    c.run(f"cd {project_dir}; {os.path.join(project_dir, 'venv/bin/python3')} /tmp/tmnf-tas-deploy/wait_for_mongodb.py")
-
-
 def backup_mongodb(c):
     if c.run(f"systemctl is-active {mongodb_service}", warn=True, hide=True).ok:
         backup_path = os.path.join(backup_dir, 'mongodb-' + datetime.now().isoformat() + '.tar.gz')
@@ -236,13 +220,11 @@ def deploy_mongodb_pre(c):
     install_docker(c)
     systemctl_start_docker(c)
     docker_pull(c, mongodb_image)
-    upload_deploy_helpers(c)
     create_directorys_mongodb(c)
     backup_mongodb(c)
 
 
 def deploy_mongodb_post(c):
-    cleanup_deploy_helpers(c)
     docker_prune(c)
 
 
@@ -346,7 +328,6 @@ def deploy(c):
     c.run("systemctl daemon-reload")
     systemctl_start(c, mongodb_service)
     systemctl_start(c, tmnfd_service)
-    wait_for_mongodb(c)
     systemctl_start(c, tas_service)
 
     deploy_tas_post(c)

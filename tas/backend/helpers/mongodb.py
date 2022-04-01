@@ -1,10 +1,28 @@
-from pymongo import MongoClient, ASCENDING, DESCENDING
+from pymongo import MongoClient, ASCENDING, DESCENDING, errors as mongo_errors
 from helpers.config import get_config
 from datetime import datetime
 import multiprocessing
+import sys
 
 _mongoDB = dict()
 config = get_config('mongo')
+
+
+def wait_for_mongodb_server():
+    first = True
+    mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=2000)
+    while(True):
+        try:
+            mongoClient.server_info()
+            print("MongoDB started ... continue", flush=True)
+            return
+        except mongo_errors.ServerSelectionTimeoutError:
+            if first:
+                print("MongoDB pending ... waiting", flush=True)
+                first = False
+        except Exception:
+            print("MongoDB unknown error ... aborting", flush=True)
+            sys.exit(1)
 
 
 def start_mongodb_connection():
