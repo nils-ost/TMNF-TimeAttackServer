@@ -167,7 +167,6 @@ def error_page_404(status, message, traceback, version):
         if path[0] in ['de', 'en']:
             cherrypy.response.status = 200
             f = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html')
-            print("Serve: " + f)
             return serve_file(f)
     return "Page not found"
 
