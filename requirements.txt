@@ -1,0 +1,5 @@
+-r tas/backend/requirements.txt
+-r tmnfd/requirements.txt
+-r install/requirements.txt
+invoke
+bpython
