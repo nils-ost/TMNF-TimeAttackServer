@@ -7,32 +7,32 @@ from helpers.GbxRemote import GbxRemote
 def wallboardPalyersMax():
     from helpers.mongodb import get_wallboard_players_max, set_wallboard_players_max
     current = get_wallboard_players_max()
-    selection = input(f"\nSet new wallboard players max ({current}): ")
-    if not selection == "" and not int(selection) == current and int(selection) > 0:
+    selection = input(f'\nSet new wallboard players max ({current}): ')
+    if not selection == '' and not int(selection) == current and int(selection) > 0:
         set_wallboard_players_max(int(selection))
 
 
 def wallboardChallengesMax():
     from helpers.mongodb import get_wallboard_challenges_max, set_wallboard_challenges_max
     current = get_wallboard_challenges_max()
-    selection = input(f"\nSet new wallboard challenges max ({current}): ")
-    if not selection == "" and not int(selection) == current and int(selection) > 0:
+    selection = input(f'\nSet new wallboard challenges max ({current}): ')
+    if not selection == '' and not int(selection) == current and int(selection) > 0:
         set_wallboard_challenges_max(int(selection))
 
 
 def displayAdmin():
     from helpers.mongodb import get_display_admin, set_display_admin
     current = get_display_admin()
-    selection = input(f"\nSet new display admin ({current}): ")
-    if not selection == "" and not selection == current:
+    selection = input(f'\nSet new display admin ({current}): ')
+    if not selection == '' and not selection == current:
         set_display_admin(selection)
 
 
 def displaySelfUrl():
     from helpers.mongodb import get_display_self_url, set_display_self_url
     current = get_display_self_url()
-    selection = input(f"\nSet new display self url ({current}): ")
-    if not selection == "" and not selection == current:
+    selection = input(f'\nSet new display self url ({current}): ')
+    if not selection == '' and not selection == current:
         set_display_self_url(selection)
 
 
@@ -44,8 +44,8 @@ def clientDownloadURL():
     current = get_client_download_url()
     if current is None:
         current = '/download/tmnf_client.exe'
-    selection = input(f"\nSet new client download url ({current}): ")
-    if selection == "":
+    selection = input(f'\nSet new client download url ({current}): ')
+    if selection == '':
         set_client_download_url(current)
     else:
         set_client_download_url(selection)
@@ -80,15 +80,15 @@ def nextChallenge():
     sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     sender.connect()
 
-    selection = input("\nNext Challenge index (or empty for next Challenge in list): ")
-    if not selection == "" and int(selection) >= 0:
+    selection = input('\nNext Challenge index (or empty for next Challenge in list): ')
+    if not selection == '' and int(selection) >= 0:
         print(sender.callMethod('SetNextChallengeIndex', int(selection)))
     print(sender.callMethod('NextChallenge'))
 
 
 def clearPlayerIP():
     from helpers.mongodb import mongoDB, player_get
-    player_id = input("\nEnter player_id: ")
+    player_id = input('\nEnter player_id: ')
     player = player_get(player_id)
     if player is None:
         print('Invalid player_id!')
@@ -101,29 +101,29 @@ def clearPlayerIP():
 def mergePlayers():
     from helpers.mongodb import player_get, player_merge
     from datetime import datetime
-    p1 = input("PlayerID 1: ")
+    p1 = input('PlayerID 1: ')
     p1 = player_get(player_id=p1)
     if p1 is None:
-        print("Does not exist!")
+        print('Does not exist!')
         return
     print(f"Last Update: {datetime.fromtimestamp(p1['last_update']).isoformat()}\n")
-    p2 = input("PlayerID 2: ")
+    p2 = input('PlayerID 2: ')
     p2 = player_get(player_id=p2)
     if p2 is None:
-        print("Does not exist!")
+        print('Does not exist!')
         return
     print(f"Last Update: {datetime.fromtimestamp(p2['last_update']).isoformat()}\n")
     p1, p2 = ((p1, p2) if p1['last_update'] > p2['last_update'] else (p2, p1))
     survivor = input(f"How survives? ({p1['_id']}): ")
-    if survivor == "":
+    if survivor == '':
         pass
     elif not survivor == p1['_id'] and not survivor == p2['_id']:
-        print("Invalid input!")
+        print('Invalid input!')
         return
     else:
         p1, p2 = ((p1, p2) if survivor == p1['_id'] else (p2, p1))
     print(f"{p2['_id']} is merged into {p1['_id']}")
-    if input("Execute? (y/N): ") == 'y':
+    if input('Execute? (y/N): ') == 'y':
         player_merge(p1['_id'], p2['_id'])
         print('done')
 
@@ -137,17 +137,17 @@ commands = [
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
-    ("Merge Players", mergePlayers)
+    ('Merge Players', mergePlayers)
 ]
 
 index = 0
 for display, func in commands:
-    print(f"{index} {display}")
+    print(f'{index} {display}')
     index += 1
 
-selection = int(input("\nSelect: "))
+selection = int(input('\nSelect: '))
 if selection not in range(0, len(commands)):
-    print("Invalid input!")
+    print('Invalid input!')
     sys.exit(1)
 
 commands[selection][1]()

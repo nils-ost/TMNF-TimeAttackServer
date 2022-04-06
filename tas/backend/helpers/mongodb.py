@@ -14,14 +14,14 @@ def wait_for_mongodb_server():
     while(True):
         try:
             mongoClient.server_info()
-            print("MongoDB started ... continue", flush=True)
+            print('MongoDB started ... continue', flush=True)
             return
         except mongo_errors.ServerSelectionTimeoutError:
             if first:
-                print("MongoDB pending ... waiting", flush=True)
+                print('MongoDB pending ... waiting', flush=True)
                 first = False
         except Exception:
-            print("MongoDB unknown error ... aborting", flush=True)
+            print('MongoDB unknown error ... aborting', flush=True)
             sys.exit(1)
 
 
@@ -46,21 +46,6 @@ TMNF-TimeAttack
 
 def clean_player_id(player_id):
     return player_id.rsplit(':', 1)[0]
-
-
-def print_all():
-    print('challenges:')
-    for c in mongoDB().challenges.find({}):
-        print(c)
-    print('players:')
-    for p in mongoDB().players.find({}):
-        print(p)
-    print('laptimes:')
-    for l in mongoDB().laptimes.find({}):
-        print(l)
-    print('bestlaptimes:')
-    for l in mongoDB().bestlaptimes.find({}):
-        print(l)
 
 
 def laptime_add(player_id, challenge_id, time):
@@ -160,9 +145,22 @@ def player_merge(survivor, merged):
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
-        mongoDB().challenges.insert_one({'_id': challenge_id, 'name': name, 'seen_count': 0, 'seen_last': None, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True})
+        mongoDB().challenges.insert_one({
+            '_id': challenge_id,
+            'name': name,
+            'seen_count': 0,
+            'seen_last': None,
+            'time_limit': time_limit,
+            'rel_time': rel_time,
+            'lap_race': lap_race,
+            'nb_laps': -1,
+            'active': True
+        })
     else:
-        mongoDB().challenges.update_one({'_id': challenge_id}, {'$set': {'name': name, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True}})
+        mongoDB().challenges.update_one(
+            {'_id': challenge_id},
+            {'$set': {'name': name, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True}}
+        )
 
 
 def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None):
@@ -238,7 +236,7 @@ def ranking_global():
     rank = 0
     step = 1
     points = None
-    for player in mongoDB().rankings.aggregate([{"$group": {'_id': '$player_id', 'points': {'$sum': '$points'}}}, {'$sort': {'points': DESCENDING}}]):
+    for player in mongoDB().rankings.aggregate([{'$group': {'_id': '$player_id', 'points': {'$sum': '$points'}}}, {'$sort': {'points': DESCENDING}}]):
         if player['points'] == points:
             step += 1
         else:
@@ -414,7 +412,7 @@ def get_laptimes_sum():
     r = mongoDB().utils.find_one({'_id': 'laptimes_sum'})
     if r is None or ts - r.get('ts', 0) > 10:
         try:
-            s = mongoDB().laptimes.aggregate([{"$group": {'_id': 'sum', 'time': {'$sum': '$time'}}}]).next()['time']
+            s = mongoDB().laptimes.aggregate([{'$group': {'_id': 'sum', 'time': {'$sum': '$time'}}}]).next()['time']
         except StopIteration:
             s = 0
         mongoDB().utils.replace_one({'_id': 'laptimes_sum'}, {'_id': 'laptimes_sum', 'ts': ts, 'sum': s}, True)
@@ -427,7 +425,7 @@ def get_total_seen_count():
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'total_seen_count'})
     if r is None or ts - r.get('ts', 0) > 10:
-        count = mongoDB().challenges.aggregate([{"$group": {'_id': 'sum', 'seen_count': {'$sum': '$seen_count'}}}]).next()['seen_count']
+        count = mongoDB().challenges.aggregate([{'$group': {'_id': 'sum', 'seen_count': {'$sum': '$seen_count'}}}]).next()['seen_count']
         mongoDB().utils.replace_one({'_id': 'total_seen_count'}, {'_id': 'total_seen_count', 'ts': ts, 'count': count}, True)
         return count
     else:

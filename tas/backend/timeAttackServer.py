@@ -5,9 +5,11 @@ import time
 import os
 from multiprocessing import Process
 from urllib.parse import unquote
-from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get, player_all, player_get, player_update_ip, laptime_filter
+from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get
+from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
-from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name, get_display_self_url, get_display_admin, get_client_download_url
+from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
@@ -94,13 +96,13 @@ class Players():
             if cherrypy.request.method == 'OPTIONS':
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
             player_ip = cherrypy.request.remote.ip
-            if cherrypy.request.method == "GET":
+            if cherrypy.request.method == 'GET':
                 result = player_get(player_ip=player_ip)
                 if result is not None:
                     result['id'] = result.pop('_id', None)
                     result['name'] = result.pop('nickname', None)
                 return result
-            elif cherrypy.request.method == "PATCH":
+            elif cherrypy.request.method == 'PATCH':
                 player_id = cherrypy.request.json.get('player_id', None)
                 if player_id is None:
                     return {'s': 1, 'm': 'player_id missing in request'}
@@ -166,9 +168,9 @@ def error_page_404(status, message, traceback, version):
         path = path[1].strip('/').split('/')
         if path[0] in ['de', 'en']:
             cherrypy.response.status = 200
-            f = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static/ang", path[0], 'index.html')
+            f = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/ang', path[0], 'index.html')
             return serve_file(f)
-    return "Page not found"
+    return 'Page not found'
 
 
 def periodic_ranking_rebuild_function():
@@ -182,28 +184,28 @@ def periodic_ranking_rebuild_function():
 if __name__ == '__main__':
     conf = {
         '/': {
-            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), "static"),
+            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang/en",
-            'tools.staticdir.index': "index.html"
+            'tools.staticdir.dir': 'ang/en',
+            'tools.staticdir.index': 'index.html'
         },
         '/de': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang/de",
-            'tools.staticdir.index': "index.html"
+            'tools.staticdir.dir': 'ang/de',
+            'tools.staticdir.index': 'index.html'
         },
         '/en': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "ang/en",
-            'tools.staticdir.index': "index.html"
+            'tools.staticdir.dir': 'ang/en',
+            'tools.staticdir.index': 'index.html'
         },
         '/thumbnails': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "thumbnails"
+            'tools.staticdir.dir': 'thumbnails'
         },
         '/download': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "download"
+            'tools.staticdir.dir': 'download'
         }
     }
     config = get_config('server')

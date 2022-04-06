@@ -1,0 +1,24 @@
+exclude: '(tas/frontend|.md$|.drawio$)'
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v1.1.1
+    hooks:
+    -   id: trailing-whitespace
+    -   id: flake8
+    -   id: check-merge-conflict
+    -   id: double-quote-string-fixer
+    -   id: end-of-file-fixer
+    -   id: debug-statements
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-byte-order-marker
+    -   id: check-case-conflict
+    -   id: check-json
+    -   id: check-symlinks
+    -   id: check-yaml
+    -   id: detect-private-key
+    -   id: requirements-txt-fixer
+-   repo: https://github.com/Lucas-C/pre-commit-hooks.git
+    rev: v1.1.12
+    hooks:
+    -   id: remove-tabs

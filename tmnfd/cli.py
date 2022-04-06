@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 from helpers.config import get_config, save_config
 from helpers.settings import DedicatedCfg, MatchSettings
@@ -7,7 +8,7 @@ from glob import glob
 from pygbx import Gbx, GbxType
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-parser = argparse.ArgumentParser(description="TMNFD CLI")
+parser = argparse.ArgumentParser(description='TMNFD CLI')
 parser.add_argument('--init', dest='init', action='store_true', default=False, help='Initialize Configuration')
 parser.add_argument('--prepare-start', dest='prepare_start', action='store_true', help='Prepares everything for tmnfd to be started')
 args = parser.parse_args()
@@ -55,12 +56,12 @@ def generate_thumbnails(interactive=True):
             os.makedirs(tpath)
         for ident, path in ms.get_challenges():
             challenge_file = os.path.join(cpath, path.replace('\\', '/'))
-            thumbnail_file = os.path.join(tpath, f"{ident}.jpg")
+            thumbnail_file = os.path.join(tpath, f'{ident}.jpg')
             extract_thumbnail(challenge_file, thumbnail_file)
             if interactive:
-                print(f"Extracted thumbnail from {challenge_file} to {thumbnail_file}")
+                print(f'Extracted thumbnail from {challenge_file} to {thumbnail_file}')
     elif interactive:
-        print("Thumbnail generation is disabled!")
+        print('Thumbnail generation is disabled!')
 
 
 def toggle_thumbnail_generation():
@@ -87,12 +88,12 @@ else:
 
     index = 0
     for display, func in commands:
-        print(f"{index} {display}")
+        print(f'{index} {display}')
         index += 1
 
-    selection = int(input("\nSelect: "))
+    selection = int(input('\nSelect: '))
     if selection not in range(0, len(commands)):
-        print("Invalid input!")
+        print('Invalid input!')
         sys.exit(1)
 
     commands[selection][1]()

@@ -90,7 +90,7 @@ def worker_function(msg_queue, sender):
                 player_id, player_login, player_time = params
                 laptime_add(player_login, current_challenge, player_time)
                 if player_time > 0:
-                    print(f"{player_login} drove: {player_time / 1000}")
+                    print(f'{player_login} drove: {player_time / 1000}')
                 sendLaptimeNotice(sender, player_login, player_time)
 
         elif func == 'TrackMania.BeginRace':
@@ -118,11 +118,11 @@ def worker_function(msg_queue, sender):
             player_update(player['Login'], player['NickName'], player['PlayerId'])
 
         elif func == 'TrackMania.PlayerConnect':
-            print(f"{params[0]} connected")
+            print(f'{params[0]} connected')
             sendLaptimeNotice(sender, params[0])
 
         elif func == 'TrackMania.PlayerDisconnect':
-            print(f"{params[0]} disconnected")
+            print(f'{params[0]} disconnected')
 
 
 def receiver_function(msg_queue, receiver):
@@ -130,7 +130,7 @@ def receiver_function(msg_queue, receiver):
         try:
             msg_queue.put(receiver.receiveCallback())
         except ConnectionResetError:
-            print("Lost connection to: TMNF - Dedicated Server")
+            print('Lost connection to: TMNF - Dedicated Server')
             challenge_id_set(None, current=True)
             challenge_id_set(None, next=True)
             return
@@ -154,17 +154,17 @@ def watcher_function():
             delay_counter = 0
             while not receiver.connect():
                 if delay_counter == 0:
-                    print("Waiting for: TMNF - Dedicated Server")
+                    print('Waiting for: TMNF - Dedicated Server')
                 delay_counter = (delay_counter + 1) % 30
                 time.sleep(1)
             while not sender.connect():
                 time.sleep(1)
-            print("Connected to: TMNF - Dedicated Server")
+            print('Connected to: TMNF - Dedicated Server')
             prepareChallenges(sender)
 
             server_name = sender.callMethod('GetServerName')[0]
             set_tmnfd_name(server_name)
-            print(f"TMNF - Dedicated Server Name: {server_name}")
+            print(f'TMNF - Dedicated Server Name: {server_name}')
             current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
             challenge_update(current_challenge['UId'], force_inc=False)
             print(f"Challenge current: {current_challenge['Name']}")

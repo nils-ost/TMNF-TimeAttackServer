@@ -20,7 +20,7 @@ class GbxRemote():
             headerLength = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24)
 
             header = self.socket.recv(headerLength)
-            if not header.decode() == "GBXRemote 2":
+            if not header.decode() == 'GBXRemote 2':
                 print('Invalid header.')
                 exit(0)
 
@@ -79,7 +79,7 @@ class GbxRemote():
 
         header = self.socket.recv(8)
         size = header[0] | (header[1] << 8) | (header[2] << 16) | (header[3] << 24)
-        responseHandler = header[4] | (header[5] << 8) | (header[6] << 16) | (header[7] << 24)
+        # responseHandler = header[4] | (header[5] << 8) | (header[6] << 16) | (header[7] << 24)
 
         response = self.socket.recv(size)
         while len(response) < size:

@@ -6,7 +6,6 @@ def extract_thumbnail(challenge_file, thumbnail_file):
     try:
         g = Gbx(challenge_file)
         g.root_parser.pos = g.positions['user_data_size'].pos
-        user_data_size = g.root_parser.read_uint32()
         num_chunks = g.root_parser.read_uint32()
 
         entries = dict()
@@ -23,7 +22,7 @@ def extract_thumbnail(challenge_file, thumbnail_file):
                     thumb = g.root_parser.read(thumb_size)
                     with open(thumbnail_file, 'wb') as f:
                         f.write(thumb)
-                    subprocess.call(f"convert {thumbnail_file} -flip {thumbnail_file}", shell=True)
+                    subprocess.call(f'convert {thumbnail_file} -flip {thumbnail_file}', shell=True)
             elif cid == 0x03043005:
                 g.root_parser.read_string()
             else:
