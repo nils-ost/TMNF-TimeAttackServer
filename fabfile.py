@@ -248,6 +248,7 @@ def deploy_tas_pre(c):
     install_apt_package(c, 'rsync')
     install_apt_package(c, 'python3')
     install_apt_package(c, 'virtualenv')
+    install_apt_package(c, 'git')
     create_directorys_tas(c)
 
 

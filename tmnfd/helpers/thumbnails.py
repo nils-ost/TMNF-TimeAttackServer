@@ -6,6 +6,7 @@ def extract_thumbnail(challenge_file, thumbnail_file):
     try:
         g = Gbx(challenge_file)
         g.root_parser.pos = g.positions['user_data_size'].pos
+        g.root_parser.read_uint32()  # reads user_data_size, data is not required but needs to be read to get to the next data-word
         num_chunks = g.root_parser.read_uint32()
 
         entries = dict()
