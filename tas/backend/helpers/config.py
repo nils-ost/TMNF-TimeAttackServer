@@ -12,7 +12,7 @@ config = {
     'mongo': {
         'host': 'localhost',
         'port': 27017,
-        'database': 'tmnf-ta'
+        'database': 'tmnf-tas'
     },
     'challenges': {
         'rel_time': 'SilverTime',

@@ -2,107 +2,254 @@
 
 ## Public
 
-`/challenges`
+### GET /challenges/
 
-  * id
-  * name
-  * seen_count
-  * seen_last
-  * time_limit
+Returns a list of all, as active marked, Challenges elements.
 
-`/challenges/current`
+#### Cache-Control
 
-  * id
-  * name
-  * seen_count
-  * seen_last
-  * time_limit
-  * rel_time
-  * lap_race
-  * nb_laps
-  * active
+  * `public`
+  * `s-maxage=9`
 
-`/challenges/next`
+#### Element-Attributes
 
-`/players` gives all players
+  * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `name` *(string)* Name of Challenge given by author
+  * `seen_count` *(integer)* How many times the Challenge was the current Challenge
+  * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
+  * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
 
-  * id
-  * name
-  * last_update
-  * ip
+### GET /challenges/current/
 
-`/players/<player_id>` gives details for player_id
+Returns information about current Challenge or `Null` if there is no current Challenge (e.g. if the dedicated server is switching Challenges)
 
-  * id
-  * name
-  * last_update
-  * current_uid
-  * ip
+#### Cache-Control
 
-`/players/me/` GET returns player with the same IP as the request is made from; PATCH sets the IP of given player to the one the request is made from
+  * `public`
+  * `s-maxage=9`
 
-GET-Return:
+#### Attributes
 
-  * id
-  * name
-  * last_update
-  * current_uid
-  * ip
+  * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `name` *(string)* Name of Challenge given by author
+  * `seen_count` *(integer)* How many times the Challenge was the current Challenge
+  * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
+  * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
+  * `rel_time` *(integer)* The value of relevant time, used for time_limit calculation, in milliseconds
+  * `lap_race` *(boolean)* Challenge is a multilap Challenge or not
+  * `nb_laps` *(integer)* Number of laps, in multilap Challenges, the rel_time is based on
+  * `active` *(boolean)* If Challenge is contained in currently used MatchSettings (should allways be True)
 
-PATCH-Data:
+### GET /challenges/next/
 
-`{"player_id": "<id>"}`
+Returns information about next Challenge or `Null` if there is no next Challenge (e.g. if TAS lost connection to dedicated server)
 
-! Ensure the trailing /
+#### Cache-Control
 
-`/players/<player_id>/rankings` gives all rankings of player_id
+  * `public`
+  * `s-maxage=9`
 
-  * challenge_id
-  * at
-  * rank
-  * time
-  * points
+#### Attributes
 
-`/players/<player_id>/laptimes` gives all laptimes of player_id
+  * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `name` *(string)* Name of Challenge given by author
+  * `seen_count` *(integer)* How many times the Challenge was the current Challenge
+  * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
+  * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
+  * `rel_time` *(integer)* The value of relevant time, used for time_limit calculation, in milliseconds
+  * `lap_race` *(boolean)* Challenge is a multilap Challenge or not
+  * `nb_laps` *(integer)* Number of laps, in multilap Challenges, the rel_time is based on
+  * `active` *(boolean)* If Challenge is contained in currently used MatchSettings (should allways be True)
 
-  * challenge_id
-  * time
-  * created_at
+### GET /players/
 
-`/players/<player_id>/laptimes/<challenge_id>` gives all laptimes of player_id for challenge_id
+Returns a list of all Player elements present on server
 
-  * time
-  * created_at
+#### Cache-Control
 
-`/rankings/<challenge_id>` gives ranking for challenge_id
+  * `public`
+  * `s-maxage=29`
 
-  * player_id
-  * at
-  * rank
-  * time
-  * points
+#### Element-Attributes
+  
+  * `id` *(string)* Internally used unique ID of Player
+  * `name` *(string)* Ingame nickname of Player
+  * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
+  * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
 
-`/rankings` gives global ranking for all players
+### GET /players/{player_id}/
 
-  * player_id
-  * rank
-  * points
+Returns details for single Player, or `Null` if given player_id can't be found on server
 
-`/settings` returns dynamic settings
+#### Cache-Control
 
-  * wallboard_players_max
-  * wallboard_challenges_max
-  * tmnfd_name
-  * display_self_url
-  * display_admin
-  * client_download_url
+  * `public`
+  * `s-maxage=29`
 
-`/stats` returns current stats of stuff happening on server
+#### Attributes
 
-  * total_players  *- the number of individual players ever joined to server*
-  * active_players  *- the number of players currently playing on server*
-  * laptimes_count  *- the summed up count of all laptimes by all players on all challenges*
-  * laptimes_sum  *- the summed up time of all laptimes by all players on all challenges*
-  * challenges_total_seen_count  *- summed up see_count of all challenges*
+  * `id` *(string)* Internally used unique ID of Player
+  * `name` *(string)* Ingame nickname of Player
+  * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
+  * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
+  * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
+
+### GET /players/me/
+
+Returns player with the same IP as the request is made from (or `Null` if no corresponding Player is found)
+
+#### Cache-Control
+
+  * `no-cache`
+
+#### Attributes
+
+  * `id` *(string)* Internally used unique ID of Player
+  * `name` *(string)* Ingame nickname of Player
+  * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
+  * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
+  * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
+  
+### PATCH /players/me/
+
+Assigns the requesting IP to the, in playload, given Player.
+
+! Ensure the tailing /
+
+#### Request Data
+
+JSON-Document with following Attributes:
+
+  * `player_id` *(string)* Internally used unique ID of Player
+
+#### Response Data
+
+JSON-Document with following Attributes:
+
+  * `s` *(integer)* Return state
+  * `m` *(string)* Message describeing state
+
+##### Possible States
+
+Following states are possible to be returned:
+
+  * `0` Operation executed as requested
+  * `1` player_id is missing in request data or invalid player_id
+  * `2` Player does allready have a IP assigned
+  * `3` IP allready assigned to a different Player
+
+
+### GET /players/{player_id}/rankings/
+
+Returns a list of all Players challenge ranking elements for given player_id
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=3`
+
+#### Element-Attributes
+
+  * `challenge_id` *(string)* Challenges unique ID as used in MatchSettings
+  * `at` *(integer)* At which time the Player drove it's best Laptime on Challenge, as UNIX-Timestamp
+  * `rank` *(integer)* Challenge rank of this Player
+  * `time` *(integer)* Best Laptime of Player on Challenge, in milliseconds
+  * `points` *(integer)* Challenge points of this Player
+
+### GET /players/{player_id}/laptimes/
+
+Returns a list of all Laptime elements for given player_id 
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=59`
+
+#### Element-Attributes
+
+  * `challenge_id` *(string)* Challenges unique ID as used in MatchSettings
+  * `time` *(integer)* Laptime of Player on Challenge, in milliseconds
+  * `created_at` *(integer)* At which time the Player drove Laptime on Challenge, as UNIX-Timestamp
+
+### GET /players/{player_id}/laptimes/{challenge_id}/
+
+Returns a list of all Laptime elements of given player_id for given challenge_id
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=29`
+
+#### Element-Attributes
+
+  * `time` *(integer)* Laptime of Player on Challenge, in milliseconds
+  * `created_at` *(integer)* At which time the Player drove Laptime on Challenge, as UNIX-Timestamp
+
+### GET /rankings/{challenge_id}/
+
+Returns a list of all Players challenge ranking elements for given challenge_id
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=3`
+
+#### Element-Attributes
+
+  * `player_id` *(string)* Internally used unique ID of Player
+  * `at` *(integer)* At which time the Player drove it's best Laptime on Challenge, as UNIX-Timestamp
+  * `rank` *(integer)* Challenge rank of this Player
+  * `time` *(integer)* Best Laptime of Player on Challenge, in milliseconds
+  * `points` *(integer)* Challenge points of this Player
+
+### GET /rankings/
+
+Returns a list of all Players global ranking elements
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=3`
+
+#### Element-Attributes
+
+  * `player_id` *(string)* Internally used unique ID of Player
+  * `rank` *(integer)* Global rank of this Player
+  * `points` *(integer)* Global points of this Player
+
+### GET /settings/
+
+Returns dynamic settings
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=59`
+
+#### Attributes
+
+  * `wallboard_players_max` *(integer)* Maximum number of Players displayed on wallboard
+  * `wallboard_challenges_max` *(integer)* Maximum number of Challenges displayer in challenges-ticker on wallboard
+  * `tmnfd_name` *(string)* Ingame name of TMNF-Dedicated server
+  * `display_self_url` *(string)* URL that should point to the TAS website (or `Null` if not set)
+  * `display_admin` *(string)* What is displayed as the server-admin contact (or `Null` if not set)
+  * `client_download_url` *(string)* URL pointing to TMNF-Client installer (or `Null` if not set)
+
+### GET /stats/
+
+Returns current stats of stuff happening on server
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=29`
+
+#### Attributes
+
+  * `total_players` *(integer)* the number of individual players ever joined to server
+  * `active_players` *(integer)* the number of players currently playing on server
+  * `laptimes_count` *(integer)* the summed up count of all laptimes by all players on all challenges
+  * `laptimes_sum` *(integer)* the summed up time of all laptimes by all players on all challenges in milliseconds
+  * `challenges_total_seen_count` *(integer)* summed up see_count of all challenges
 
 ## Private

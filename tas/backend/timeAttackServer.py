@@ -34,6 +34,7 @@ class Settings():
         result['display_self_url'] = get_display_self_url()
         result['display_admin'] = get_display_admin()
         result['client_download_url'] = get_client_download_url()
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 
 
@@ -47,6 +48,7 @@ class Stats():
         result['laptimes_count'] = get_laptimes_count()
         result['laptimes_sum'] = get_laptimes_sum()
         result['challenges_total_seen_count'] = get_total_seen_count()
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
         return result
 
 
@@ -57,6 +59,7 @@ class Challenges():
         result = list()
         for c in challenge_all():
             result.append({'id': c['_id'], 'name': c['name'], 'seen_count': c['seen_count'], 'seen_last': c['seen_last'], 'time_limit': c['time_limit']})
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
         return result
 
     @cherrypy.expose()
@@ -67,6 +70,7 @@ class Challenges():
             return None
         c['id'] = c['_id']
         c.pop('_id', None)
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
         return c
 
     @cherrypy.expose()
@@ -77,6 +81,7 @@ class Challenges():
             return None
         c['id'] = c['_id']
         c.pop('_id', None)
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
         return c
 
 
@@ -90,16 +95,21 @@ class Players():
             result = list()
             for p in player_all():
                 result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update'], 'ip': p.get('ip', None)})
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
             return result
         elif player_id == 'me':
             if cherrypy.request.method == 'OPTIONS':
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
-            player_ip = cherrypy.request.remote.ip
+            if 'X-Forwarded-For' in cherrypy.request.headers:  # needs to be used in case haproxy is used in front of TAS
+                player_ip = cherrypy.request.headers['X-Forwarded-For']
+            else:
+                player_ip = cherrypy.request.remote.ip
             if cherrypy.request.method == 'GET':
                 result = player_get(player_ip=player_ip)
                 if result is not None:
                     result['id'] = result.pop('_id', None)
                     result['name'] = result.pop('nickname', None)
+                cherrypy.response.headers['Cache-Control'] = 'no-cache'
                 return result
             elif cherrypy.request.method == 'PATCH':
                 player_id = cherrypy.request.json.get('player_id', None)
@@ -125,8 +135,10 @@ class Players():
                 if result is not None:
                     result['id'] = result.pop('_id', None)
                     result['name'] = result.pop('nickname', None)
+                cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
                 return result
             elif details == 'rankings':
+                cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=3'
                 return ranking_player(player_id)
             elif details == 'laptimes':
                 if challenge_id is None:
@@ -135,6 +147,7 @@ class Players():
                         lt.pop('_id', None)
                         lt.pop('player_id', None)
                         result.append(lt)
+                    cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
                     return result
                 else:
                     result = list()
@@ -143,6 +156,7 @@ class Players():
                         lt.pop('player_id', None)
                         lt.pop('challenge_id', None)
                         result.append(lt)
+                    cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
                     return result
             else:
                 return None
@@ -154,10 +168,12 @@ class Rankings():
     @cherrypy.tools.json_out()
     def index(self, challenge_id=None):
         if challenge_id is None:
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=3'
             return ranking_global()
         elif challenge_get(challenge_id) is None:
             return {'m': 'invalid challenge_id'}
         else:
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=3'
             return ranking_challenge(challenge_id)
 
 
