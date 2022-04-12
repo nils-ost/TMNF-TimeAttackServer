@@ -12,6 +12,7 @@ from helpers.mongodb import get_display_self_url, get_display_admin, get_client_
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.config import get_config
+from helpers.metrics import start_metrics_exporter
 
 
 class TimeAttackServer():
@@ -222,4 +223,5 @@ if __name__ == '__main__':
     start_tmnfd_connection()
     periodic_ranking_rebuild_process = Process(target=periodic_ranking_rebuild_function, daemon=True)
     periodic_ranking_rebuild_process.start()
+    start_metrics_exporter()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)

@@ -22,6 +22,10 @@ config = {
     'server': {
         'port': 8000
     },
+    'metrics': {
+        'enabled': False,
+        'port': 8001
+    },
     'util': {
         'wallboard_players_max_default': 10,
         'wallboard_challenges_max_default': 8
