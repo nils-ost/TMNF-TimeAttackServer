@@ -1,6 +1,7 @@
 from fabric import task
 import patchwork.transfers
 import os
+import json
 from datetime import datetime
 
 apt_update_run = False
@@ -9,6 +10,9 @@ backup_dir = '/var/backup'
 storagedir_mongo = '/var/data/mongodb'
 mongodb_image = 'mongo:4.4'
 mongodb_service = 'docker.mongodb.service'
+haproxy_image = 'haproxy:lts-alpine'
+haproxy_service = 'docker.haproxy.service'
+haproxy_config = '/etc/haproxy/haproxy.cfg'
 tas_service = 'tmnf-tas.service'
 tmnfc_dl_url = 'http://files.trackmaniaforever.com/tmnationsforever_setup.exe'
 tmnfc_dir = 'static/download'
@@ -304,6 +308,37 @@ def deploy_tmnfd(c):
     systemctl_start(c, tmnfd_service)
 
     deploy_tmnfd_post(c)
+
+
+@task(name='deploy-haproxy')
+def deploy_haproxy(c):
+    install_apt_package(c, 'curl')
+    install_docker(c)
+    systemctl_start_docker(c)
+    docker_pull(c, haproxy_image)
+    systemctl_stop(c, haproxy_service)
+
+    tas_config = c.run('tmnf-tas --config', warn=True, hide=True)
+    if not tas_config.ok:
+        print("TAS not installed, can't setup HAproxy")
+        return
+    tas_config = json.loads(tas_config.stdout)
+    if int(tas_config['server']['port']) == 80:
+        print("TAS allready occupying port 80, can't setup HAproxy")
+        return
+    c.run(f'mkdir -p {os.path.dirname(haproxy_config)}', hide=True)
+    c.put('install/haproxy.cfg', remote=haproxy_config)
+    c.run(f"sed -i 's/local_tas host.docker.internal:[0-9]*/local_tas host.docker.internal:{tas_config['server']['port']}/' {haproxy_config}")
+
+    systemctl_install_service(c, 'docker.service', haproxy_service, [
+        ('__additional__', '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0'),
+        ('__storage__', haproxy_config + ':/usr/local/etc/haproxy/haproxy.cfg:ro'),
+        ('__port__', '80:80 -p 8404:8404'),
+        ('__image__', haproxy_image)
+    ])
+    c.run('systemctl daemon-reload')
+    systemctl_start(c, haproxy_service)
+    docker_prune(c)
 
 
 @task

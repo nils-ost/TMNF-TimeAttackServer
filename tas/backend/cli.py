@@ -1,7 +1,15 @@
 #!venv/bin/python
+import os
 import sys
+import argparse
+import json
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
+parser.add_argument('--config', dest='config', action='store_true', default=False, help='Returns current configuration')
+args = parser.parse_args()
 
 
 def wallboardPalyersMax():
@@ -139,6 +147,10 @@ commands = [
     ("Clear Player's IP", clearPlayerIP),
     ('Merge Players', mergePlayers)
 ]
+
+if args.config:
+    print(json.dumps(get_config(), indent=2))
+    sys.exit(0)
 
 index = 0
 for display, func in commands:
