@@ -2,6 +2,7 @@ from fabric import task
 import patchwork.transfers
 import os
 import json
+import time
 from datetime import datetime
 
 apt_update_run = False
@@ -339,6 +340,74 @@ def deploy_haproxy(c):
     c.run('systemctl daemon-reload')
     systemctl_start(c, haproxy_service)
     docker_prune(c)
+
+
+@task(name='deploy-iptables')
+def deploy_iptables(c):
+    c.run('echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections')
+    c.run('echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections')
+    install_apt_package(c, 'iptables-persistent')
+
+    rules_v4 = """
+    INPUT -p udp -m udp --dport 2350 -j ACCEPT
+    INPUT -p tcp -m tcp --dport 2350 -j ACCEPT
+    INPUT -p tcp -m tcp --dport 3450 -j ACCEPT
+    INPUT -i lo -j ACCEPT
+    INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+    INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+    INPUT -i docker0 -p tcp -m tcp --dport 8000 -j ACCEPT
+    INPUT -p icmp -j ACCEPT
+    INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    """
+    for rule in rules_v4.strip().split('\n'):
+        rule = rule.strip()
+        if not c.run(f'iptables -C {rule}', hide=True, warn=True).ok:
+            print(f'Adding rule v4: {rule}')
+            c.run(f'iptables -A {rule}')
+    c.run('iptables -P INPUT DROP')
+    c.run('iptables -P FORWARD DROP')
+
+    rules_v6 = """
+    INPUT -i lo -j ACCEPT
+    INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+    INPUT -p icmp -j ACCEPT
+    INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    """
+    for rule in rules_v6.strip().split('\n'):
+        rule = rule.strip()
+        if not c.run(f'ip6tables -C {rule}', hide=True, warn=True).ok:
+            print(f'Adding rule v6: {rule}')
+            c.run(f'ip6tables -A {rule}')
+    c.run('ip6tables -P INPUT DROP')
+    c.run('ip6tables -P FORWARD DROP')
+
+    docker_rules = """
+    -p tcp -m conntrack --ctorigdstport 8404 --ctdir ORIGINAL -j DROP
+    -p tcp -m conntrack --ctorigdstport 27017 --ctdir ORIGINAL -j DROP
+    """
+    ifaces = [iface for iface in c.run('ls /sys/class/net', hide=True).stdout.strip().split() if iface.startswith('enp') or iface.startswith('eth')]
+    docker_lines = list()
+    for rule in docker_rules.strip().split('\n'):
+        rule = rule.strip()
+        for iface in ifaces:
+            if not c.run(f'iptables -C DOCKER-USER -i {iface} {rule}', warn=True, hide=True).ok:
+                print(f'Adding rule v4: DOCKER-USER -i {iface} {rule}')
+                c.run(f'iptables -A DOCKER-USER -i {iface} {rule}')
+            docker_lines.append(f'-A DOCKER-USER -i {iface} {rule}')
+    do_del = c.run('iptables -C DOCKER-USER -j RETURN', warn=True, hide=True).ok
+    c.run('iptables -A DOCKER-USER -j RETURN')
+    docker_lines.append('-A DOCKER-USER -j RETURN')
+    if do_del:
+        c.run('iptables -D DOCKER-USER -j RETURN')
+
+    print('Writing /etc/iptables/rules.v4')
+    c.run(f'mv /etc/iptables/rules.v4 /etc/iptables/rules.v4.bak.{int(time.time())}', hide=True, warn=True)
+    c.put('install/iptables.v4', remote='/etc/iptables/rules.v4')
+    c.run("sed -i -e 's/###DOCKER_RULES###/" + '\\n'.join(docker_lines) + "/g' /etc/iptables/rules.v4")
+
+    print('Writing /etc/iptables/rules.v6')
+    c.run(f'mv /etc/iptables/rules.v6 /etc/iptables/rules.v6.bak.{int(time.time())}', hide=True, warn=True)
+    c.put('install/iptables.v6', remote='/etc/iptables/rules.v6')
 
 
 @task

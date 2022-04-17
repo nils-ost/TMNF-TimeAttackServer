@@ -23,6 +23,15 @@ then
     venv/bin/fab -i id_fab -H root@localhost deploy-haproxy
 fi
 
+echo -e "\n\n"
+read -p "Do you like to set up basic iptables-rules? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo -e "\n\n#####################################\nHandover to Fabric\n#####################################\n\n"
+    venv/bin/fab -i id_fab -H root@localhost deploy-iptables
+fi
+
 rm ~/.ssh/authorized_keys
 rm ~/.ssh/config
 mv ~/.ssh/authorized_keys.bak ~/.ssh/authorized_keys

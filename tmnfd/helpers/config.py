@@ -10,7 +10,7 @@ _config = {
     'challenges_path': 'dedicated/GameData/Tracks',
     'active_matchsetting': 'NationsWhite.txt',
     'thumbnails_path': '/opt/middleware/tmnf-tas/static/thumbnails',
-    'thumbnail_generation_enabled': False
+    'thumbnail_generation_enabled': True
 }
 
 

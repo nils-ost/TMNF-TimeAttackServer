@@ -51,5 +51,5 @@ def create_bundle(c):
     for item in ['tmnfd/cli.py', 'tmnfd/requirements.txt', 'tmnfd/helpers']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/tmnfd/')
     c.run('cp install/bundle-installer.sh /tmp/tmnf-tas/installer.sh; chmod +x /tmp/tmnf-tas/installer.sh')
-    c.run('makeself /tmp/tmnf-tas ./tmnf-tas-installer.run "Installer for TMNF-TimeAttacServer" ./installer.sh')
+    c.run('makeself /tmp/tmnf-tas ./tmnf-tas-installer.run "Installer for TMNF-TimeAttackServer" ./installer.sh')
     c.run('rm -rf /tmp/tmnf-tas')
