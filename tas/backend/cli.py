@@ -3,7 +3,6 @@ import os
 import sys
 import argparse
 import json
-from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -42,6 +41,34 @@ def displaySelfUrl():
     selection = input(f'\nSet new display self url ({current}): ')
     if not selection == '' and not selection == current:
         set_display_self_url(selection)
+
+
+def downloadClient():
+    from tqdm import tqdm
+    import requests
+    from helpers.mongodb import set_client_download_url
+    url = 'http://files.trackmaniaforever.com/tmnationsforever_setup.exe'
+    file_name = 'static/download/tmnf_client.exe'
+    if os.path.isfile(file_name):
+        selection = input('Client allready present. Delete and redownload it? (y/N): ').strip()
+        if selection == 'y':
+            os.remove(file_name)
+            set_client_download_url()
+        else:
+            return
+    new_url = input(f'Download URL ({url}): ').strip()
+    if not new_url == '':
+        url = new_url
+    if not os.path.isdir('static/download'):
+        os.makedirs('static/download')
+    response = requests.get(url, stream=True)
+    content_len = int(response.headers.get('Content-Length'))
+    with open(file_name, 'wb') as handle, tqdm(total=content_len, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+        for data in response.iter_content(1024):
+            pbar.update(len(data))
+            handle.write(data)
+    print('Setting client download url to new file')
+    set_client_download_url('/download/tmnf_client.exe')
 
 
 def clientDownloadURL():
@@ -84,6 +111,7 @@ def clearDB():
 
 
 def nextChallenge():
+    from helpers.config import get_config
     config = get_config('tmnf-server')
     sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     sender.connect()
@@ -136,30 +164,39 @@ def mergePlayers():
         print('done')
 
 
+def exit():
+    sys.exit(0)
+
+
 commands = [
     ('Set Wallboard Players Max', wallboardPalyersMax),
     ('Set Wallboard Challenges Max', wallboardChallengesMax),
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
     ('Set Client Download URL', clientDownloadURL),
+    ('Download/Provide TMNF Client', downloadClient),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
-    ('Merge Players', mergePlayers)
+    ('Merge Players', mergePlayers),
+    ('Exit', exit)
 ]
 
 if args.config:
+    from helpers.config import get_config
     print(json.dumps(get_config(), indent=2))
     sys.exit(0)
 
-index = 0
-for display, func in commands:
-    print(f'{index} {display}')
-    index += 1
+while True:
+    index = 0
+    for display, func in commands:
+        print(f'{index} {display}')
+        index += 1
 
-selection = int(input('\nSelect: '))
-if selection not in range(0, len(commands)):
-    print('Invalid input!')
-    sys.exit(1)
+    selection = int(input('\nSelect: '))
+    if selection not in range(0, len(commands)):
+        print('Invalid input!')
+        sys.exit(1)
 
-commands[selection][1]()
+    commands[selection][1]()
+    print()

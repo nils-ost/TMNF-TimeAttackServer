@@ -15,9 +15,6 @@ haproxy_image = 'haproxy:lts-alpine'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
 tas_service = 'tmnf-tas.service'
-tmnfc_dl_url = 'http://files.trackmaniaforever.com/tmnationsforever_setup.exe'
-tmnfc_dir = 'static/download'
-tmnfc_exe = 'tmnf_client.exe'
 tmnfd_dl_url = 'http://files2.trackmaniaforever.com/TrackmaniaServer_2011-02-21.zip'
 tmnfd_dir = '/opt/middleware/tmnfd'
 tmnfd_version = '2011-02-21'
@@ -171,18 +168,6 @@ def backup_mongodb(c):
         c.run(f'docker cp {mongodb_service}:/backup.tar.gz {backup_path}', hide=True)
 
 
-def tmnfc_provide(c):
-    c.run(f'mkdir -p {os.path.join(project_dir, tmnfc_dir)}')
-    tmnfc = c.run(f"cat {os.path.join(project_dir, tmnfc_dir, 'tmnfc')}", warn=True, hide=True)
-    if tmnfc.ok:
-        if tmnfc.stdout.strip() == 'provided':
-            print('TMNF-Client allready provided')
-            return
-    print('Providing TMNF-Client EXE')
-    c.run(f'curl {tmnfc_dl_url} --output {os.path.join(project_dir, tmnfc_dir, tmnfc_exe)}')
-    c.run(f"echo 'provided' > {os.path.join(project_dir, tmnfc_dir, 'tmnfc')}")
-
-
 def tmnfd_version_matches(c):
     version = c.run(f"cat {os.path.join(tmnfd_dir, 'version')}", warn=True, hide=True)
     if version.ok:
@@ -257,10 +242,6 @@ def deploy_tas_pre(c):
     create_directorys_tas(c)
 
 
-def deploy_tas_post(c):
-    tmnfc_provide(c)
-
-
 @task(name='deploy-tas')
 def deploy_tas(c):
     deploy_tas_pre(c)
@@ -274,8 +255,6 @@ def deploy_tas(c):
     systemctl_install_service(c, 'tmnf-tas.service', tas_service, [('__project_dir__', project_dir)])
     c.run('systemctl daemon-reload')
     systemctl_start(c, tas_service)
-
-    deploy_tas_post(c)
 
 
 def deploy_tmnfd_pre(c):
@@ -444,6 +423,5 @@ def deploy(c):
     systemctl_start(c, tmnfd_service)
     systemctl_start(c, tas_service)
 
-    deploy_tas_post(c)
     deploy_mongodb_post(c)
     deploy_tmnfd_post(c)

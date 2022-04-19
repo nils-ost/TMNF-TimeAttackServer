@@ -1,7 +1,6 @@
 import os
 import sys
 import argparse
-from helpers.config import get_config, save_config
 from helpers.settings import DedicatedCfg, MatchSettings
 from helpers.thumbnails import extract_thumbnail
 from glob import glob
@@ -15,6 +14,7 @@ args = parser.parse_args()
 
 
 def init_config(force=True):
+    from helpers.config import get_config, save_config
     config = get_config()
     if force or not config.get('init', False):
         cfg = DedicatedCfg()
@@ -29,11 +29,13 @@ def init_config(force=True):
 
 
 def write_active():
+    from helpers.config import get_config
     ms = MatchSettings(get_config()['active_matchsetting'])
     ms.save(activate=True)
 
 
 def list_challenges():
+    from helpers.config import get_config
     path = get_config()['challenges_path']
     path += '' if path.endswith('/') else '/'
     for f in \
@@ -47,6 +49,7 @@ def list_challenges():
 
 
 def generate_thumbnails(interactive=True):
+    from helpers.config import get_config
     config = get_config()
     if config.get('thumbnail_generation_enabled', False):
         ms = MatchSettings(config['active_matchsetting'])
@@ -65,6 +68,7 @@ def generate_thumbnails(interactive=True):
 
 
 def toggle_thumbnail_generation():
+    from helpers.config import get_config, save_config
     config = get_config()
     enabled = config.get('thumbnail_generation_enabled', False)
     if input(f"generation currently {'enabled' if enabled else 'disabled'}! {'Disable' if enabled else 'Enable'} now? (y/N):") == 'y':

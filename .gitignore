@@ -4,6 +4,7 @@ venv/
 tas/backend/config.json
 tas/backend/static/ang
 tas/backend/static/thumbnails
+tas/backend/static/download
 *.run
 tmnfd/config.json
 tmnfd/testdata
