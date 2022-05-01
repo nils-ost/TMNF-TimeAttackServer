@@ -8,6 +8,7 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
 parser.add_argument('--config', dest='config', action='store_true', default=False, help='Returns current configuration')
+parser.add_argument('--enablemetrics', dest='enablemetrics', action='store_true', default=False, help='If set the TAS metrics endpoint is set to enabled')
 args = parser.parse_args()
 
 
@@ -185,6 +186,14 @@ commands = [
 if args.config:
     from helpers.config import get_config
     print(json.dumps(get_config(), indent=2))
+    sys.exit(0)
+
+if args.enablemetrics:
+    from helpers.config import get_config, set_config
+    config = get_config('metrics')
+    if not config.get('enabled', False):
+        config['enabled'] = True
+        set_config(config, 'metrics')
     sys.exit(0)
 
 while True:

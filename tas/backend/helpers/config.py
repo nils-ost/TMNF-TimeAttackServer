@@ -46,3 +46,13 @@ def get_config(portion=None):
         return config
     else:
         return config.get(portion, None)
+
+
+def set_config(nconfig, portion=None):
+    global config
+    if portion is None:
+        config = nconfig
+    else:
+        config[portion] = nconfig
+    with open('config.json', 'w') as f:
+        f.write(json.dumps(config, indent=4))

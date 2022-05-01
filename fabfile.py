@@ -11,6 +11,8 @@ backup_dir = '/var/backup'
 storagedir_mongo = '/var/data/mongodb'
 mongodb_image = 'mongo:4.4'
 mongodb_service = 'docker.mongodb.service'
+mongoexporter_image = 'bitnami/mongodb-exporter:0.30.0'
+mongoexporter_service = 'docker.mongoexporter.service'
 haproxy_image = 'haproxy:lts-alpine'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
@@ -204,6 +206,32 @@ def tmnfd_map_config(c):
     c.run(f"ln -s {os.path.join(tmnfd_dir, 'dedicated/GameData/Tracks/MatchSettings/TAS')} {os.path.join(tmnfd_dir, 'MatchSettings')}")
 
 
+def reassign_docker_iptables_rules(c):
+    docker_rules = """
+    -p tcp -m conntrack --ctorigdstport 8404 --ctdir ORIGINAL -j DROP
+    -p tcp -m conntrack --ctorigdstport 27017 --ctdir ORIGINAL -j DROP
+    -p tcp -m conntrack --ctorigdstport 27001 --ctdir ORIGINAL -j DROP
+    """
+    ifaces = [iface for iface in c.run('ls /sys/class/net', hide=True).stdout.strip().split() if iface.startswith('enp') or iface.startswith('eth')]
+    docker_lines = list()
+    for rule in docker_rules.strip().split('\n'):
+        rule = rule.strip()
+        for iface in ifaces:
+            do_del = c.run(f'iptables -C DOCKER-USER -i {iface} {rule}', warn=True, hide=True).ok
+            c.run(f'iptables -A DOCKER-USER -i {iface} {rule}')
+            if do_del:
+                c.run(f'iptables -D DOCKER-USER -i {iface} {rule}')
+            else:
+                print(f'Adding rule v4: DOCKER-USER -i {iface} {rule}')
+            docker_lines.append(f'-A DOCKER-USER -i {iface} {rule}')
+    do_del = c.run('iptables -C DOCKER-USER -j RETURN', warn=True, hide=True).ok
+    c.run('iptables -A DOCKER-USER -j RETURN')
+    docker_lines.append('-A DOCKER-USER -j RETURN')
+    if do_del:
+        c.run('iptables -D DOCKER-USER -j RETURN')
+    return docker_lines
+
+
 def deploy_mongodb_pre(c):
     install_apt_package(c, 'curl')
     install_docker(c)
@@ -236,6 +264,7 @@ def deploy_mongodb(c):
 
 def deploy_tas_pre(c):
     install_apt_package(c, 'rsync')
+    install_apt_package(c, 'rsyslog')
     install_apt_package(c, 'python3')
     install_apt_package(c, 'virtualenv')
     install_apt_package(c, 'git')
@@ -360,24 +389,7 @@ def deploy_iptables(c):
     c.run('ip6tables -P INPUT DROP')
     c.run('ip6tables -P FORWARD DROP')
 
-    docker_rules = """
-    -p tcp -m conntrack --ctorigdstport 8404 --ctdir ORIGINAL -j DROP
-    -p tcp -m conntrack --ctorigdstport 27017 --ctdir ORIGINAL -j DROP
-    """
-    ifaces = [iface for iface in c.run('ls /sys/class/net', hide=True).stdout.strip().split() if iface.startswith('enp') or iface.startswith('eth')]
-    docker_lines = list()
-    for rule in docker_rules.strip().split('\n'):
-        rule = rule.strip()
-        for iface in ifaces:
-            if not c.run(f'iptables -C DOCKER-USER -i {iface} {rule}', warn=True, hide=True).ok:
-                print(f'Adding rule v4: DOCKER-USER -i {iface} {rule}')
-                c.run(f'iptables -A DOCKER-USER -i {iface} {rule}')
-            docker_lines.append(f'-A DOCKER-USER -i {iface} {rule}')
-    do_del = c.run('iptables -C DOCKER-USER -j RETURN', warn=True, hide=True).ok
-    c.run('iptables -A DOCKER-USER -j RETURN')
-    docker_lines.append('-A DOCKER-USER -j RETURN')
-    if do_del:
-        c.run('iptables -D DOCKER-USER -j RETURN')
+    docker_lines = reassign_docker_iptables_rules(c)
 
     print('Writing /etc/iptables/rules.v4')
     c.run(f'mv /etc/iptables/rules.v4 /etc/iptables/rules.v4.bak.{int(time.time())}', hide=True, warn=True)
@@ -387,6 +399,70 @@ def deploy_iptables(c):
     print('Writing /etc/iptables/rules.v6')
     c.run(f'mv /etc/iptables/rules.v6 /etc/iptables/rules.v6.bak.{int(time.time())}', hide=True, warn=True)
     c.put('install/iptables.v6', remote='/etc/iptables/rules.v6')
+
+
+@task(name='deploy-monitoring')
+def deploy_monitoring(c):
+    iptables_rules = list()
+    ifaces = [iface for iface in c.run('ls /sys/class/net', hide=True).stdout.strip().split() if iface.startswith('enp') or iface.startswith('eth')]
+
+    # ask for ip of monitoring server
+    monitoring_ip = input('IP of monitoring server: ').strip()
+
+    # enable TAS metrics endpoint
+    tas_config = json.loads(c.run('tmnf-tas --config', hide=True).stdout)
+    if not tas_config.get('metrics', dict()).get('enabled', False):
+        print('Enableing TAS metrics-endpoint')
+        c.run('tmnf-tas --enablemetrics', hide=True)
+        systemctl_start(c, tas_service)  # restarts the service
+    iptables_rules.append(f"INPUT -p tcp -m tcp -s {monitoring_ip} --dport {tas_config['metrics']['port']} -j ACCEPT")
+
+    # install prometheus node_exporter
+    install_apt_package(c, 'prometheus-node-exporter')
+    iptables_rules.append(f'INPUT -p tcp -m tcp -s {monitoring_ip} --dport 9100 -j ACCEPT')
+
+    # install mongodb_exporter (if mongodb on same host)
+    if c.run(f'systemctl is-active {mongodb_service}', warn=True, hide=True).ok:
+        docker_pull(c, mongoexporter_image)
+        systemctl_install_service(c, 'docker.service', mongoexporter_service, [
+            ('__additional__', f'--link {mongodb_service}'),
+            ('__storage__', '/dev/null:/mnt/dummy:ro'),
+            ('__port__', '9216:9216'),
+            ('__image__', f'{mongoexporter_image} --mongodb.uri=mongodb://{mongodb_service}:27017/admin --discovering-mode')
+        ])
+        c.run('systemctl daemon-reload')
+        systemctl_start(c, mongoexporter_service)
+        docker_prune(c)
+        for iface in ifaces:
+            iptables_rules.append(f'DOCKER-USER -i {iface} -p tcp -s {monitoring_ip} -m conntrack --ctorigdstport 9216 --ctdir ORIGINAL -j ACCEPT')
+            iptables_rules.append(f'DOCKER-USER -i {iface} -p tcp -m conntrack --ctorigdstport 9216 --ctdir ORIGINAL -j DROP')
+
+    # check if haproxy metrics are enabled
+    if c.run(f'systemctl is-active {haproxy_service}', warn=True, hide=True).ok:
+        haproxy_ports = list()
+        for port in c.run(f'docker port {haproxy_service}', hide=True).stdout.strip().split('\n'):
+            port = port.strip().split('/', 1)[0]
+            if not port == '80' and port not in haproxy_ports:
+                haproxy_ports.append(port)
+        for port in haproxy_ports:
+            for iface in ifaces:
+                iptables_rules.append(f'DOCKER-USER -i {iface} -p tcp -s {monitoring_ip} -m conntrack --ctorigdstport {port} --ctdir ORIGINAL -j ACCEPT')
+
+    # add iptables rules
+    iptables_lines = list()
+    for rule in iptables_rules:
+        rule = rule.strip()
+        if not c.run(f'iptables -C {rule}', hide=True, warn=True).ok:
+            print(f'Adding rule v4: {rule}')
+            c.run(f'iptables -A {rule}')
+        iptables_lines.append(f'-A {rule}')
+    reassign_docker_iptables_rules(c)
+    print()
+    print()
+    print('Please ensure the following lines are added to /etc/iptables/rules.v4:')
+    print()
+    for line in iptables_lines:
+        print(line)
 
 
 @task
