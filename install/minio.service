@@ -1,0 +1,20 @@
+[Unit]
+Description=minio-Server
+
+[Service]
+Type=simple
+Environment="MINIO_ROOT_USER=__user__"
+Environment="MINIO_ROOT_PASSWORD=__password__"
+Environment="MINIO_PROMETHEUS_AUTH_TYPE=public"
+ExecStart=__project_dir__/minio server __storage__ --quiet
+KillSignal=SIGINT
+WorkingDirectory=__project_dir__
+RestartSec=5
+Restart=always
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=minio
+
+[Install]
+WantedBy=multi-user.target

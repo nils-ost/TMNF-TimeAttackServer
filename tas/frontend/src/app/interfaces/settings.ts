@@ -5,4 +5,5 @@ export interface Settings {
     display_self_url: string;
     display_admin: string;
     client_download_url?: string;
+    provide_replays: boolean;
 }

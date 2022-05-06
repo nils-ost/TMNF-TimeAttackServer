@@ -2,15 +2,19 @@ import cherrypy
 import cherrypy_cors
 import time
 import os
+import json
 from multiprocessing import Process
 from urllib.parse import unquote
+from cherrypy.lib import file_generator
+from datetime import datetime
 from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get
-from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter
+from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
-from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_provide_replays
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
+from helpers.s3 import replay_get, replay_exists
 from helpers.config import get_config
 from helpers.metrics import start_metrics_exporter
 
@@ -20,6 +24,7 @@ class TimeAttackServer():
         self.challenges = Challenges()
         self.players = Players()
         self.rankings = Rankings()
+        self.replays = Replays()
         self.settings = Settings()
         self.stats = Stats()
 
@@ -35,6 +40,7 @@ class Settings():
         result['display_self_url'] = get_display_self_url()
         result['display_admin'] = get_display_admin()
         result['client_download_url'] = get_client_download_url()
+        result['provide_replays'] = get_provide_replays()
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 
@@ -176,6 +182,42 @@ class Rankings():
         else:
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=3'
             return ranking_challenge(challenge_id)
+
+
+@cherrypy.popargs('replay_name')
+class Replays():
+    @cherrypy.expose()
+    def index(self, replay_name=None):
+        if replay_name is None:
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
+            cherrypy.response.headers['Content-Type'] = 'application/json'
+            result = list()
+            for laptime in laptime_filter(replay=True):
+                laptime.pop('_id', None)
+                result.append(laptime)
+            return json.dumps(result).encode('utf-8')
+
+        laptime = laptime_get(replay=replay_name)
+        if laptime is None or not replay_exists(replay_name):
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
+            cherrypy.response.status = 404
+            return
+        else:
+            def timetos(time):
+                m = int(abs(time) / 10)
+                ms = int(m % 100)
+                m = int(m / 100)
+                s = int(m % 60)
+                m = int(m / 60)
+                return f"{m}-{'0' if s < 10 else ''}{s}-{'0' if ms < 10 else ''}{ms}"
+            player = player_get(laptime['player_id'])
+            challenge = challenge_get(laptime['challenge_id'])
+            created = datetime.fromtimestamp(laptime['created_at']).strftime('%Y_%m_%d_%H_%M_%S')
+            filename = f"{created}_{challenge['name']}_{player['nickname']}_({timetos(laptime['time'])}).Replay.Gbx"
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=1800'
+            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            cherrypy.response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return file_generator(replay_get(replay_name))
 
 
 def periodic_ranking_rebuild_function():

@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerRanking, GlobalRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
 import { Challenge } from '../../interfaces/challenge';
+import { Settings } from '../../interfaces/settings';
+import { SettingsService } from '../../services/settings.service';
 import { PlayerService } from '../../services/player.service';
 import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
@@ -15,6 +17,7 @@ import { MenuItem } from 'primeng/api';
 })
 export class PlayersComponent implements OnInit {
   @ViewChild('dt_players_list') players_table: any;
+  provide_replays: boolean = false;
   players: Player[] = [];
   globalRankings: GlobalRanking[] = [];
   selectedPlayer?: Player;
@@ -27,13 +30,15 @@ export class PlayersComponent implements OnInit {
   constructor(
     private playerService: PlayerService,
     private rankingService: RankingService,
-    private challengeService: ChallengeService
+    private challengeService: ChallengeService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
     this.refreshChallenges();
     this.refreshGlobalRanking();
     this.refreshPlayers();
+    this.refreshSettings();
 
     this.speeddail_menu = [
       {
@@ -167,6 +172,16 @@ export class PlayersComponent implements OnInit {
           }
         );
     }
+  }
+
+  refreshSettings() {
+    this.settingsService
+      .getSettings()
+      .subscribe(
+        (settings: Settings) => {
+          this.provide_replays = settings.provide_replays;
+        }
+      );
   }
 
   refreshAll() {

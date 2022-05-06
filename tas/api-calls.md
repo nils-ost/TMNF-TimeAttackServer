@@ -170,6 +170,7 @@ Returns a list of all Laptime elements for given player_id
   * `challenge_id` *(string)* Challenges unique ID as used in MatchSettings
   * `time` *(integer)* Laptime of Player on Challenge, in milliseconds
   * `created_at` *(integer)* At which time the Player drove Laptime on Challenge, as UNIX-Timestamp
+  * `replay` *(string)* Name of replay for laptime as it is stored in S3; `Null` if no replay is available
 
 ### GET /players/{player_id}/laptimes/{challenge_id}/
 
@@ -184,6 +185,7 @@ Returns a list of all Laptime elements of given player_id for given challenge_id
 
   * `time` *(integer)* Laptime of Player on Challenge, in milliseconds
   * `created_at` *(integer)* At which time the Player drove Laptime on Challenge, as UNIX-Timestamp
+  * `replay` *(string)* Name of replay for laptime as it is stored in S3; `Null` if no replay is available
 
 ### GET /rankings/{challenge_id}/
 
@@ -216,6 +218,32 @@ Returns a list of all Players global ranking elements
   * `player_id` *(string)* Internally used unique ID of Player
   * `rank` *(integer)* Global rank of this Player
   * `points` *(integer)* Global points of this Player
+
+### GET /replays/
+
+Returns a list of all Laptimes that have a Replay
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=30`
+
+#### Element-Attributes
+
+  * `player_id` *(string)* Internally used unique ID of Player
+  * `challenge_id` *(string)* Challenges unique ID as used in MatchSettings
+  * `time` *(integer)* Laptime of Player on Challenge, in milliseconds
+  * `created_at` *(integer)* At which time the Player drove Laptime on Challenge, as UNIX-Timestamp
+  * `replay` *(string)* Name of replay for laptime as it is stored in S3
+
+### GET /replays/{replay_name}/
+
+Returns a Replay as file-download with given name or 404 if the requested Replay could not be found
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=1800`
 
 ### GET /settings/
 

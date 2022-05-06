@@ -1,12 +1,20 @@
 <p-table [value]="playerChallengeLaptimes" [scrollable]="true" scrollHeight="calc(44vh - 0.5rem)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
+            <th *ngIf="provide_replays" class="col-replay"></th>
             <th i18n="Header for column at in tables@@tableHeaderAt">at</th>
             <th i18n="Header for column time in tables@@tableHeaderTime">time</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-laptime>
         <tr [ngClass]="{'best-laptime': laptime.created_at === bestLaptimeAt}">
+            <td *ngIf="provide_replays" class="col-replay">
+                <a href="{{ apiUrl }}/replays/{{ laptime.replay }}/" *ngIf="laptime.replay" i18n-pTooltip="Tooltip for replay donwload icon@@tooltipDownloadReplay" pTooltip="download replay" tooltipPosition="bottom">
+                    <div class="icon">
+                        <i class="pi pi-download"></i>
+                    </div>
+                </a>
+            </td>
             <td>{{ laptime.created_at * 1000 | date:'medium' }}</td>
             <td>{{ laptime.time / 1000 | number: '1.2-2' }}s</td>
         </tr>

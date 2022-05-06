@@ -8,8 +8,10 @@ from pygbx import Gbx, GbxType
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNFD CLI')
+parser.add_argument('--test', dest='test', action='store_true', default=False, help='Used for testing if tmnfd-cli is available')
 parser.add_argument('--init', dest='init', action='store_true', default=False, help='Initialize Configuration')
 parser.add_argument('--prepare-start', dest='prepare_start', action='store_true', help='Prepares everything for tmnfd to be started')
+parser.add_argument('--upload_replay', dest='upload_replay', default=None, help='Uploads specified replay file to S3 storage')
 args = parser.parse_args()
 
 
@@ -76,18 +78,36 @@ def toggle_thumbnail_generation():
         save_config(config)
 
 
-if args.init:
+def exit():
+    sys.exit(0)
+
+
+def upload_replay(replay):
+    from helpers.s3 import upload_replay as s3_upload_replay
+    from helpers.config import get_config
+    replay_path = os.path.join(get_config()['replays_path'], replay)
+    if not replay_path.endswith('.Replay.Gbx'):
+        replay_path = replay_path + '.Replay.Gbx'
+    s3_upload_replay(replay_path, replay)
+
+
+if args.test:
+    sys.exit(0)
+elif args.init:
     init_config(False)
 elif args.prepare_start:
     write_active()
     generate_thumbnails(False)
+elif args.upload_replay:
+    upload_replay(args.upload_replay)
 else:
     commands = [
         ('Force Config Init', init_config),
         ('Write Active MatchSettings', write_active),
         ('List Challenges', list_challenges),
         ('Generate Thumbnails', generate_thumbnails),
-        ('Toggle Thumbnail Generation', toggle_thumbnail_generation)
+        ('Toggle Thumbnail Generation', toggle_thumbnail_generation),
+        ('Exit', exit)
     ]
 
     index = 0

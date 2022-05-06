@@ -51,27 +51,49 @@ def clean_player_id(player_id):
 def laptime_add(player_id, challenge_id, time):
     ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
-    lt = {'player_id': player_id, 'challenge_id': challenge_id, 'time': time, 'created_at': ts}
+    new_best = False
+    lt = {'player_id': player_id, 'challenge_id': challenge_id, 'time': time, 'created_at': ts, 'replay': None}
     if time > 0:
         mongoDB().laptimes.insert_one(lt)
         best = mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
         if best is None:
             mongoDB().bestlaptimes.insert_one(lt)
+            new_best = True
         elif best['time'] is None or best['time'] > time:
-            mongoDB().bestlaptimes.update_one({'_id': best['_id']}, {'$set': {'time': time, 'created_at': ts}})
+            mongoDB().bestlaptimes.update_one({'_id': best['_id']}, {'$set': {'time': time, 'created_at': ts, 'replay': None}})
+            new_best = True
     elif time == 0 and mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id}) is None:
         lt['time'] = None
         mongoDB().bestlaptimes.insert_one(lt)
     mongoDB().players.update_one({'_id': player_id}, {'$set': {'last_update': ts}})
+    return (ts, new_best)
 
 
-def laptime_filter(player_id=None, challenge_id=None):
+def laptime_filter(player_id=None, challenge_id=None, replay=False):
     f = dict({'time': {'$ne': None}})
     if player_id is not None:
         f['player_id'] = player_id
     if challenge_id is not None:
         f['challenge_id'] = challenge_id
+    if replay:
+        f['replay'] = {'$ne': None}
     return mongoDB().laptimes.find(f).sort('created_at', ASCENDING)
+
+
+def laptime_get(replay=None):
+    if replay is None:
+        return None
+    return mongoDB().laptimes.find_one({'replay': replay})
+
+
+def replay_add(player_id, challenge_id, ts, replay_name):
+    player_id = clean_player_id(player_id)
+    blt = mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id, 'created_at': ts})
+    if blt is not None:
+        mongoDB().bestlaptimes.update_one({'_id': blt['_id']}, {'$set': {'replay': replay_name}})
+    lt = mongoDB().laptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id, 'created_at': ts})
+    if lt is not None:
+        mongoDB().laptimes.update_one({'_id': lt['_id']}, {'$set': {'replay': replay_name}})
 
 
 def bestlaptime_get(player_id, challenge_id):
@@ -367,6 +389,28 @@ def get_client_download_url():
     if r is None:
         return None
     return r.get('url', None)
+
+
+def set_tmnfd_cli_method(method=None):
+    mongoDB().settings.replace_one({'_id': 'tmnfd_cli_method'}, {'_id': 'tmnfd_cli_method', 'method': method}, True)
+
+
+def get_tmnfd_cli_method():
+    r = mongoDB().settings.find_one({'_id': 'tmnfd_cli_method'})
+    if r is None:
+        return None
+    return r.get('method', None)
+
+
+def set_provide_replays(provide=False):
+    mongoDB().settings.replace_one({'_id': 'provide_replays'}, {'_id': 'provide_replays', 'provide': provide}, True)
+
+
+def get_provide_replays():
+    r = mongoDB().settings.find_one({'_id': 'provide_replays'})
+    if r is None:
+        return False
+    return r.get('provide', False)
 
 
 """

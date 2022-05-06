@@ -29,7 +29,7 @@
         </div>
         <div class="laptimes-connector" *ngIf="selectedPlayerRanking"></div>
         <div class="laptimes-list">
-            <app-players-laptime-list [playerChallengeLaptimes]="playerChallengeLaptimes" [bestLaptimeAt]="selectedPlayerRanking.at" *ngIf="selectedPlayerRanking"></app-players-laptime-list>
+            <app-players-laptime-list [playerChallengeLaptimes]="playerChallengeLaptimes" [bestLaptimeAt]="selectedPlayerRanking.at" [provide_replays]="provide_replays" *ngIf="selectedPlayerRanking"></app-players-laptime-list>
         </div>
     </div>
 </div>

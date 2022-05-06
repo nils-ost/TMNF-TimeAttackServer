@@ -7,8 +7,11 @@ from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set
 from helpers.mongodb import player_update, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
+from helpers.mongodb import get_provide_replays, set_provide_replays, replay_add
+from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_replay
 import time
 import sys
+import hashlib
 
 config = get_config('tmnf-server')
 challenge_config = get_config('challenges')
@@ -88,10 +91,21 @@ def worker_function(msg_queue, sender):
             current_challenge = challenge_id_get(current=True)
             if current_challenge is not None:
                 player_id, player_login, player_time = params
-                laptime_add(player_login, current_challenge, player_time)
+                ts, new_best = laptime_add(player_login, current_challenge, player_time)
                 if player_time > 0:
                     print(f'{player_login} drove: {player_time / 1000}')
                 sendLaptimeNotice(sender, player_login, player_time)
+                if new_best and get_provide_replays():
+                    player_hash = hashlib.md5(player_login.encode('utf-8')).hexdigest()
+                    replay_name = f'{player_hash}_{ts}'
+                    if sender.callMethod('SaveBestGhostsReplay', player_login, replay_name)[0]:
+                        if tmnfd_cli_upload_replay(replay_name):
+                            replay_add(player_login, current_challenge, ts, replay_name)
+                            print(f'Providing Replay: {replay_name}')
+                        else:
+                            print('Replay could not be provided!')
+                    else:
+                        print('Replay could not be provided!')
 
         elif func == 'TrackMania.BeginRace':
             challenge_db = challenge_get(params[0]['UId'])
@@ -161,6 +175,14 @@ def watcher_function():
                 time.sleep(1)
             print('Connected to: TMNF - Dedicated Server')
             prepareChallenges(sender)
+
+            if get_provide_replays():
+                cli_method = tmnfd_cli_test()
+                if cli_method is None:
+                    print('TMNF - Dedicated CLI is not reachable! Disableing replay-provider.')
+                    set_provide_replays(False)
+                else:
+                    print(f'TMNF - Dedicated CLI connection method is: {cli_method}')
 
             server_name = sender.callMethod('GetServerName')[0]
             set_tmnfd_name(server_name)

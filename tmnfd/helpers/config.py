@@ -10,7 +10,15 @@ _config = {
     'challenges_path': 'dedicated/GameData/Tracks',
     'active_matchsetting': 'NationsWhite.txt',
     'thumbnails_path': '/opt/middleware/tmnf-tas/static/thumbnails',
-    'thumbnail_generation_enabled': True
+    'thumbnail_generation_enabled': True,
+    'replays_path': 'dedicated/GameData/Tracks/Replays',
+    's3': {
+        'host': 'localhost',
+        'port': 9000,
+        'access_key': 'tmnftas',
+        'access_secret': 'password',
+        'bucket_replays': 'tas-replays'
+    }
 }
 
 

@@ -87,10 +87,29 @@ def clientDownloadURL():
         set_client_download_url(selection)
 
 
+def provideReplays():
+    from helpers.mongodb import set_provide_replays, get_provide_replays
+    provide = get_provide_replays()
+    print(f"Providing replays is currently {'enabled' if provide else 'disabled'}")
+    selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
+    if selection == 'y':
+        set_provide_replays(not provide)
+        if not provide:
+            from helpers.tmnfdcli import tmnfd_cli_test
+            print('Testing connection to tmnfd-cli...')
+            result = tmnfd_cli_test()
+            if result is None:
+                print('...no connection; disableing providing replays')
+                set_provide_replays(False)
+            else:
+                print(f'...connection method is: {result}')
+
+
 def clearDB():
-    from helpers.mongodb import mongoDB
-    if not input('Wipe all player, challenge and laptime data? (y/N): ').strip() == 'y':
+    if not input('Wipe all player, challenge, laptime and replay data? (y/N): ').strip() == 'y':
         return
+    from helpers.mongodb import mongoDB
+    from helpers.s3 import replay_delete_all
     mongoDB().challenges.drop()
     print('Wiped Challenges')
     mongoDB().players.drop()
@@ -105,6 +124,8 @@ def clearDB():
     print('Wiped Rankings')
     mongoDB().utils.drop()
     print('Wiped Utils')
+    replay_delete_all()
+    print('Wiped Replays')
     if not input('Also wipe settings? (y/N): ').strip() == 'y':
         return
     mongoDB().settings.drop()
@@ -175,6 +196,7 @@ commands = [
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
     ('Set Client Download URL', clientDownloadURL),
+    ('Set Provide Replays', provideReplays),
     ('Download/Provide TMNF Client', downloadClient),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),

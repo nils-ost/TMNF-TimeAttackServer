@@ -26,6 +26,13 @@ config = {
         'enabled': False,
         'port': 8001
     },
+    's3': {
+        'host': 'localhost',
+        'port': 9000,
+        'access_key': 'tmnftas',
+        'access_secret': 'password',
+        'bucket_replays': 'tas-replays'
+    },
     'util': {
         'wallboard_players_max_default': 10,
         'wallboard_challenges_max_default': 8

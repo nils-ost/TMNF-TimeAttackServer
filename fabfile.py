@@ -9,6 +9,7 @@ apt_update_run = False
 project_dir = '/opt/middleware/tmnf-tas'
 backup_dir = '/var/backup'
 storagedir_mongo = '/var/data/mongodb'
+storagedir_minio = '/var/data/minio'
 mongodb_image = 'mongo:4.4'
 mongodb_service = 'docker.mongodb.service'
 mongoexporter_image = 'bitnami/mongodb-exporter:0.30.0'
@@ -22,6 +23,9 @@ tmnfd_dir = '/opt/middleware/tmnfd'
 tmnfd_version = '2011-02-21'
 tmnfd_zip = 'dedicated.zip'
 tmnfd_service = 'tmnfd.service'
+minio_service = 'minio.service'
+minio_release = '2022-04-30T22-23-53Z'
+minio_dir = '/opt/middleware/minio'
 
 
 def docker_pull(c, image):
@@ -87,6 +91,27 @@ def setup_virtualenv(c, pdir):
     c.run(f"virtualenv -p /usr/bin/python3 {os.path.join(pdir, 'venv')}")
     print(f'Installing python requirements for {pdir}')
     c.run(f"{os.path.join(pdir, 'venv/bin/pip')} install -r {os.path.join(pdir, 'requirements.txt')}")
+
+
+def install_minio(c):
+    for d in [minio_dir, storagedir_minio]:
+        print(f'Creating {d}')
+        c.run(f'mkdir -p {d}', warn=True, hide=True)
+    install = False
+    if c.run(f"ls {os.path.join(minio_dir, 'minio')}", warn=True, hide=True).ok:
+        if minio_release not in c.run(f"{os.path.join(minio_dir, 'minio')} -v", hide=True).stdout:
+            print('wrong minio release is installed')
+            install = True
+    else:
+        print('minio is not installed')
+        install = True
+    if install:
+        print(f'Installing minio {minio_release}')
+        url = f'https://dl.min.io/server/minio/release/linux-amd64/archive/minio.RELEASE.{minio_release}'
+        c.run(f"curl {url} -o {os.path.join(minio_dir, 'minio')}")
+        c.run(f"chmod 744 {os.path.join(minio_dir, 'minio')}")
+    else:
+        print('minio allready installed')
 
 
 def upload_project_files(c):
@@ -288,6 +313,9 @@ def deploy_tas(c):
 
 def deploy_tmnfd_pre(c):
     install_apt_package(c, 'curl')
+    install_apt_package(c, 'python3')
+    install_apt_package(c, 'virtualenv')
+    install_apt_package(c, 'rsync')
     install_apt_package(c, 'p7zip-full')
     install_apt_package(c, 'liblzo2-dev')
     install_apt_package(c, 'python3-dev')
@@ -317,6 +345,20 @@ def deploy_tmnfd(c):
     systemctl_start(c, tmnfd_service)
 
     deploy_tmnfd_post(c)
+
+
+@task(name='deploy-minio')
+def deploy_minio(c):
+    systemctl_stop(c, minio_service)
+    install_minio(c)
+    systemctl_install_service(c, 'minio.service', minio_service, [
+        ('__project_dir__', minio_dir),
+        ('__storage__', storagedir_minio),
+        ('__user__', 'tmnftas'),
+        ('__password__', 'password')
+    ])
+    c.run('systemctl daemon-reload')
+    systemctl_start(c, minio_service)
 
 
 @task(name='deploy-haproxy')
@@ -448,6 +490,10 @@ def deploy_monitoring(c):
             for iface in ifaces:
                 iptables_rules.append(f'DOCKER-USER -i {iface} -p tcp -s {monitoring_ip} -m conntrack --ctorigdstport {port} --ctdir ORIGINAL -j ACCEPT')
 
+    # check if minio is installed
+    if c.run(f'systemctl is-active {minio_service}', warn=True, hide=True).ok:
+        iptables_rules.append(f'INPUT -p tcp -m tcp -s {monitoring_ip} --dport 9000 -j ACCEPT')
+
     # add iptables rules
     iptables_lines = list()
     for rule in iptables_rules:
@@ -474,6 +520,8 @@ def deploy(c):
     systemctl_stop(c, tas_service)
     systemctl_stop(c, tmnfd_service)
     systemctl_stop(c, mongodb_service)
+    systemctl_stop(c, minio_service)
+    install_minio(c)
     upload_project_files(c)
     setup_virtualenv(c, project_dir)
     prepare_tas_cli(c)
@@ -494,8 +542,15 @@ def deploy(c):
         ('__port__', '27017:27017'),
         ('__image__', mongodb_image)
     ])
+    systemctl_install_service(c, 'minio.service', minio_service, [
+        ('__project_dir__', minio_dir),
+        ('__storage__', storagedir_minio),
+        ('__user__', 'tmnftas'),
+        ('__password__', 'password')
+    ])
     c.run('systemctl daemon-reload')
     systemctl_start(c, mongodb_service)
+    systemctl_start(c, minio_service)
     systemctl_start(c, tmnfd_service)
     systemctl_start(c, tas_service)
 

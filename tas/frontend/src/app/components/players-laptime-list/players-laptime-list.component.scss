@@ -3,3 +3,18 @@
         color: var(--primary-color) !important;
     }
 }
+
+:host ::ng-deep a {
+    color: var(--primary-color);
+}
+
+:host ::ng-deep .p-datatable-table .p-datatable-tbody > tr > td, :host ::ng-deep .p-datatable-table .p-datatable-thead > tr > th {
+    flex-grow: 1;
+}
+
+:host ::ng-deep .p-datatable-table .p-datatable-tbody > tr > .col-replay, :host ::ng-deep .p-datatable-table .p-datatable-thead > tr > .col-replay {
+    min-width: 2.5rem;
+    padding-right: 0;
+    flex-grow: 0;
+    justify-content: center;
+}

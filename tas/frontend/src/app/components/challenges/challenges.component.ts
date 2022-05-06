@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ChallengeService } from '../../services/challenge.service';
 import { RankingService } from '../../services/ranking.service';
 import { PlayerService } from '../../services/player.service';
+import { SettingsService } from '../../services/settings.service';
+import { Settings } from '../../interfaces/settings';
 import { Challenge } from '../../interfaces/challenge';
 import { ChallengeRanking } from '../../interfaces/ranking';
 import { PlayerChallengeLaptime } from '../../interfaces/laptime';
@@ -21,17 +23,20 @@ export class ChallengesComponent implements OnInit {
   challengeRankings: ChallengeRanking[] = [];
   playerChallengeLaptimes: PlayerChallengeLaptime[] = [];
   players: Player[] = [];
+  provide_replays: boolean = false;
   speeddail_menu: MenuItem[] = [];
 
   constructor(
     private challengeService: ChallengeService,
     private rankingService: RankingService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
     this.refreshChallenges();
     this.refreshPlayers();
+    this.refreshSettings();
 
     this.speeddail_menu = [
       {
@@ -153,6 +158,16 @@ export class ChallengesComponent implements OnInit {
           }
         );
     }
+  }
+
+  refreshSettings() {
+    this.settingsService
+      .getSettings()
+      .subscribe(
+        (settings: Settings) => {
+          this.provide_replays = settings.provide_replays;
+        }
+      );
   }
 
   refreshAll() {
