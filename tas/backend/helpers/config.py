@@ -31,7 +31,8 @@ config = {
         'port': 9000,
         'access_key': 'tmnftas',
         'access_secret': 'password',
-        'bucket_replays': 'tas-replays'
+        'bucket_replays': 'tas-replays',
+        'bucket_thumbnails': 'tas-thumbnails'
     },
     'util': {
         'wallboard_players_max_default': 10,

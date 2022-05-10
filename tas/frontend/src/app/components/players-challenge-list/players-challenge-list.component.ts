@@ -20,6 +20,7 @@ interface SortablePlayerRanking {
 export class PlayersChallengeListComponent implements OnInit, OnChanges {
   @Input() playerRankings!: PlayerRanking[];
   @Input() challenges!: Challenge[];
+  @Input() thumbnails: boolean = false;
   @Output() selectPlayerRankingEvent = new EventEmitter<PlayerRanking | null>();
   selectedPlayerRanking?: PlayerRanking;
   sortablePlayerRankings: SortablePlayerRanking[] = [];

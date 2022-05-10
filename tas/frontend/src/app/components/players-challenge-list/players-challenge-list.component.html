@@ -10,7 +10,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-spr>
         <tr [pSelectableRow]="spr">
-            <td><img class="cimg" src="{{ thumbnailUrlBase }}{{ spr.challenge_id }}.jpg" />&nbsp;{{ spr.challenge_name }}</td>
+            <td><img class="cimg" *ngIf="thumbnails" src="{{ thumbnailUrlBase }}{{ spr.challenge_id }}.jpg" />&nbsp;{{ spr.challenge_name }}</td>
             <td>{{ spr.rank }}</td>
             <td>{{ spr.points }}</td>
             <td *ngIf="spr.time > 0">{{ spr.time / 1000 | number: '1.2-2' }}s</td>

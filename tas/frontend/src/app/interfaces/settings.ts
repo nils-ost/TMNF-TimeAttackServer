@@ -6,4 +6,5 @@ export interface Settings {
     display_admin: string;
     client_download_url?: string;
     provide_replays: boolean;
+    provide_thumbnails: boolean;
 }

@@ -20,6 +20,7 @@ interface SortableChallenge {
 export class ChallengesListComponent implements OnInit, OnChanges {
   @Input() challenges!: Challenge[];
   @Input() currentChallenge!: Challenge;
+  @Input() thumbnails: boolean = false;
   @Output() selectChallengeEvent = new EventEmitter<Challenge | null>();
   selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];

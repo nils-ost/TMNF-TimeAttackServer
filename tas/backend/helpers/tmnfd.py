@@ -7,8 +7,8 @@ from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set
 from helpers.mongodb import player_update, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
-from helpers.mongodb import get_provide_replays, set_provide_replays, replay_add
-from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_replay
+from helpers.mongodb import get_provide_replays, get_provide_thumbnails, replay_add
+from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_replay, tmnfd_cli_generate_thumbnails
 import time
 import sys
 import hashlib
@@ -176,13 +176,13 @@ def watcher_function():
             print('Connected to: TMNF - Dedicated Server')
             prepareChallenges(sender)
 
-            if get_provide_replays():
+            if get_provide_replays() or get_provide_thumbnails():
                 cli_method = tmnfd_cli_test()
                 if cli_method is None:
-                    print('TMNF - Dedicated CLI is not reachable! Disableing replay-provider.')
-                    set_provide_replays(False)
-                else:
-                    print(f'TMNF - Dedicated CLI connection method is: {cli_method}')
+                    pass
+                elif get_provide_thumbnails():
+                    tmnfd_cli_generate_thumbnails()
+                    print('Generated Thumbnails')
 
             server_name = sender.callMethod('GetServerName')[0]
             set_tmnfd_name(server_name)

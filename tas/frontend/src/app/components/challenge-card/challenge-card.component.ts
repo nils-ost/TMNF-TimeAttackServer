@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ChallengeCardComponent implements OnInit {
   @Input() challenge!: ChallengeDisplay;
+  @Input() thumbnail: boolean = false;
   @Output() onEnableRefresh = new EventEmitter();
   @Output() onDisableRefresh = new EventEmitter();
   thumbnailUrl: string = "";

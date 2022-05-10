@@ -10,7 +10,7 @@
     <ng-template pTemplate="body" let-challenge>
         <tr [pSelectableRow]="challenge">
             <td class="col-name">{{ challenge.name }}<br />{{ challenge.id }}</td>
-            <td><img class="cimg" src="{{ thumbnailUrlBase }}{{ challenge.id }}.jpg" />{{ challenge.time_limit / 1000 | number: '1.0-0' }}s</td>
+            <td><img class="cimg" *ngIf="thumbnails" src="{{ thumbnailUrlBase }}{{ challenge.id }}.jpg" />{{ challenge.time_limit / 1000 | number: '1.0-0' }}s</td>
             <td class="col-time">
                 <ng-container i18n="Label for seen count in challenges screen@@labelCount">Count</ng-container>: {{ challenge.seen_count }}<br />
                 <ng-container i18n="Label for seen last in challenges screen@@labelLast">Last</ng-container>: {{ (challenge.seen_last ? (challenge.seen_last * 1000 | date:'medium') : "---") }}

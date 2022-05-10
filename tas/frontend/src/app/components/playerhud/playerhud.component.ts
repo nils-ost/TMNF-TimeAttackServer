@@ -290,7 +290,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
     this.missingChallengesNames = missingS;
     if (best != 9999) this.bestRank = best;
     else this.bestRank = undefined;
-    if (worst != 0) this.worstRank = worst;
+    if (worst > 1) this.worstRank = worst;
     else this.worstRank = undefined;
   }
 

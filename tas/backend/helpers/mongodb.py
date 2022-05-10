@@ -413,6 +413,17 @@ def get_provide_replays():
     return r.get('provide', False)
 
 
+def set_provide_thumbnails(provide=False):
+    mongoDB().settings.replace_one({'_id': 'provide_thumbnails'}, {'_id': 'provide_thumbnails', 'provide': provide}, True)
+
+
+def get_provide_thumbnails():
+    r = mongoDB().settings.find_one({'_id': 'provide_thumbnails'})
+    if r is None:
+        return False
+    return r.get('provide', False)
+
+
 """
 Stats
 """

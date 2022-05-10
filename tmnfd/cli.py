@@ -2,9 +2,7 @@ import os
 import sys
 import argparse
 from helpers.settings import DedicatedCfg, MatchSettings
-from helpers.thumbnails import extract_thumbnail
 from glob import glob
-from pygbx import Gbx, GbxType
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNFD CLI')
@@ -12,6 +10,7 @@ parser.add_argument('--test', dest='test', action='store_true', default=False, h
 parser.add_argument('--init', dest='init', action='store_true', default=False, help='Initialize Configuration')
 parser.add_argument('--prepare-start', dest='prepare_start', action='store_true', help='Prepares everything for tmnfd to be started')
 parser.add_argument('--upload_replay', dest='upload_replay', default=None, help='Uploads specified replay file to S3 storage')
+parser.add_argument('--generate_thumbnails', dest='generate_thumbnails', action='store_true', help='Generates thumbnails and uploads them to S3 storage')
 args = parser.parse_args()
 
 
@@ -37,6 +36,7 @@ def write_active():
 
 
 def list_challenges():
+    from pygbx import Gbx, GbxType
     from helpers.config import get_config
     path = get_config()['challenges_path']
     path += '' if path.endswith('/') else '/'
@@ -52,30 +52,20 @@ def list_challenges():
 
 def generate_thumbnails(interactive=True):
     from helpers.config import get_config
+    from helpers.thumbnails import extract_thumbnail
+    from helpers.s3 import exists_thumbnail, upload_thumbnail
     config = get_config()
-    if config.get('thumbnail_generation_enabled', False):
-        ms = MatchSettings(config['active_matchsetting'])
-        cpath = get_config()['challenges_path']
-        tpath = get_config()['thumbnails_path']
-        if not os.path.isdir(tpath):
-            os.makedirs(tpath)
-        for ident, path in ms.get_challenges():
+    ms = MatchSettings(config['active_matchsetting'])
+    cpath = get_config()['challenges_path']
+    for ident, path in ms.get_challenges():
+        if not exists_thumbnail(ident):
             challenge_file = os.path.join(cpath, path.replace('\\', '/'))
-            thumbnail_file = os.path.join(tpath, f'{ident}.jpg')
-            extract_thumbnail(challenge_file, thumbnail_file)
+            extract_thumbnail(challenge_file, '/tmp/thumbnail.jpg')
+            upload_thumbnail('/tmp/thumbnail.jpg', ident)
             if interactive:
-                print(f'Extracted thumbnail from {challenge_file} to {thumbnail_file}')
-    elif interactive:
-        print('Thumbnail generation is disabled!')
-
-
-def toggle_thumbnail_generation():
-    from helpers.config import get_config, save_config
-    config = get_config()
-    enabled = config.get('thumbnail_generation_enabled', False)
-    if input(f"generation currently {'enabled' if enabled else 'disabled'}! {'Disable' if enabled else 'Enable'} now? (y/N):") == 'y':
-        config['thumbnail_generation_enabled'] = not enabled
-        save_config(config)
+                print(f'Extracted thumbnail from {challenge_file}')
+        elif interactive:
+            print(f'Thumbnail {ident}.jpg exists')
 
 
 def exit():
@@ -91,33 +81,40 @@ def upload_replay(replay):
     s3_upload_replay(replay_path, replay)
 
 
+commands = [
+    ('Force Config Init', init_config),
+    ('Write Active MatchSettings', write_active),
+    ('List Challenges', list_challenges),
+    ('Generate Thumbnails', generate_thumbnails),
+    ('Exit', exit)
+]
+
 if args.test:
     sys.exit(0)
+
 elif args.init:
     init_config(False)
+
 elif args.prepare_start:
     write_active()
+
+elif args.generate_thumbnails:
     generate_thumbnails(False)
+
 elif args.upload_replay:
     upload_replay(args.upload_replay)
+
 else:
-    commands = [
-        ('Force Config Init', init_config),
-        ('Write Active MatchSettings', write_active),
-        ('List Challenges', list_challenges),
-        ('Generate Thumbnails', generate_thumbnails),
-        ('Toggle Thumbnail Generation', toggle_thumbnail_generation),
-        ('Exit', exit)
-    ]
+    while True:
+        index = 0
+        for display, func in commands:
+            print(f'{index} {display}')
+            index += 1
 
-    index = 0
-    for display, func in commands:
-        print(f'{index} {display}')
-        index += 1
+        selection = int(input('\nSelect: '))
+        if selection not in range(0, len(commands)):
+            print('Invalid input!')
+            sys.exit(1)
 
-    selection = int(input('\nSelect: '))
-    if selection not in range(0, len(commands)):
-        print('Invalid input!')
-        sys.exit(1)
-
-    commands[selection][1]()
+        commands[selection][1]()
+        print()

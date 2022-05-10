@@ -25,7 +25,7 @@
     </div>
     <div class="challenges-container">
         <div class="challenges-list">
-            <app-players-challenge-list [playerRankings]="playerRankings" [challenges]="challenges" (selectPlayerRankingEvent)="selectPlayerRanking($event)" *ngIf="selectedPlayer"></app-players-challenge-list>
+            <app-players-challenge-list [playerRankings]="playerRankings" [challenges]="challenges" [thumbnails]="provide_thumbnails" (selectPlayerRankingEvent)="selectPlayerRanking($event)" *ngIf="selectedPlayer"></app-players-challenge-list>
         </div>
         <div class="laptimes-connector" *ngIf="selectedPlayerRanking"></div>
         <div class="laptimes-list">

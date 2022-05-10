@@ -154,12 +154,6 @@ def create_directorys_mongodb(c):
         c.run(f'mkdir -p {d}', warn=True, hide=True)
 
 
-def create_directorys_tas(c):
-    for d in [project_dir + '/static/thumbnails']:
-        print(f'Creating {d}')
-        c.run(f'mkdir -p {d}', warn=True, hide=True)
-
-
 def create_directorys_tmnfd(c):
     for d in [tmnfd_dir]:
         print(f'Creating {d}')
@@ -293,7 +287,6 @@ def deploy_tas_pre(c):
     install_apt_package(c, 'python3')
     install_apt_package(c, 'virtualenv')
     install_apt_package(c, 'git')
-    create_directorys_tas(c)
 
 
 @task(name='deploy-tas')

@@ -245,6 +245,30 @@ Returns a Replay as file-download with given name or 404 if the requested Replay
   * `public`
   * `s-maxage=1800`
 
+### GET /thumbnails/
+
+Returns a list of all Thumbnails with their related Challenge info
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=30`
+
+#### Element-Attributes
+
+  * `challenge_id` *(string)* Challenges unique ID as used in MatchSettings
+  * `name` *(string)* Name of Challenge given by author
+  * `thumbnail` *(string)* Name of thumbnail as it is stored in S3
+
+### GET /thumbnails/{thumbnail_name}/
+
+Returns a Thumbnail as file-download with given name or 404 if the requested Thumbnail could not be found
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=10000`
+
 ### GET /settings/
 
 Returns dynamic settings

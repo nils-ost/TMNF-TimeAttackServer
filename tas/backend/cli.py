@@ -98,18 +98,32 @@ def provideReplays():
             from helpers.tmnfdcli import tmnfd_cli_test
             print('Testing connection to tmnfd-cli...')
             result = tmnfd_cli_test()
-            if result is None:
-                print('...no connection; disableing providing replays')
-                set_provide_replays(False)
-            else:
+            if result is not None:
                 print(f'...connection method is: {result}')
+
+
+def provideThumbnails():
+    from helpers.mongodb import set_provide_thumbnails, get_provide_thumbnails
+    provide = get_provide_thumbnails()
+    print(f"Providing thumbnails is currently {'enabled' if provide else 'disabled'}")
+    selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
+    if selection == 'y':
+        set_provide_thumbnails(not provide)
+        if not provide:
+            from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails
+            print('Testing connection to tmnfd-cli...')
+            result = tmnfd_cli_test()
+            if result is not None:
+                print(f'...connection method is: {result}')
+                tmnfd_cli_generate_thumbnails()
+                print('Generated Thumbnails')
 
 
 def clearDB():
     if not input('Wipe all player, challenge, laptime and replay data? (y/N): ').strip() == 'y':
         return
     from helpers.mongodb import mongoDB
-    from helpers.s3 import replay_delete_all
+    from helpers.s3 import buckets_delete_all
     mongoDB().challenges.drop()
     print('Wiped Challenges')
     mongoDB().players.drop()
@@ -124,8 +138,8 @@ def clearDB():
     print('Wiped Rankings')
     mongoDB().utils.drop()
     print('Wiped Utils')
-    replay_delete_all()
-    print('Wiped Replays')
+    buckets_delete_all()
+    print('Wiped Replays and Thumbnails')
     if not input('Also wipe settings? (y/N): ').strip() == 'y':
         return
     mongoDB().settings.drop()
@@ -197,6 +211,7 @@ commands = [
     ('Set Display Self URL', displaySelfUrl),
     ('Set Client Download URL', clientDownloadURL),
     ('Set Provide Replays', provideReplays),
+    ('Set Provide Thumbnails', provideThumbnails),
     ('Download/Provide TMNF Client', downloadClient),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),

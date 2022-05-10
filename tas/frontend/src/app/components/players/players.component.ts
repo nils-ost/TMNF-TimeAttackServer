@@ -18,6 +18,7 @@ import { MenuItem } from 'primeng/api';
 export class PlayersComponent implements OnInit {
   @ViewChild('dt_players_list') players_table: any;
   provide_replays: boolean = false;
+  provide_thumbnails: boolean = false;
   players: Player[] = [];
   globalRankings: GlobalRanking[] = [];
   selectedPlayer?: Player;
@@ -180,6 +181,7 @@ export class PlayersComponent implements OnInit {
       .subscribe(
         (settings: Settings) => {
           this.provide_replays = settings.provide_replays;
+          this.provide_thumbnails = settings.provide_thumbnails;
         }
       );
   }

@@ -11,10 +11,10 @@ from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_ge
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
-from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_provide_replays
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_provide_replays, get_provide_thumbnails
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
-from helpers.s3 import replay_get, replay_exists
+from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists
 from helpers.config import get_config
 from helpers.metrics import start_metrics_exporter
 
@@ -25,6 +25,7 @@ class TimeAttackServer():
         self.players = Players()
         self.rankings = Rankings()
         self.replays = Replays()
+        self.thumbnails = Thumbnails()
         self.settings = Settings()
         self.stats = Stats()
 
@@ -41,6 +42,7 @@ class Settings():
         result['display_admin'] = get_display_admin()
         result['client_download_url'] = get_client_download_url()
         result['provide_replays'] = get_provide_replays()
+        result['provide_thumbnails'] = get_provide_thumbnails()
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 
@@ -220,6 +222,31 @@ class Replays():
             return file_generator(replay_get(replay_name))
 
 
+@cherrypy.popargs('thumbnail_name')
+class Thumbnails():
+    @cherrypy.expose()
+    def index(self, thumbnail_name=None):
+        if thumbnail_name is None:
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
+            cherrypy.response.headers['Content-Type'] = 'application/json'
+            result = list()
+            for c in challenge_all():
+                result.append({'challenge_id': c['_id'], 'name': c['name'], 'thumbnail': c['_id'] + '.jpg'})
+            return json.dumps(result).encode('utf-8')
+        if not thumbnail_exists(thumbnail_name):
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
+            cherrypy.response.status = 404
+            return
+        else:
+            filename = thumbnail_name
+            if not filename.endswith('.jpg'):
+                filename = filename + '.jpg'
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10000'
+            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            cherrypy.response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return file_generator(thumbnail_get(thumbnail_name))
+
+
 def periodic_ranking_rebuild_function():
     while True:
         time.sleep(5)
@@ -247,10 +274,6 @@ if __name__ == '__main__':
             'tools.staticdir.dir': 'ang/en',
             'tools.staticdir.index': 'index.html',
             'tools.staticdir.abs_index': True
-        },
-        '/thumbnails': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'thumbnails'
         },
         '/download': {
             'tools.staticdir.on': True,

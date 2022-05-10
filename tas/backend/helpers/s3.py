@@ -13,29 +13,25 @@ botoClient = boto3.client(
 
 def setup_storage():
     global botoClient
-    if config['bucket_replays'] not in [bucket['Name'] for bucket in botoClient.list_buckets()['Buckets']]:
-        botoClient.create_bucket(Bucket=config['bucket_replays'])
+    buckets = [bucket['Name'] for bucket in botoClient.list_buckets()['Buckets']]
+    for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:
+        if bucket not in buckets:
+            botoClient.create_bucket(Bucket=bucket)
 
 
 setup_storage()
 
 
-def replay_get(name):
-    global config
+def generic_get(bucket, name):
     global botoClient
-    if not name.endswith('.Replay.Gbx'):
-        name = name + '.Replay.Gbx'
-    result = botoClient.get_object(Bucket=config['bucket_replays'], Key=name)
+    result = botoClient.get_object(Bucket=bucket, Key=name)
     return result['Body']
 
 
-def replay_exists(name):
-    global config
+def generic_exists(bucket, name):
     global botoClient
-    if not name.endswith('.Replay.Gbx'):
-        name = name + '.Replay.Gbx'
     try:
-        objects = botoClient.list_objects(Bucket=config['bucket_replays'], Prefix=name)
+        objects = botoClient.list_objects(Bucket=bucket, Prefix=name)
         objects = [k for k in [obj['Key'] for obj in objects.get('Contents', [])]]
         if name in objects:
             return True
@@ -45,12 +41,55 @@ def replay_exists(name):
         return False
 
 
-def replay_delete_all():
-    global config
+def generic_delete_all(bucket):
     botoResource = boto3.resource(
         's3',
         endpoint_url=f"http://{config['host']}:{config['port']}",
         aws_access_key_id=config['access_key'],
         aws_secret_access_key=config['access_secret']
     )
-    botoResource.Bucket(config['bucket_replays']).objects.all().delete()
+    botoResource.Bucket(bucket).objects.all().delete()
+
+
+def replay_get(name):
+    global config
+    if not name.endswith('.Replay.Gbx'):
+        name = name + '.Replay.Gbx'
+    return generic_get(config['bucket_replays'], name)
+
+
+def replay_exists(name):
+    global config
+    if not name.endswith('.Replay.Gbx'):
+        name = name + '.Replay.Gbx'
+    return generic_exists(config['bucket_replays'], name)
+
+
+def replay_delete_all():
+    global config
+    generic_delete_all(config['bucket_replays'])
+
+
+def thumbnail_get(name):
+    global config
+    if not name.endswith('.jpg'):
+        name = name + '.jpg'
+    return generic_get(config['bucket_thumbnails'], name)
+
+
+def thumbnail_exists(name):
+    global config
+    if not name.endswith('.jpg'):
+        name = name + '.jpg'
+    return generic_exists(config['bucket_thumbnails'], name)
+
+
+def thumbnail_delete_all():
+    global config
+    generic_delete_all(config['bucket_thumbnails'])
+
+
+def buckets_delete_all():
+    global config
+    for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:
+        generic_delete_all(bucket)

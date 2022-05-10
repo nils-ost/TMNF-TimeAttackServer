@@ -12,7 +12,7 @@ def start_development(c):
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
-        c.run(f'sudo docker run --name dev-haproxy --rm -p 80:80 -p 8404:8404 \
+        c.run(f'sudo docker run --name dev-haproxy --rm -p 80:80 -p 8404:8404 -p 9999:9999 \
             -v {os.path.join(os.path.abspath(os.path.curdir), "install/haproxy.cfg")}:/usr/local/etc/haproxy/haproxy.cfg:ro \
             --add-host=host.docker.internal:host-gateway \
             --sysctl net.ipv4.ip_unprivileged_port_start=0 -d haproxy:lts-alpine')
@@ -44,7 +44,7 @@ def create_bundle(c):
     c.run('rm -rf tas/backend/helpers/__pycache__; rm -rf tmnfd/helpers/__pycache__')
     for item in ['tas/backend/timeAttackServer.py', 'tas/backend/cli.py', 'tas/backend/requirements.txt', 'tas/backend/helpers', 'tas/backend/static']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/tas/backend/')
-    for item in ['/tmp/tmnf-tas/tas/backend/static/thumbnails', '/tmp/tmnf-tas/tas/backend/static/download']:
+    for item in ['/tmp/tmnf-tas/tas/backend/static/download']:
         c.run(f'rm -rf {item}', warn=True)
     for item in ['fabfile.py', 'install']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/')

@@ -2,7 +2,8 @@
     <div class="card-content">
         <div class="header">
             <p>{{ challenge.name }}</p>
-            <p-image src="{{ thumbnailUrl }}" styleClass="challengeThumbnail" [preview]="true" (onShow)="onDisableRefresh.emit()" (onHide)="onEnableRefresh.emit()"></p-image>
+            <p-image src="{{ thumbnailUrl }}" *ngIf="thumbnail" styleClass="challengeThumbnail" [preview]="true" (onShow)="onDisableRefresh.emit()" (onHide)="onEnableRefresh.emit()"></p-image>
+            <div class="imgPlaceholder" *ngIf="!thumbnail"></div>
         </div>
         <div class="stats">
             <p><ng-container i18n="Header for Seen Count in Tables@@tableHeaderSeenCount">Seen Count</ng-container>: {{ challenge.seen_count }}</p>
