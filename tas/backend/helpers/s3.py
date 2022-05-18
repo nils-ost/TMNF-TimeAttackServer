@@ -89,6 +89,25 @@ def thumbnail_delete_all():
     generic_delete_all(config['bucket_thumbnails'])
 
 
+def challenge_get(name):
+    global config
+    if not name.endswith('.Challenge.Gbx'):
+        name = name + '.Challenge.Gbx'
+    return generic_get(config['bucket_challenges'], name)
+
+
+def challenge_exists(name):
+    global config
+    if not name.endswith('.Challenge.Gbx'):
+        name = name + '.Challenge.Gbx'
+    return generic_exists(config['bucket_challenges'], name)
+
+
+def challenge_delete_all():
+    global config
+    generic_delete_all(config['bucket_challenges'])
+
+
 def buckets_delete_all():
     global config
     for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:

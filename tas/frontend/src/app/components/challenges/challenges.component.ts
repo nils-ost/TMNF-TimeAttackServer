@@ -25,6 +25,7 @@ export class ChallengesComponent implements OnInit {
   players: Player[] = [];
   provide_replays: boolean = false;
   provide_thumbnails: boolean = false;
+  provide_challenges: boolean = false;
   speeddail_menu: MenuItem[] = [];
 
   constructor(
@@ -168,6 +169,7 @@ export class ChallengesComponent implements OnInit {
         (settings: Settings) => {
           this.provide_replays = settings.provide_replays;
           this.provide_thumbnails = settings.provide_thumbnails;
+          this.provide_challenges = settings.provide_challenges;
         }
       );
   }

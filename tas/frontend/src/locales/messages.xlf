@@ -6,7 +6,7 @@
         <source>Seen Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Header for Seen Count in Tables</note>
       </trans-unit>
@@ -14,7 +14,7 @@
         <source>Time Limit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Label for time limit in challenge-ticker</note>
       </trans-unit>
@@ -22,7 +22,7 @@
         <source>Up in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">Header for Up In in Tables</note>
       </trans-unit>
@@ -30,7 +30,7 @@
         <source>Current</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Label for current challenge in challenge-ticker</note>
       </trans-unit>
@@ -38,7 +38,7 @@
         <source>Next in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <note priority="1" from="description">Label for next challenge in challenge-ticker</note>
       </trans-unit>
@@ -46,7 +46,7 @@
         <source>Loading</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">Label for loading challenge in challenge-ticker</note>
       </trans-unit>
@@ -54,7 +54,7 @@
         <source>challenge</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players-challenge-list/players-challenge-list.component.html</context>
@@ -66,7 +66,7 @@
         <source>time limit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Header for column time limit in tables</note>
       </trans-unit>
@@ -74,7 +74,7 @@
         <source>seen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">Header for column seen in tables</note>
       </trans-unit>
@@ -82,15 +82,23 @@
         <source>up</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Header for column up in tables</note>
+      </trans-unit>
+      <trans-unit id="tooltipDownloadChallenge" datatype="html">
+        <source>download challenge Gbx</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip for challenge donwload icon</note>
       </trans-unit>
       <trans-unit id="labelCount" datatype="html">
         <source>Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <note priority="1" from="description">Label for seen count in challenges screen</note>
       </trans-unit>
@@ -98,7 +106,7 @@
         <source>Last</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <note priority="1" from="description">Label for seen last in challenges screen</note>
       </trans-unit>
@@ -106,7 +114,7 @@
         <source>In</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <note priority="1" from="description">Label for up in in challenges screen</note>
       </trans-unit>
@@ -114,7 +122,7 @@
         <source>At</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <note priority="1" from="description">Label for at in challenges screen</note>
       </trans-unit>
@@ -122,7 +130,7 @@
         <source>&apos;Up in&apos; times might vary as not all time limits are finally calculated yet!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
@@ -282,11 +290,11 @@
         <source>Refresh Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">Text for link to refresh screen</note>
       </trans-unit>
@@ -294,11 +302,11 @@
         <source>Open PlayerHUD</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
@@ -310,7 +318,7 @@
         <source>Open Players Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -326,7 +334,7 @@
         <source>Open Wallboard</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -334,7 +342,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Wallboard Screen</note>
       </trans-unit>
@@ -342,7 +350,7 @@
         <source>Open Home Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -350,7 +358,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
@@ -534,7 +542,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
@@ -586,7 +594,7 @@
         <source>Export CSV</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">Text for link to export csv</note>
       </trans-unit>

@@ -1,4 +1,4 @@
-from helpers.mongodb import set_tmnfd_cli_method, get_tmnfd_cli_method, set_provide_replays, set_provide_thumbnails
+from helpers.mongodb import set_tmnfd_cli_method, get_tmnfd_cli_method, set_provide_replays
 from helpers.config import get_config
 import subprocess
 
@@ -20,8 +20,6 @@ def tmnfd_cli_test():
         print('TMNF - Dedicated CLI is not reachable!')
         set_provide_replays(False)
         print('  Disableing replay-provider')
-        set_provide_thumbnails(False)
-        print('  Disableing thumbnail-provider')
         return None
 
 
@@ -44,4 +42,15 @@ def tmnfd_cli_generate_thumbnails():
     if cli_method == 'ssh':
         return int(subprocess.call(
             f"ssh root@{config['host']} tmnfd --generate_thumbnails", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    return False
+
+
+def tmnfd_cli_upload_challenges():
+    global config
+    cli_method = get_tmnfd_cli_method()
+    if cli_method == 'bash':
+        return int(subprocess.call('tmnfd --upload_challenges', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    if cli_method == 'ssh':
+        return int(subprocess.call(
+            f"ssh root@{config['host']} tmnfd --upload_challenges", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
     return False

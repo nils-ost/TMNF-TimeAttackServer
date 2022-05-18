@@ -424,6 +424,17 @@ def get_provide_thumbnails():
     return r.get('provide', False)
 
 
+def set_provide_challenges(provide=False):
+    mongoDB().settings.replace_one({'_id': 'upload_challenges'}, {'_id': 'upload_challenges', 'provide': provide}, True)
+
+
+def get_provide_challenges():
+    r = mongoDB().settings.find_one({'_id': 'upload_challenges'})
+    if r is None:
+        return False
+    return r.get('provide', False)
+
+
 """
 Stats
 """

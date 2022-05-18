@@ -11,6 +11,7 @@ parser.add_argument('--init', dest='init', action='store_true', default=False, h
 parser.add_argument('--prepare-start', dest='prepare_start', action='store_true', help='Prepares everything for tmnfd to be started')
 parser.add_argument('--upload_replay', dest='upload_replay', default=None, help='Uploads specified replay file to S3 storage')
 parser.add_argument('--generate_thumbnails', dest='generate_thumbnails', action='store_true', help='Generates thumbnails and uploads them to S3 storage')
+parser.add_argument('--upload_challenges', dest='upload_challenges', action='store_true', help='Uploads challenges files of active machsetting to S3 storage')
 args = parser.parse_args()
 
 
@@ -68,6 +69,21 @@ def generate_thumbnails(interactive=True):
             print(f'Thumbnail {ident}.jpg exists')
 
 
+def upload_challenges(interactive=True):
+    from helpers.config import get_config
+    from helpers.s3 import exists_challenge, upload_challenge
+    config = get_config()
+    ms = MatchSettings(config['active_matchsetting'])
+    for ident, cpath in ms.get_challenges():
+        cpath = os.path.join(config['challenges_path'], cpath.replace('\\', '/'))
+        if not exists_challenge(ident):
+            upload_challenge(cpath, ident)
+            if interactive:
+                print(f'Uploaded: {cpath}')
+        elif interactive:
+            print(f'Allready exists: {cpath}')
+
+
 def exit():
     sys.exit(0)
 
@@ -86,6 +102,7 @@ commands = [
     ('Write Active MatchSettings', write_active),
     ('List Challenges', list_challenges),
     ('Generate Thumbnails', generate_thumbnails),
+    ('Upload Challenges', upload_challenges),
     ('Exit', exit)
 ]
 
@@ -103,6 +120,9 @@ elif args.generate_thumbnails:
 
 elif args.upload_replay:
     upload_replay(args.upload_replay)
+
+elif args.upload_challenges:
+    upload_challenges(False)
 
 else:
     while True:

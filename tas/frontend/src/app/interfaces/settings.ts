@@ -7,4 +7,5 @@ export interface Settings {
     client_download_url?: string;
     provide_replays: boolean;
     provide_thumbnails: boolean;
+    provide_challenges: boolean;
 }

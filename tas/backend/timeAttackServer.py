@@ -11,10 +11,11 @@ from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_ge
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
-from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_provide_replays, get_provide_thumbnails
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url
+from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
-from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists
+from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
 from helpers.config import get_config
 from helpers.metrics import start_metrics_exporter
 
@@ -43,6 +44,7 @@ class Settings():
         result['client_download_url'] = get_client_download_url()
         result['provide_replays'] = get_provide_replays()
         result['provide_thumbnails'] = get_provide_thumbnails()
+        result['provide_challenges'] = get_provide_challenges()
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 
@@ -61,15 +63,29 @@ class Stats():
         return result
 
 
+@cherrypy.popargs('challenge_id')
 class Challenges():
     @cherrypy.expose()
-    @cherrypy.tools.json_out()
-    def index(self):
-        result = list()
-        for c in challenge_all():
-            result.append({'id': c['_id'], 'name': c['name'], 'seen_count': c['seen_count'], 'seen_last': c['seen_last'], 'time_limit': c['time_limit']})
-        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
-        return result
+    def index(self, challenge_id=None):
+        if challenge_id is None:
+            result = list()
+            for c in challenge_all():
+                result.append({'id': c['_id'], 'name': c['name'], 'seen_count': c['seen_count'], 'seen_last': c['seen_last'], 'time_limit': c['time_limit']})
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=90'
+            cherrypy.response.headers['Content-Type'] = 'application/json'
+            return json.dumps(result).encode('utf-8')
+
+        challenge = challenge_get(challenge_id=challenge_id)
+        if challenge is None or not challenge_exists_s3(challenge_id):
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
+            cherrypy.response.status = 404
+            return
+        else:
+            filename = f"{challenge['name']}.Challenge.Gbx"
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10000'
+            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            cherrypy.response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return file_generator(challenge_get_s3(challenge_id))
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
@@ -216,7 +232,7 @@ class Replays():
             challenge = challenge_get(laptime['challenge_id'])
             created = datetime.fromtimestamp(laptime['created_at']).strftime('%Y_%m_%d_%H_%M_%S')
             filename = f"{created}_{challenge['name']}_{player['nickname']}_({timetos(laptime['time'])}).Replay.Gbx"
-            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=1800'
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10000'
             cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
             cherrypy.response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
             return file_generator(replay_get(replay_name))

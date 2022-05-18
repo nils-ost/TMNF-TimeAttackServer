@@ -15,7 +15,7 @@ botoClient = boto3.client(
 def setup_storage():
     global botoClient
     buckets = [bucket['Name'] for bucket in botoClient.list_buckets()['Buckets']]
-    for bucket in [config['bucket_replays'], config['bucket_thumbnails']]:
+    for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:
         if bucket not in buckets:
             botoClient.create_bucket(Bucket=bucket)
 
@@ -23,14 +23,15 @@ def setup_storage():
 setup_storage()
 
 
-def upload_generic(bucket, path, name):
+def upload_generic(bucket, path, name, rm_local=False):
     global botoClient
     if not os.path.isfile(path):
         return False
     try:
         with open(path, 'rb') as f:
             botoClient.upload_fileobj(f, Bucket=bucket, Key=name)
-        os.remove(path)
+        if rm_local:
+            os.remove(path)
         return True
     except Exception:
         return False
@@ -40,14 +41,21 @@ def upload_replay(path, name):
     global config
     if not name.endswith('.Replay.Gbx'):
         name = name + '.Replay.Gbx'
-    return upload_generic(config['bucket_replays'], path, name)
+    return upload_generic(config['bucket_replays'], path, name, True)
 
 
 def upload_thumbnail(path, name):
     global config
     if not name.endswith('.jpg'):
         name = name + '.jpg'
-    return upload_generic(config['bucket_thumbnails'], path, name)
+    return upload_generic(config['bucket_thumbnails'], path, name, True)
+
+
+def upload_challenge(path, name):
+    global config
+    if not name.endswith('.Challenge.Gbx'):
+        name = name + '.Challenge.Gbx'
+    return upload_generic(config['bucket_challenges'], path, name)
 
 
 def exists_generic(bucket, name):
@@ -68,3 +76,10 @@ def exists_thumbnail(name):
     if not name.endswith('.jpg'):
         name = name + '.jpg'
     return exists_generic(config['bucket_thumbnails'], name)
+
+
+def exists_challenge(name):
+    global config
+    if not name.endswith('.Challenge.Gbx'):
+        name = name + '.Challenge.Gbx'
+    return exists_generic(config['bucket_challenges'], name)

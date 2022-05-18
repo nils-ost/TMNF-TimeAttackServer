@@ -21,16 +21,17 @@ export class ChallengesListComponent implements OnInit, OnChanges {
   @Input() challenges!: Challenge[];
   @Input() currentChallenge!: Challenge;
   @Input() thumbnails: boolean = false;
+  @Input() provide_challenges: boolean = false;
   @Output() selectChallengeEvent = new EventEmitter<Challenge | null>();
   selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];
-  thumbnailUrlBase: string = "";
+  apiUrl: string = "";
   unpredictedUpIn: boolean = true;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.thumbnailUrlBase = environment.apiUrl + '/thumbnails/';
+    this.apiUrl = environment.apiUrl;
     this.buildSortableChallenges();
     this.calculateUnpredictedUpIn();
   }

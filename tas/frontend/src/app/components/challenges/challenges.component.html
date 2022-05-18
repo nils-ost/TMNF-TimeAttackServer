@@ -18,7 +18,7 @@
 <div class="lists-container">
     <div class="challenges-list">
         <div class="challenges-connector"></div>
-        <app-challenges-list [challenges]="challenges" [currentChallenge]="currentChallenge" [thumbnails]="provide_thumbnails" (selectChallengeEvent)="selectChallenge($event)" *ngIf="currentChallenge"></app-challenges-list>>
+        <app-challenges-list [challenges]="challenges" [currentChallenge]="currentChallenge" [thumbnails]="provide_thumbnails" [provide_challenges]="provide_challenges" (selectChallengeEvent)="selectChallenge($event)" *ngIf="currentChallenge"></app-challenges-list>>
     </div>
     <div class="players-spacer">
         <div class="players-connector" *ngIf="selectedChallenge"></div>

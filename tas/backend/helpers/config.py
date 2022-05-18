@@ -32,7 +32,8 @@ config = {
         'access_key': 'tmnftas',
         'access_secret': 'password',
         'bucket_replays': 'tas-replays',
-        'bucket_thumbnails': 'tas-thumbnails'
+        'bucket_thumbnails': 'tas-thumbnails',
+        'bucket_challenges': 'tas-challenges'
     },
     'util': {
         'wallboard_players_max_default': 10,

@@ -117,6 +117,27 @@ def provideThumbnails():
                 print(f'...connection method is: {result}')
                 tmnfd_cli_generate_thumbnails()
                 print('Generated Thumbnails')
+            else:
+                print('You need to trigger Thumbnail generation on TMNFD manually!')
+
+
+def provideChallenges():
+    from helpers.mongodb import set_provide_challenges, get_provide_challenges
+    provide = get_provide_challenges()
+    print(f"Uploading challenges is currently {'enabled' if provide else 'disabled'}")
+    selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
+    if selection == 'y':
+        set_provide_challenges(not provide)
+        if not provide:
+            from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_challenges
+            print('Testing connection to tmnfd-cli...')
+            result = tmnfd_cli_test()
+            if result is not None:
+                print(f'...connection method is: {result}')
+                tmnfd_cli_upload_challenges()
+                print('Uploaded Challenges')
+            else:
+                print('You need to trigger Challenges upload on TMNFD manually!')
 
 
 def clearDB():
@@ -139,7 +160,7 @@ def clearDB():
     mongoDB().utils.drop()
     print('Wiped Utils')
     buckets_delete_all()
-    print('Wiped Replays and Thumbnails')
+    print('Wiped Replays, Thumbnails and Challenges')
     if not input('Also wipe settings? (y/N): ').strip() == 'y':
         return
     mongoDB().settings.drop()
@@ -212,6 +233,7 @@ commands = [
     ('Set Client Download URL', clientDownloadURL),
     ('Set Provide Replays', provideReplays),
     ('Set Provide Thumbnails', provideThumbnails),
+    ('Set Provide Challenges', provideChallenges),
     ('Download/Provide TMNF Client', downloadClient),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),

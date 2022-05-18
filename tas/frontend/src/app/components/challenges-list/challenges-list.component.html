@@ -1,6 +1,7 @@
 <p-table [value]="sortableChallenges" sortField="up_in" [autoLayout]="true" [scrollable]="true" scrollHeight="88vh" selectionMode="single" [(selection)]="selectedChallenge" (onRowSelect)="selectChallenge($event)" (onRowUnselect)="selectChallenge(null)" styleClass="rounded-table">
     <ng-template pTemplate="header">
         <tr>
+            <th *ngIf="provide_challenges" class="col-download"></th>
             <th pSortableColumn="name" class="col-name"><ng-container i18n="Header for column challenge name in tables@@tableHeaderChallengeName">challenge</ng-container> <p-sortIcon field="name"></p-sortIcon></th>
             <th><ng-container i18n="Header for column time limit in tables@@tableHeaderTimeLimit">time limit</ng-container></th>
             <th pSortableColumn="seen_last" class="col-time"><ng-container i18n="Header for column seen in tables@@tableHeaderSeen">seen</ng-container> <p-sortIcon field="seen_last"></p-sortIcon></th>
@@ -9,8 +10,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-challenge>
         <tr [pSelectableRow]="challenge">
+            <td *ngIf="provide_challenges" class="col-download">
+                <a href="{{ apiUrl }}/challenges/{{ challenge.id }}/" i18n-pTooltip="Tooltip for challenge donwload icon@@tooltipDownloadChallenge" pTooltip="download challenge Gbx" tooltipPosition="bottom">
+                    <div class="icon">
+                        <i class="pi pi-download"></i>
+                    </div>
+                </a>
+            </td>
             <td class="col-name">{{ challenge.name }}<br />{{ challenge.id }}</td>
-            <td><img class="cimg" *ngIf="thumbnails" src="{{ thumbnailUrlBase }}{{ challenge.id }}.jpg" />{{ challenge.time_limit / 1000 | number: '1.0-0' }}s</td>
+            <td><img class="cimg" *ngIf="thumbnails" src="{{ apiUrl }}/thumbnails/{{ challenge.id }}.jpg" />{{ challenge.time_limit / 1000 | number: '1.0-0' }}s</td>
             <td class="col-time">
                 <ng-container i18n="Label for seen count in challenges screen@@labelCount">Count</ng-container>: {{ challenge.seen_count }}<br />
                 <ng-container i18n="Label for seen last in challenges screen@@labelLast">Last</ng-container>: {{ (challenge.seen_last ? (challenge.seen_last * 1000 | date:'medium') : "---") }}

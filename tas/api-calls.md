@@ -9,7 +9,7 @@ Returns a list of all, as active marked, Challenges elements.
 #### Cache-Control
 
   * `public`
-  * `s-maxage=9`
+  * `s-maxage=90`
 
 #### Element-Attributes
 
@@ -18,6 +18,15 @@ Returns a list of all, as active marked, Challenges elements.
   * `seen_count` *(integer)* How many times the Challenge was the current Challenge
   * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
   * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
+
+### GET /challenges/{challenge_id}/
+
+Returns a Challenge.Gbx as file-download with given id or 404 if the requested Challenge could not be found
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=10000`
 
 ### GET /challenges/current/
 
@@ -243,7 +252,7 @@ Returns a Replay as file-download with given name or 404 if the requested Replay
 #### Cache-Control
 
   * `public`
-  * `s-maxage=1800`
+  * `s-maxage=10000`
 
 ### GET /thumbnails/
 
@@ -286,6 +295,9 @@ Returns dynamic settings
   * `display_self_url` *(string)* URL that should point to the TAS website (or `Null` if not set)
   * `display_admin` *(string)* What is displayed as the server-admin contact (or `Null` if not set)
   * `client_download_url` *(string)* URL pointing to TMNF-Client installer (or `Null` if not set)
+  * `provide_replays` *(boolean)* Indicates if replay files are provided or not
+  * `provide_thumbnails` *(boolean)* Indicates if challenge thumbnail files are provided or not
+  * `provide_challenges` *(boolean)* Indicates if challenge Gbx files are provided or not
 
 ### GET /stats/
 
