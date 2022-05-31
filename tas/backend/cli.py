@@ -4,12 +4,26 @@ import sys
 import argparse
 import json
 from helpers.GbxRemote import GbxRemote
+import subprocess
+import time
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
 parser.add_argument('--config', dest='config', action='store_true', default=False, help='Returns current configuration')
 parser.add_argument('--enablemetrics', dest='enablemetrics', action='store_true', default=False, help='If set the TAS metrics endpoint is set to enabled')
+parser.add_argument('--state', '-s', dest='state', action='store_true', default=False, help='If set the state of TAS stack is displayed')
+parser.add_argument('--start', dest='start', action='store_true', default=False, help='If set TAS stack is started')
+parser.add_argument('--stop', dest='stop', action='store_true', default=False, help='If set TAS stack is stopped')
+parser.add_argument('--restart', dest='restart', action='store_true', default=False, help='If set TAS stack is restarted')
 args = parser.parse_args()
+
+
+class bcolors:
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
 
 
 def wallboardPalyersMax():
@@ -221,11 +235,79 @@ def mergePlayers():
         print('done')
 
 
+def state():
+    # tmnf-tas.service
+    active = subprocess.call('systemctl is-active tmnf-tas.service', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
+    print(f"{' ' * 6}tmnf-tas.service: {bcolors.GREEN + 'active' if active else bcolors.FAIL + 'inactive'}{bcolors.ENDC}")
+    # tmnfd.service, docker.mongodb.service, minio.service
+    for service in ['tmnfd.service', 'docker.mongodb.service', 'minio.service']:
+        present = subprocess.call(f'systemctl cat {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
+        if present:
+            active = subprocess.call(f'systemctl is-active {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
+        if service == 'tmnfd.service':
+            from helpers.config import get_config
+            from helpers.GbxRemote import GbxRemote
+            config = get_config('tmnf-server')
+            tmnfd = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+            connected = tmnfd.connect()
+        elif service == 'docker.mongodb.service':
+            from helpers.mongodb import start_mongodb_connection, is_connected
+            start_mongodb_connection()
+            connected = is_connected()
+        elif service == 'minio.service':
+            from helpers.s3 import is_connected
+            connected = is_connected()
+
+        state = 'locally ' if present else 'remotely '
+        if present:
+            state += (bcolors.GREEN + 'active ' if active else bcolors.FAIL + 'inactive ') + bcolors.ENDC
+        state += (bcolors.GREEN + 'connectable' if connected else bcolors.FAIL + 'unconnectable') + bcolors.ENDC
+        print(f'{" " * (22 - len(service))}{service}: {state}')
+    # docker.haproxy.service
+    if subprocess.call('systemctl cat docker.haproxy.service', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
+        active = subprocess.call('systemctl is-active docker.haproxy.service', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
+        state = (bcolors.GREEN + 'active' if active else bcolors.FAIL + 'inactive') + bcolors.ENDC
+    else:
+        state = bcolors.WARNING + 'not present' + bcolors.ENDC
+    print(f'docker.haproxy.service: {state}')
+    # tmnfd-cli
+    from helpers.tmnfdcli import tmnfd_cli_test_method
+    tmnfdcli = tmnfd_cli_test_method()
+    state = (bcolors.FAIL + 'unconnectable' if tmnfdcli is None else bcolors.GREEN + f'connectable via {tmnfdcli}') + bcolors.ENDC
+    print(f'{" " * 13}tmnfd-cli: {state}')
+
+
+def stop_stack():
+    for service in ['tmnfd.service', 'tmnf-tas.service', 'docker.haproxy.service', 'minio.service', 'docker.mongodb.service']:
+        if subprocess.call(f'systemctl cat {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
+            if subprocess.call(f'systemctl is-active {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
+                subprocess.call(f'systemctl stop {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                print(f'Stopped {service}')
+
+
+def start_stack():
+    for service in ['docker.mongodb.service', 'minio.service', 'tmnfd.service', 'tmnf-tas.service', 'docker.haproxy.service']:
+        if subprocess.call(f'systemctl cat {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
+            if not subprocess.call(f'systemctl is-active {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0:
+                subprocess.call(f'systemctl start {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                print(f'Started {service}')
+
+
+def restart_stack():
+    stop_stack()
+    time.sleep(1)
+    start_stack()
+
+
 def exit():
     sys.exit(0)
 
 
 commands = [
+    ('Stack State', state),
+    ('Start Stack', start_stack),
+    ('Stop Stack', stop_stack),
+    ('Restart Stack', restart_stack),
     ('Set Wallboard Players Max', wallboardPalyersMax),
     ('Set Wallboard Challenges Max', wallboardChallengesMax),
     ('Set Display Admin', displayAdmin),
@@ -253,6 +335,22 @@ if args.enablemetrics:
     if not config.get('enabled', False):
         config['enabled'] = True
         set_config(config, 'metrics')
+    sys.exit(0)
+
+if args.state:
+    state()
+    sys.exit(0)
+
+if args.start:
+    start_stack()
+    sys.exit(0)
+
+if args.stop:
+    stop_stack()
+    sys.exit(0)
+
+if args.restart:
+    restart_stack()
     sys.exit(0)
 
 while True:

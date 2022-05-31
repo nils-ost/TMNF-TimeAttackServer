@@ -5,22 +5,25 @@ import subprocess
 config = get_config('tmnf-server')
 
 
-def tmnfd_cli_test():
+def tmnfd_cli_test_method():
     global config
     r = subprocess.call('tmnfd --test', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     if int(r) == 0:
-        set_tmnfd_cli_method('bash')
         return 'bash'
     r = subprocess.call(f"ssh -o ConnectTimeout=3 root@{config['host']} tmnfd --test", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     if int(r) == 0:
-        set_tmnfd_cli_method('ssh')
         return 'ssh'
-    else:
-        set_tmnfd_cli_method(None)
+    return None
+
+
+def tmnfd_cli_test():
+    method = tmnfd_cli_test_method()
+    if method is None:
         print('TMNF - Dedicated CLI is not reachable!')
         set_provide_replays(False)
         print('  Disableing replay-provider')
-        return None
+    set_tmnfd_cli_method(method)
+    return method
 
 
 def tmnfd_cli_upload_replay(name):

@@ -39,6 +39,15 @@ def mongoDB():
     return _mongoDB[p]
 
 
+def is_connected():
+    try:
+        mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=1000)
+        mongoClient.server_info()
+        return True
+    except Exception:
+        return False
+
+
 """
 TMNF-TimeAttack
 """

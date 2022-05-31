@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ConnectionClosedError
 from helpers.config import get_config
 
 config = get_config('s3')
@@ -11,6 +12,27 @@ botoClient = boto3.client(
 )
 
 
+def is_connected():
+    global botoClient
+    origCT = botoClient.meta.config.connect_timeout
+    botoClient.meta.config.connect_timeout = 1
+    origRetries = botoClient.meta.config.retries
+    botoClient.meta.config.retries = {'max_attempts': 0}
+    result = False
+    for i in range(3):
+        try:
+            botoClient.list_buckets()
+            result = True
+            break
+        except ConnectionClosedError:
+            continue
+        except Exception:
+            break
+    botoClient.meta.config.connect_timeout = origCT
+    botoClient.meta.config.retries = origRetries
+    return result
+
+
 def setup_storage():
     global botoClient
     buckets = [bucket['Name'] for bucket in botoClient.list_buckets()['Buckets']]
@@ -19,7 +41,8 @@ def setup_storage():
             botoClient.create_bucket(Bucket=bucket)
 
 
-setup_storage()
+if is_connected():
+    setup_storage()
 
 
 def generic_get(bucket, name):
