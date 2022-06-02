@@ -8,3 +8,4 @@ tas/backend/static/download
 *.run
 tmnfd/config.json
 tmnfd/testdata
+*.bkp

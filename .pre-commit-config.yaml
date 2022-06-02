@@ -1,4 +1,4 @@
-exclude: '(tas/frontend|.md$|.drawio$)'
+exclude: '(tas/frontend|.md$|.drawio|.drawio.svg$)'
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v1.1.1
