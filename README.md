@@ -36,6 +36,8 @@ And now, because a picture says more than 1000 words, here you have a drawing of
 
 At this point I like to hightlight, that TMNF-TAS is not designed to be used on the internet, it's specific target is LAN-Partys and so for local networks.
 
+On my website I prepared a page with some impressions of TMNF-TAS, just follow this link [https://nijos.de/tmnf-timeattackserver/tmnf-tas-impressions/](https://nijos.de/tmnf-timeattackserver/tmnf-tas-impressions/) to reach them.
+
 If you now just like to try out TMNF-TAS, you need to do the following:
 
   * get an Ubuntu host
