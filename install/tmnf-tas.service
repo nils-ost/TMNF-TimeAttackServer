@@ -2,15 +2,16 @@
 Description=TMNF-TimeAttackServer
 
 [Service]
-Type=simple
-ExecStart=__project_dir__/venv/bin/python __project_dir__/timeAttackServer.py
-KillSignal=SIGINT
-WorkingDirectory=__project_dir__
-RestartSec=5
+Type=exec
+
 Restart=always
+RestartSec=5
+
+ExecStart=__project_dir__/venv/bin/python __project_dir__/timeAttackServer.py
+WorkingDirectory=__project_dir__
+KillSignal=SIGINT
+
 StandardInput=null
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=tmnf-tas
 
 [Install]

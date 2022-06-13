@@ -2,16 +2,17 @@
 Description=TMNF-DedicatedServer
 
 [Service]
-Type=simple
+Type=exec
+
+Restart=always
+RestartSec=5
+
 ExecStartPre=__project_dir__/venv/bin/python __project_dir__/cli.py --prepare-start
 ExecStart=__project_dir__/dedicated/TrackmaniaServer /dedicated_cfg=dedicated_cfg.txt /game_settings=MatchSettings/active.txt /lan /nodaemon
-KillSignal=SIGINT
 WorkingDirectory=__project_dir__/dedicated
-RestartSec=5
-Restart=always
+KillSignal=SIGINT
+
 StandardInput=null
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=tmnfd
 
 [Install]

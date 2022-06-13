@@ -4,8 +4,12 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=0
+Type=exec
+
+TimeoutStartSec=20
 Restart=always
+RestartSec=5
+
 ExecStartPre=-/usr/bin/docker stop %n
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStart=/usr/bin/docker run --rm --name %n \
