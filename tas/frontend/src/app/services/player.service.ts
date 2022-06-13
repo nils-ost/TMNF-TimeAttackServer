@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Player } from '../interfaces/player';
 import { PlayerRanking } from '../interfaces/ranking';
 import { environment } from '../../environments/environment';
 import { PlayerChallengeLaptime } from '../interfaces/laptime';
+import { handleError, cleanName } from './common';
 
 @Injectable({
   providedIn: 'root'
@@ -16,34 +17,33 @@ export class PlayerService {
 
   constructor(private http: HttpClient) { }
 
-  private handleError(error: HttpErrorResponse) {
-  if (error.status === 0) {
-    // A client-side or network error occurred. Handle it accordingly.
-    console.error('An error occurred:', error.error);
-  } else {
-    // The backend returned an unsuccessful response code.
-    // The response body may contain clues as to what went wrong.
-    console.error(
-      `Backend returned code ${error.status}, body was: `, error.error);
+  private cleanPlayerName(player: Player | null) {
+    if (player) player.name = cleanName(player.name);
+    return player;
   }
-    // Return an observable with a user-facing error message.
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+
+  private cleanPlayersNames(players: Player[]) {
+    for (let i = 0; i < players.length; i++) {
+      let newPlayer: Player | null = this.cleanPlayerName(players[i]);
+      if (newPlayer) players[i] = newPlayer;
+    }
+    return players;
   }
 
   public getPlayers(): Observable<Player[]> {
-    return this.http.get<Player[]>(this.playerUrl).pipe(catchError(this.handleError));
+    return this.http.get<Player[]>(this.playerUrl).pipe(catchError(handleError), map((players) => this.cleanPlayersNames(players)));
   }
 
   public getPlayerRankings(player_id: string): Observable<PlayerRanking[]> {
-    return this.http.get<PlayerRanking[]>(this.playerUrl + encodeURIComponent(player_id) + '/rankings/').pipe(catchError(this.handleError));
+    return this.http.get<PlayerRanking[]>(this.playerUrl + encodeURIComponent(player_id) + '/rankings/').pipe(catchError(handleError));
   }
 
   public getPlayerChallengeLaptimes(player_id: string, challenge_id: string): Observable<PlayerChallengeLaptime[]> {
-    return this.http.get<PlayerChallengeLaptime[]>(this.playerUrl + encodeURIComponent(player_id) + '/laptimes/' + challenge_id).pipe(catchError(this.handleError));
+    return this.http.get<PlayerChallengeLaptime[]>(this.playerUrl + encodeURIComponent(player_id) + '/laptimes/' + challenge_id).pipe(catchError(handleError));
   }
 
   public getPlayerMe(): Observable<Player | null> {
-    return this.http.get<Player | null>(this.playerUrl + 'me/').pipe(catchError(this.handleError));
+    return this.http.get<Player | null>(this.playerUrl + 'me/').pipe(catchError(handleError), map((player) => this.cleanPlayerName(player)));
   }
 
   public setPlayerMe(player_id: string): Observable<any> {
@@ -52,6 +52,6 @@ export class PlayerService {
         'Content-Type':  'application/json'
       })
     };
-    return this.http.patch<any>(this.playerUrl + 'me/', {'player_id': player_id}, httpOptions).pipe(catchError(this.handleError));
+    return this.http.patch<any>(this.playerUrl + 'me/', {'player_id': player_id}, httpOptions).pipe(catchError(handleError));
   }
 }
