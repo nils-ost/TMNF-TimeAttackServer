@@ -5,6 +5,7 @@ apt install -y python3 virtualenv
 virtualenv -p /usr/bin/python3 venv
 venv/bin/pip install -r install/requirements.txt
 
+mkdir ~/.ssh
 ssh-keygen -t ed25519 -f ./id_fab -N ""
 cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys.bak
 cat ./id_fab.pub >> ~/.ssh/authorized_keys

@@ -15,7 +15,7 @@
 
 TMNF-TAS is designed to be run on Linux or more specific on a Debian derivate. So far I tested it on:
 
-  * Ubuntu 18.04 LTS
+  * Ubuntu 18.04 LTS (you are getting a deprication warning for boto3, which can be ignored)
   * Ubuntu 20.04 LTS
   * Ubuntu 22.04 LTS
 
@@ -35,7 +35,7 @@ sudo su
 cd
 
 # download latest tas-installer
-wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.0.0/tmnf-tas-installer_v1.0.0.run
+wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.0.2/tmnf-tas-installer_v1.0.2.run
 
 # rename the file (just be be more uniform with the following commands)
 mv tmnf-tas-installer* tmnf-tas-installer.run
