@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt update
-apt install -y python3 virtualenv
+apt install -y openssh-server python3 virtualenv
 virtualenv -p /usr/bin/python3 venv
 venv/bin/pip install -r install/requirements.txt
 

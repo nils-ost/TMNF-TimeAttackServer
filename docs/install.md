@@ -19,7 +19,7 @@ TMNF-TAS is designed to be run on Linux or more specific on a Debian derivate. S
   * Ubuntu 20.04 LTS
   * Ubuntu 22.04 LTS
 
-Please install the OS as usual (minimal headless installation is fine), configure your network and set up SSH. SSH needs to be installed and configured to accept key-authentication for root (this is required during installation, but you don't need to configure a key allready, this is done by the installer itself)
+Please install the OS as usual (minimal headless installation is fine) and configure your network.
 
 ## Install the Softwarestack
 
@@ -35,9 +35,9 @@ sudo su
 cd
 
 # download latest tas-installer
-wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.0.2/tmnf-tas-installer_v1.0.2.run
+wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.0.3/tmnf-tas-installer_v1.0.3.run
 
-# rename the file (just be be more uniform with the following commands)
+# rename the file (just to be more uniform with the following commands)
 mv tmnf-tas-installer* tmnf-tas-installer.run
 
 # give the installer execution permissions

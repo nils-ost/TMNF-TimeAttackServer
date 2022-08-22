@@ -1,8 +1,12 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.0.3
+
+  * bundle-installer.sh now also installs `openssh-server` (which reduces user-preconfiguration of the system to the bare minimum)
+
 ## v1.0.2
 
-  * bundle-installer.sh now creates /root/.ssh directory just in case it is not present (this caused installer crashes on servers where no SSH configuration was present for root)
+  * bundle-installer.sh now creates `/root/.ssh` directory just in case it is not present (this caused installer crashes on servers where no SSH configuration was present for root)
 
 ## v1.0.1
 
