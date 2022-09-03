@@ -444,6 +444,30 @@ def get_provide_challenges():
     return r.get('provide', False)
 
 
+def set_start_time(startts=None):
+    if startts is None or (isinstance(startts, int) and startts >= 0):
+        mongoDB().settings.replace_one({'_id': 'start_time'}, {'_id': 'start_time', 'startts': startts}, True)
+
+
+def get_start_time():
+    r = mongoDB().settings.find_one({'_id': 'start_time'})
+    if r is None:
+        return None
+    return r.get('startts', None)
+
+
+def set_end_time(endts=None):
+    if endts is None or (isinstance(endts, int) and endts >= 0):
+        mongoDB().settings.replace_one({'_id': 'end_time'}, {'_id': 'end_time', 'endts': endts}, True)
+
+
+def get_end_time():
+    r = mongoDB().settings.find_one({'_id': 'end_time'})
+    if r is None:
+        return None
+    return r.get('endts', None)
+
+
 """
 Stats
 """

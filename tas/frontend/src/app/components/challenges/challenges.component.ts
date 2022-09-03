@@ -20,12 +20,11 @@ export class ChallengesComponent implements OnInit {
   currentChallenge?: Challenge;
   selectedChallenge?: Challenge;
   selectedChallengeRanking?: ChallengeRanking;
+  settings?: Settings;
   challengeRankings: ChallengeRanking[] = [];
   playerChallengeLaptimes: PlayerChallengeLaptime[] = [];
   players: Player[] = [];
   provide_replays: boolean = false;
-  provide_thumbnails: boolean = false;
-  provide_challenges: boolean = false;
   speeddail_menu: MenuItem[] = [];
 
   constructor(
@@ -36,9 +35,9 @@ export class ChallengesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.refreshSettings();
     this.refreshChallenges();
     this.refreshPlayers();
-    this.refreshSettings();
 
     this.speeddail_menu = [
       {
@@ -167,9 +166,8 @@ export class ChallengesComponent implements OnInit {
       .getSettings()
       .subscribe(
         (settings: Settings) => {
+          this.settings = settings;
           this.provide_replays = settings.provide_replays;
-          this.provide_thumbnails = settings.provide_thumbnails;
-          this.provide_challenges = settings.provide_challenges;
         }
       );
   }

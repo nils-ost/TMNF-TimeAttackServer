@@ -1,0 +1,15 @@
+<div class="wrapper-row">
+    <div class="tile">
+        <div class="title">
+            <ng-container i18n="Title of Start Countdown@@TitleStartCD">TrackMania TimeAttack Tournament starts in</ng-container>
+        </div>
+        <div class="counter">
+            {{ countdown_h }}:{{ countdown_m }}:{{ countdown_s }}
+        </div>
+        <div class="desc">
+            <p><ng-container i18n="Description prefixing Ingame Server Name on end-countdown Screen@@DescIngameServerNameStartCD">The InGame Servername is going to be</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+            <p><ng-container i18n="Info box content for this page can be found at@@infoBoxPageFoundAt">This page (and a lot more) is available at</ng-container>: <span class="highlight">{{ settings?.display_self_url }}</span></p>
+            <p><ng-container i18n="Description prefixing Server Admin@@DescServerAdminCD">If you have any questions please contact</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
+        </div>
+    </div>
+</div>

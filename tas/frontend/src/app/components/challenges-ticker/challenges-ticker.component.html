@@ -1,3 +1,17 @@
-<div class="challenge-card-container">
+<div class="challenge-card-container" *ngIf="time_left > 0">
     <app-challenge-card *ngFor="let cd of challengeDisplay" [challenge]="cd" [thumbnail]="settings?.provide_thumbnails || false" (onEnableRefresh)="onEnableRefresh.emit()" (onDisableRefresh)="onDisableRefresh.emit()"></app-challenge-card>
+</div>
+
+<div class="challenge-card-container" *ngIf="time_left <= 0">
+    <div class="finished">
+        <div class="content">
+            <div class="header">
+                <p i18n="Text saying that Tournament is over@@TournamentOverText">Tournament is over</p>
+            </div>
+            <div class="info">
+                <p><ng-container i18n="Redirecting to results info@@RedirectingResultsInfo">Redirecting to results in</ng-container>: {{ redirect_in }}s</p>
+            </div>
+        </div>
+        <div class="connector"></div>
+    </div>
 </div>

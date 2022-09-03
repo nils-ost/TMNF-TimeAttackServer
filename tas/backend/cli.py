@@ -6,6 +6,7 @@ import json
 from helpers.GbxRemote import GbxRemote
 import subprocess
 import time
+from datetime import datetime
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
@@ -299,6 +300,46 @@ def restart_stack():
     start_stack()
 
 
+def startTime():
+    from helpers.mongodb import get_start_time, set_start_time
+    startts = get_start_time()
+    if startts is None:
+        print('No start time set!')
+    else:
+        print(f'Current start time: {datetime.fromtimestamp(startts).strftime("%Y-%m-%d %H:%M:%S")}')
+        if input('Delete start time? (y/N): ') == 'y':
+            set_start_time()
+    if input('Set new start time? (y/N): ') == 'y':
+        print(f'Your current time is: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+        inp = input('Enter new start time in the format "YYYY-MM-DD hh:mm:ss" : ')
+        try:
+            startts = int(datetime.strptime(inp, '%Y-%m-%d %H:%M:%S').timestamp())
+            set_start_time(startts)
+            print(f'Saved new start time: {datetime.fromtimestamp(startts).strftime("%Y-%m-%d %H:%M:%S")}')
+        except Exception:
+            print('Invalid input!')
+
+
+def endTime():
+    from helpers.mongodb import get_end_time, set_end_time
+    endts = get_end_time()
+    if endts is None:
+        print('No end time set!')
+    else:
+        print(f'Current end time: {datetime.fromtimestamp(endts).strftime("%Y-%m-%d %H:%M:%S")}')
+        if input('Delete end time? (y/N): ') == 'y':
+            set_end_time()
+    if input('Set new end time? (y/N): ') == 'y':
+        print(f'Your current time is: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+        inp = input('Enter new end time in the format "YYYY-MM-DD hh:mm:ss" : ')
+        try:
+            endts = int(datetime.strptime(inp, '%Y-%m-%d %H:%M:%S').timestamp())
+            set_end_time(endts)
+            print(f'Saved new end time: {datetime.fromtimestamp(endts).strftime("%Y-%m-%d %H:%M:%S")}')
+        except Exception:
+            print('Invalid input!')
+
+
 def exit():
     sys.exit(0)
 
@@ -316,6 +357,8 @@ commands = [
     ('Set Provide Replays', provideReplays),
     ('Set Provide Thumbnails', provideThumbnails),
     ('Set Provide Challenges', provideChallenges),
+    ('Set Start Time', startTime),
+    ('Set End Time', endTime),
     ('Download/Provide TMNF Client', downloadClient),
     ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),

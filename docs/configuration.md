@@ -159,11 +159,13 @@ TAS comes with it's own interactive CLI to configure different aspects during ru
   * `9 Set Provide Replays` Enables (or disables) function to automatically store Players best laptimes in S3 and provides them for download on frontend.
   * `10 Set Provide Thumbnails` Enables (or disables) Thumbnails on frontend.
   * `11 Set Provide Challenges` Enables (or disables) the option to download challenge Gbx files on frontend.
-  * `12 Download/Provide TMNF Client` This function can be used to download the latest version of TMNF Client, store it locally and set the `Client Download URL` in one go.
-  * `12 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
-  * `14 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
-  * `15 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
-  * `16 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
+  * `12 Set Start Time` Let's you set (or delete) the time the Tournament starts. (Before this time the Gameserver get locked, that no Player can join)
+  * `13 Set End Time` Let's you set (or delete) the time the Tournament ends. (After this time the Gameserver gets locked and all Players are kicked)
+  * `14 Download/Provide TMNF Client` This function can be used to download the latest version of TMNF Client, store it locally and set the `Client Download URL` in one go.
+  * `15 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
+  * `16 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
+  * `17 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
+  * `18 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
 
 And here we go with some notes to the functions:
 
@@ -194,3 +196,26 @@ It might happen that a player joins the server and gives himself the name Hans, 
 The function `Merge Players` gives you, the Admin, the chance to merge those two Accounts into one where all the laptimes are moved to the surviving account. (BTW this would also work if the player Hans would play from two different stations)
 
 But be aware that this is manipulating stored data, which can't be undone.
+
+##### Set Start/End Time
+
+With this options it is possible to limit the duration of a TimeAttack Tournaments. The GameServer is going to be locked before StartTime and after EndTime. But it is not required to define both of them, they both also work standalone.
+
+Also it is possible to apply both times on-the-fly. If you are setting an EndTime the Tournament is going to end at this time, if you are setting a StartTime in the future the GameServer gets immediately locked and all active Players are kicked with the message, that the Tournament did not start yet.
+
+If you like to define a start (and/or end) time before a LAN-Party the usual process would look like the following:
+
+  * `systemctl stop tmnf-tas`
+  * set start and/or end time via CLI
+  * clearDB via CLI (but not the settings)
+  * `systemctl start tmnf-tas`
+
+This process starts a fresh and time-limited Tournament, be aware that all previous driven laptimes are deleted now.
+
+If the Tournament ended and (for whatever reason) you like to unlock the GameServer again you need to perform the following actions:
+
+  * delete end time via CLI
+  * `systemctl stop tmnfd`
+  * `systemctl start tmnfd`
+
+If you just delete the end time the GameServer stays locked!

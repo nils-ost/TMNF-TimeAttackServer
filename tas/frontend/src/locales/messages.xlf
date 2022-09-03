@@ -126,15 +126,23 @@
         </context-group>
         <note priority="1" from="description">Label for at in challenges screen</note>
       </trans-unit>
+      <trans-unit id="labelTournamentEnded" datatype="html">
+        <source>Tournament finished</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Label for ended Tournament in challenges screen</note>
+      </trans-unit>
       <trans-unit id="infoBoxUnpredictedUpIn" datatype="html">
         <source>&apos;Up in&apos; times might vary as not all time limits are finally calculated yet!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <note priority="1" from="description">Info box content for warning, that not all up in times are savely predicted</note>
       </trans-unit>
@@ -270,6 +278,22 @@
         </context-group>
         <note priority="1" from="description">Header for column at in tables</note>
       </trans-unit>
+      <trans-unit id="TournamentOverText" datatype="html">
+        <source>Tournament is over</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-ticker/challenges-ticker.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Text saying that Tournament is over</note>
+      </trans-unit>
+      <trans-unit id="RedirectingResultsInfo" datatype="html">
+        <source>Redirecting to results in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-ticker/challenges-ticker.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Redirecting to results info</note>
+      </trans-unit>
       <trans-unit id="challengesChallengesTitle" datatype="html">
         <source> Challenges </source>
         <context-group purpose="location">
@@ -290,7 +314,7 @@
         <source>Refresh Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -302,7 +326,7 @@
         <source>Open PlayerHUD</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -310,7 +334,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
@@ -318,7 +342,7 @@
         <source>Open Players Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -326,7 +350,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
@@ -334,7 +358,7 @@
         <source>Open Wallboard</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -350,7 +374,7 @@
         <source>Open Home Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
@@ -362,9 +386,69 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Home Screen</note>
+      </trans-unit>
+      <trans-unit id="TitleEndCD" datatype="html">
+        <source>TrackMania TimeAttack Tournament ends in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Title of End Countdown</note>
+      </trans-unit>
+      <trans-unit id="EndCountdownInfinite" datatype="html">
+        <source>never</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Text for End Countdown if end is infinite</note>
+      </trans-unit>
+      <trans-unit id="EndCountdownReached" datatype="html">
+        <source>ended</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Text for End Countdown if end is reached</note>
+      </trans-unit>
+      <trans-unit id="DescIngameServerNameEndCD" datatype="html">
+        <source>The InGame Servername is</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Description prefixing Ingame Server Name on end-countdown Screen</note>
+      </trans-unit>
+      <trans-unit id="infoBoxPageFoundAt" datatype="html">
+        <source>This page (and a lot more) is available at</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/start-countdown/start-countdown.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Info box content for this page can be found at</note>
+      </trans-unit>
+      <trans-unit id="DescServerAdminCD" datatype="html">
+        <source>If you have any questions please contact</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/end-countdown/end-countdown.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/start-countdown/start-countdown.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Description prefixing Server Admin</note>
       </trans-unit>
       <trans-unit id="tableCurrentChallengeTitle" datatype="html">
         <source>Current Challenge</source>
@@ -518,7 +602,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Text for link to enable autorefresh</note>
       </trans-unit>
@@ -530,7 +614,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
       </trans-unit>
@@ -546,7 +630,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
       </trans-unit>
@@ -598,6 +682,22 @@
         </context-group>
         <note priority="1" from="description">Text for link to export csv</note>
       </trans-unit>
+      <trans-unit id="TitleStartCD" datatype="html">
+        <source>TrackMania TimeAttack Tournament starts in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/start-countdown/start-countdown.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Title of Start Countdown</note>
+      </trans-unit>
+      <trans-unit id="DescIngameServerNameStartCD" datatype="html">
+        <source>The InGame Servername is going to be</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/start-countdown/start-countdown.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Description prefixing Ingame Server Name on end-countdown Screen</note>
+      </trans-unit>
       <trans-unit id="wallboardChallegenScheduleTitle" datatype="html">
         <source> Challenge Schedule </source>
         <context-group purpose="location">
@@ -615,27 +715,47 @@
         </context-group>
         <note priority="1" from="description">Info box content for error, that the connection to tmnfd got lost</note>
       </trans-unit>
-      <trans-unit id="infoBoxPageFoundAt" datatype="html">
-        <source>This page (and a lot more) can be found at</source>
+      <trans-unit id="infoBoxEndTime" datatype="html">
+        <source>Tournament ends at</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <note priority="1" from="description">Info box content for this page can be found at</note>
+        <note priority="1" from="description">Info box content for end_time warning</note>
       </trans-unit>
       <trans-unit id="LinkTextHidePageURL" datatype="html">
         <source>Hide Page-URL Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <note priority="1" from="description">Text for link to hide Page-URL Message on bottom of screen</note>
+      </trans-unit>
+      <trans-unit id="HeaderStartCountdownOnWallboard" datatype="html">
+        <source>Tournament starts in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Text of header for start countdown</note>
+      </trans-unit>
+      <trans-unit id="HeaderEndCountdownOnWallboard" datatype="html">
+        <source>Tournament ends in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Text of header for end countdown</note>
       </trans-unit>
       <trans-unit id="WallboardScreenLinkText" datatype="html">
         <source> Wallboard </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">19,21</context>
+          <context context-type="linenumber">33,35</context>
         </context-group>
         <note priority="1" from="description">Text of link to wallboard screen</note>
       </trans-unit>
@@ -643,7 +763,7 @@
         <source> Players </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">27,29</context>
+          <context context-type="linenumber">41,43</context>
         </context-group>
         <note priority="1" from="description">Text of link to players scrren</note>
       </trans-unit>
@@ -651,7 +771,7 @@
         <source> Challenges </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">49,51</context>
         </context-group>
         <note priority="1" from="description">Text of link to challenges screen</note>
       </trans-unit>
@@ -659,15 +779,31 @@
         <source> PlayerHUD </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">51,53</context>
+          <context context-type="linenumber">66,68</context>
         </context-group>
         <note priority="1" from="description">Text of link to PlayerHUD screen</note>
+      </trans-unit>
+      <trans-unit id="StartCountdownScreenLinkText" datatype="html">
+        <source> Start Countdown </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to start-countdown screen</note>
+      </trans-unit>
+      <trans-unit id="EndCountdownScreenLinkText" datatype="html">
+        <source> End Countdown </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">82,84</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to end-countdown screen</note>
       </trans-unit>
       <trans-unit id="LabelIngameServerName" datatype="html">
         <source>Ingame Server Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Ingame Server Name</note>
       </trans-unit>
@@ -675,7 +811,7 @@
         <source>Server Admin</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Server Admin</note>
       </trans-unit>
@@ -683,7 +819,7 @@
         <source>Laptimes Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Count</note>
       </trans-unit>
@@ -691,7 +827,7 @@
         <source>Laptimes Sum</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Sum</note>
       </trans-unit>
@@ -699,7 +835,7 @@
         <source>Challenges Total Seen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
       </trans-unit>
@@ -707,7 +843,7 @@
         <source>Total Players</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Total Players</note>
       </trans-unit>
@@ -715,7 +851,7 @@
         <source>Active Players</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Active Players</note>
       </trans-unit>
@@ -723,7 +859,7 @@
         <source>Download latest compatible Client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>

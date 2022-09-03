@@ -5,6 +5,20 @@
             TMNF-TimeAttackServer
         </div>
 
+        <div class="connector-container flex" *ngIf="start_countdown || end_countdown">
+            <div class="connector"></div>
+            <div class="connector"></div>
+            <div class="connector"></div>
+        </div>
+
+        <div class="countdown-container" *ngIf="start_countdown || end_countdown">
+            <div class="header">
+                <ng-container *ngIf="start_countdown" i18n="Text of header for start countdown@@HeaderStartCountdownOnWallboard">Tournament starts in</ng-container>
+                <ng-container *ngIf="end_countdown" i18n="Text of header for end countdown@@HeaderEndCountdownOnWallboard">Tournament ends in</ng-container>
+            </div>
+            <div class="counter">{{ countdown_h }}:{{ countdown_m }}:{{ countdown_s }}</div>
+        </div>
+
         <div class="connector-container flex">
             <div class="connector"></div>
             <div class="connector"></div>
@@ -12,7 +26,7 @@
         </div>
         
         <div class="card-container flex">
-            <a class="card" routerLink="/wallboard" routerLinkActive="active" pRipple>
+            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/wallboard" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-window-maximize"></i>
                 </div>
@@ -20,7 +34,7 @@
                     Wallboard
                 </div>
             </a>
-            <a class="card" routerLink="/players" routerLinkActive="active" pRipple>
+            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/players" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-users"></i>
                 </div>
@@ -28,7 +42,7 @@
                     Players
                 </div>
             </a>
-            <a class="card" routerLink="/challenges" routerLinkActive="active" pRipple>
+            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/challenges" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-list"></i>
                 </div>
@@ -40,16 +54,33 @@
 
         <div class="connector-container flex">
             <div class="connector"></div>
+            <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
         </div>
 
         <div class="card-container flex">
-            <a class="card" routerLink="/playerhud" routerLinkActive="active" pRipple>
+            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/playerhud" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-user"></i>
                 </div>
                 <div i18n="Text of link to PlayerHUD screen@@PlayerHUDScreenLinkText">
                     PlayerHUD
+                </div>
+            </a>
+            <a class="card" *ngIf="start_countdown" routerLink="/start-countdown" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-clock"></i>
+                </div>
+                <div i18n="Text of link to start-countdown screen@@StartCountdownScreenLinkText">
+                    Start Countdown
+                </div>
+            </a>
+            <a class="card" *ngIf="end_countdown" routerLink="/end-countdown" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-clock"></i>
+                </div>
+                <div i18n="Text of link to end-countdown screen@@EndCountdownScreenLinkText">
+                    End Countdown
                 </div>
             </a>
             <a class="card" href="/de/" pRipple *ngIf="uri.startsWith('/en/')">
@@ -72,6 +103,7 @@
 
         <div class="connector-container flex">
             <div class="connector"></div>
+            <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
         </div>
 

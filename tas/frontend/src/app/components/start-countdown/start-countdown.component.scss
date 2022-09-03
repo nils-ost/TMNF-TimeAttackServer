@@ -1,0 +1,48 @@
+:host ::ng-deep .wrapper-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 98vh;
+    margin: 0;
+    padding: 0;
+
+    .tile {
+        background-color: var(--surface-card);
+        border-radius: 1rem;
+        padding: 3rem;
+
+        .title {
+            font-family: var(--font-family);
+            font-size: 5rem;
+            color: var(--text-color);
+            text-align: center;
+            margin-top: -1.5rem;
+        }
+
+        .counter {
+            font-family: var(--font-family);
+            font-size: 20rem;
+            color: var(--text-color);
+            text-shadow: 0rem 0rem 3rem var(--primary-color);
+            text-align: center;
+            line-height: 100%;
+            margin-top: 3rem;
+            margin-bottom: 4.5rem;
+        }
+
+        .desc {
+            font-family: var(--font-family);
+            font-size: 2rem;
+            color: var(--text-color);
+            text-align: center;
+            
+            p {
+                margin: 0;
+                
+                .highlight {
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+}

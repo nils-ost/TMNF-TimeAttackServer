@@ -33,6 +33,8 @@ import { ChallengesPlayerListComponent } from './components/challenges-player-li
 import { PlayerhudComponent } from './components/playerhud/playerhud.component';
 import { PlayerhudCurrentListComponent } from './components/playerhud-current-list/playerhud-current-list.component';
 import { PlayerhudGlobalListComponent } from './components/playerhud-global-list/playerhud-global-list.component';
+import { StartCountdownComponent } from './components/start-countdown/start-countdown.component';
+import { EndCountdownComponent } from './components/end-countdown/end-countdown.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { PlayerhudGlobalListComponent } from './components/playerhud-global-list
     ChallengesPlayerListComponent,
     PlayerhudComponent,
     PlayerhudCurrentListComponent,
-    PlayerhudGlobalListComponent
+    PlayerhudGlobalListComponent,
+    StartCountdownComponent,
+    EndCountdownComponent
   ],
   imports: [
     BrowserModule,

@@ -8,4 +8,6 @@ export interface Settings {
     provide_replays: boolean;
     provide_thumbnails: boolean;
     provide_challenges: boolean;
+    start_time: number | null;
+    end_time: number | null;
 }

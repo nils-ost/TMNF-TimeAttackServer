@@ -57,6 +57,13 @@
                     margin-bottom: 0.6em;
                 }
             }
+
+            .disabled {
+                color: transparent;
+                text-shadow: 0rem 0rem 0.5rem var(--text-color);
+                pointer-events: none;
+                cursor: default;
+            }
         }
 
         .info-container {
@@ -107,6 +114,28 @@
                         text-decoration: none;
                     }
                 }
+            }
+        }
+
+        .countdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--surface-card);
+            border-radius: 0.5rem;
+            margin: 0rem 0.5rem 0rem 0.5rem;
+            padding: 1.2rem;
+
+            .header {
+                font-family: var(--font-family);
+                color: var(--text-color);
+                font-size: 1rem;
+            }
+
+            .counter {
+                font-family: var(--font-family);
+                color: var(--primary-color);
+                font-size: 2rem;
             }
         }
     }

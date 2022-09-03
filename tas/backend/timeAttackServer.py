@@ -12,7 +12,7 @@ from helpers.mongodb import player_all, player_get, player_update_ip, laptime_fi
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
 from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url
-from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges
+from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
 from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
@@ -45,6 +45,8 @@ class Settings():
         result['provide_replays'] = get_provide_replays()
         result['provide_thumbnails'] = get_provide_thumbnails()
         result['provide_challenges'] = get_provide_challenges()
+        result['start_time'] = get_start_time()
+        result['end_time'] = get_end_time()
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Challenge } from '../../interfaces/challenge';
+import { Settings } from '../../interfaces/settings';
 import { environment } from '../../../environments/environment';
 
 interface SortableChallenge {
@@ -20,8 +21,7 @@ interface SortableChallenge {
 export class ChallengesListComponent implements OnInit, OnChanges {
   @Input() challenges!: Challenge[];
   @Input() currentChallenge!: Challenge;
-  @Input() thumbnails: boolean = false;
-  @Input() provide_challenges: boolean = false;
+  @Input() settings?: Settings;
   @Output() selectChallengeEvent = new EventEmitter<Challenge | null>();
   selectedChallenge?: Challenge;
   sortableChallenges: SortableChallenge[] = [];

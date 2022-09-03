@@ -34,6 +34,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
   unpredictedUpIn: boolean = true;
   displayPageFoundAtURL: boolean = true;
+  time_left: number = 9999;
 
   speeddail_menu: MenuItem[] = [];
   enable_menu_item: MenuItem = {
@@ -219,6 +220,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (s: Settings) => {
           this.settings = s;
+          if (s.end_time) this.time_left = s.end_time - Math.floor(Date.now()/1000);
         }
       );
   }

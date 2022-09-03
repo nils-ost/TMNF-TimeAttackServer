@@ -9,4 +9,53 @@
     app-challenge-card {
         flex-grow: 1;
     }
+
+    .finished {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: center;
+
+        .content {
+            font-family: var(--font-family);
+            min-width: 10rem;
+            background-color: var(--surface-card);
+            color: var(--text-color);
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 0.5rem;
+
+            .header {
+                text-align: center;
+
+                p {
+                    margin: 0;
+                    font-size: 2em;
+                    color: #f03e3e;
+                }
+            }
+
+            .info {
+                text-align: center;
+
+                p {
+                    margin: 0;
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+
+        .connector {
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--surface-card);
+            margin-left: calc(50% - 0.5rem);
+            margin-right: calc(50% - 0.5rem);
+        }
+    }
 }

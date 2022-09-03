@@ -1,0 +1,17 @@
+<div class="wrapper-row">
+    <div class="tile">
+        <div class="title">
+            <ng-container i18n="Title of End Countdown@@TitleEndCD">TrackMania TimeAttack Tournament ends in</ng-container>
+        </div>
+        <div class="counter" [ngClass]="{'warn': countdown < 3600 && countdown > 1200, 'crit': countdown < 1200}">
+            <ng-container *ngIf="!end_infinite && !end_reached">{{ countdown_h }}:{{ countdown_m }}:{{ countdown_s }}</ng-container>
+            <ng-container *ngIf="end_infinite" i18n="Text for End Countdown if end is infinite@@EndCountdownInfinite">never</ng-container>
+            <ng-container *ngIf="end_reached" i18n="Text for End Countdown if end is reached@@EndCountdownReached">ended</ng-container>
+        </div>
+        <div class="desc">
+            <p><ng-container i18n="Description prefixing Ingame Server Name on end-countdown Screen@@DescIngameServerNameEndCD">The InGame Servername is</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+            <p><ng-container i18n="Info box content for this page can be found at@@infoBoxPageFoundAt">This page (and a lot more) is available at</ng-container>: <span class="highlight">{{ settings?.display_self_url }}</span></p>
+            <p><ng-container i18n="Description prefixing Server Admin@@DescServerAdminCD">If you have any questions please contact</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
+        </div>
+    </div>
+</div>

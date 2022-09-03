@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Router } from "@angular/router"
 import { Challenge, ChallengeDisplay } from '../../interfaces/challenge';
 import { Subscription, timer, Observable } from 'rxjs';
 import { Settings } from '../../interfaces/settings';
@@ -17,12 +18,18 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
   @Output() onEnableRefresh = new EventEmitter();
   @Output() onDisableRefresh = new EventEmitter();
   challengeDisplay: ChallengeDisplay[] = [];
+  time_left: number = 9999;
+  redirect_in: number = 20;
 
   refreshChallengeDisplayTimer = timer(1000, 10000);
+  refreshRedirectTimer = timer(1000, 1000);
   refreshChallengeDisplayTimerSubscription: Subscription | undefined;
+  refreshRedirectTimerSubscription: Subscription | undefined;
   switchAutoRefreshSubscription: Subscription | undefined;
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.refreshChallengeDisplay();
@@ -47,12 +54,28 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
 
   disableAutoRefresh() {
     this.refreshChallengeDisplayTimerSubscription?.unsubscribe();
+    this.refreshRedirectTimerSubscription?.unsubscribe();
+  }
+
+  refreshRedirectIn() {
+    this.redirect_in -= 1;
+    if (this.redirect_in <= 0) this.router.navigate(['/players']);
   }
 
   refreshChallengeDisplay() {
     if (this.current_challenge && this.next_challenge) {
       let max_elements = 4;
-      if (this.settings) max_elements = this.settings.wallboard_challenges_max;
+      if (this.settings) {
+        max_elements = this.settings.wallboard_challenges_max;
+        if (this.settings.end_time) {
+          this.time_left = this.settings.end_time - Math.floor(Date.now()/1000);
+          if (this.time_left <= 0) {
+            this.refreshChallengeDisplayTimerSubscription?.unsubscribe();
+            this.redirect_in = 20;
+            this.refreshRedirectTimerSubscription = this.refreshRedirectTimer.subscribe(() => this.refreshRedirectIn());
+          }
+        }
+      }
       let tmp: ChallengeDisplay[] = [];
       let current_index: number = -1;
       let up_in: number = 0;
@@ -77,7 +100,7 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
           if (up_in < 0) cd.is_loading = true;
           up_in += c.time_limit / 1000;
         }
-        if (current_index != -1 && tmp.length < max_elements) tmp.push(cd);
+        if (current_index != -1 && tmp.length < max_elements && (up_in - c.time_limit / 1000) < this.time_left) tmp.push(cd);
         if (tmp.length >= max_elements) break;
       }
       if (current_index != -1 && tmp.length < max_elements) {
@@ -97,7 +120,7 @@ export class ChallengesTickerComponent implements OnInit, OnDestroy {
           else cd.up_in = "<1m";
           if (up_in < 0) cd.is_loading = true;
           up_in += cd.time_limit;
-          if (tmp.length < max_elements) tmp.push(cd);
+          if (tmp.length < max_elements && (up_in - c.time_limit / 1000) < this.time_left) tmp.push(cd);
           if (tmp.length >= max_elements) break;
         }
       }

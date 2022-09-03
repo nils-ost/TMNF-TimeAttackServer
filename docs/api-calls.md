@@ -298,6 +298,8 @@ Returns dynamic settings
   * `provide_replays` *(boolean)* Indicates if replay files are provided or not
   * `provide_thumbnails` *(boolean)* Indicates if challenge thumbnail files are provided or not
   * `provide_challenges` *(boolean)* Indicates if challenge Gbx files are provided or not
+  * `start_time` *(integer)* Timestamp at which the Tournament starts (or `Null` if not set)
+  * `end_time` *(integer)* Timestamp at which the Tournament ends (or `Null` if not set)
 
 ### GET /stats/
 

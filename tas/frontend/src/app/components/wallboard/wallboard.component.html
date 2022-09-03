@@ -40,6 +40,18 @@
             <span class="custom-message"><ng-container i18n="Info box content for error, that the connection to tmnfd got lost@@infoBoxLostConnection">Lost connection to dedicated gameserver! Please contact</ng-container>: {{ settings ? settings.display_admin : 'Admin' }}</span>
         </ng-template>
     </p-messages>
+
+    <p-messages severity="error" styleClass="msg-box" *ngIf="settings && settings.end_time && time_left <= 1200 && time_left > 0">
+        <ng-template pTemplate>
+            <span class="custom-message"><ng-container i18n="Info box content for end_time warning@@infoBoxEndTime">Tournament ends at</ng-container>: {{ settings.end_time * 1000 | date:'mediumTime' }}</span>
+        </ng-template>
+    </p-messages>
+
+    <p-messages severity="warn" styleClass="msg-box" *ngIf="settings && settings.end_time && time_left < 3600 && time_left > 1200">
+        <ng-template pTemplate>
+            <span class="custom-message"><ng-container i18n="Info box content for end_time warning@@infoBoxEndTime">Tournament ends at</ng-container>: {{ settings.end_time * 1000 | date:'mediumTime' }}</span>
+        </ng-template>
+    </p-messages>
     
     <p-messages severity="warn" styleClass="msg-box" *ngIf="unpredictedUpIn">
         <ng-template pTemplate>
@@ -49,7 +61,7 @@
     
     <p-messages severity="success" styleClass="msg-box" *ngIf="displayPageFoundAtURL">
         <ng-template pTemplate>
-            <span class="custom-message"><ng-container i18n="Info box content for this page can be found at@@infoBoxPageFoundAt">This page (and a lot more) can be found at</ng-container>: {{ settings ? settings.display_self_url : '???' }}</span>
+            <span class="custom-message"><ng-container i18n="Info box content for this page can be found at@@infoBoxPageFoundAt">This page (and a lot more) is available at</ng-container>: {{ settings ? settings.display_self_url : '???' }}</span>
         </ng-template>
     </p-messages>
 </div>

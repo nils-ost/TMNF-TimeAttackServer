@@ -22,6 +22,12 @@
 
 :host ::ng-deep .p-datatable-scrollable .p-datatable-tbody > tr > .col-time, :host ::ng-deep .p-datatable-scrollable .p-datatable-thead > tr > .col-time {
     flex-grow: 3;
+
+    .ended {
+        color: #f03e3e;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 :host ::ng-deep .p-datatable-scrollable .p-datatable-tbody > tr > .col-download, :host ::ng-deep .p-datatable-scrollable .p-datatable-thead > tr > .col-download {
