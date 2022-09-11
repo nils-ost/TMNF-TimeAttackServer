@@ -50,6 +50,10 @@ def create_bundle(c):
         c.run(f'cp -r {item} /tmp/tmnf-tas/')
     for item in ['tmnfd/cli.py', 'tmnfd/requirements.txt', 'tmnfd/helpers']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/tmnfd/')
+    version = c.run('git describe')
+    version = version.stdout.strip().replace('v', '', 1).rsplit('-', 1)[0].replace('-', '.')
+    with open('/tmp/tmnf-tas/tas/backend/helpers/version.py', 'w') as f:
+        f.write(f"version = '{version}'")
     c.run('cp install/bundle-installer.sh /tmp/tmnf-tas/installer.sh; chmod +x /tmp/tmnf-tas/installer.sh')
-    c.run('makeself /tmp/tmnf-tas ./tmnf-tas-installer.run "Installer for TMNF-TimeAttackServer" ./installer.sh')
+    c.run(f'makeself /tmp/tmnf-tas ./tmnf-tas-installer_v{version}.run "Installer for TMNF-TimeAttackServer" ./installer.sh')
     c.run('rm -rf /tmp/tmnf-tas')

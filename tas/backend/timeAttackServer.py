@@ -7,11 +7,12 @@ from multiprocessing import Process
 from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
+from helpers.versioning import run as versioning_run
 from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
-from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
@@ -36,6 +37,7 @@ class Settings():
     @cherrypy.tools.json_out()
     def index(self):
         result = dict()
+        result['version'] = get_version()
         result['wallboard_players_max'] = get_wallboard_players_max()
         result['wallboard_challenges_max'] = get_wallboard_challenges_max()
         result['tmnfd_name'] = get_tmnfd_name()
@@ -274,6 +276,8 @@ def periodic_ranking_rebuild_function():
 
 
 if __name__ == '__main__':
+    versioning_run()
+
     conf = {
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),

@@ -16,6 +16,10 @@
         * Challenges-Ticker only shows upcoming Challenges if the start before end-time
         * Redirects to Players screen after end-time (to show results)
     * TAS-FE: Challenges screen 'Up' column now shows 'Tornament ended' info for all Challenges that do not start before end-time
+  * Introduced a versioning system
+    * Functions added to enable DB upgrades on later versions
+    * The current running and the DB version are tracked and compared on server-start
+    * The current running version is displayed on TAS-CLI and TAS-FE's welcome screen
 
 ## v1.0.3
 

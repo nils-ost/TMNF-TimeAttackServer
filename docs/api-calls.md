@@ -289,6 +289,7 @@ Returns dynamic settings
 
 #### Attributes
 
+  * `version` *(string)* Returns the Version the Database (and TMNF-TAS) is running on
   * `wallboard_players_max` *(integer)* Maximum number of Players displayed on wallboard
   * `wallboard_challenges_max` *(integer)* Maximum number of Challenges displayer in challenges-ticker on wallboard
   * `tmnfd_name` *(string)* Ingame name of TMNF-Dedicated server

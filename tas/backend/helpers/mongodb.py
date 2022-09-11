@@ -328,6 +328,18 @@ Settings
 """
 
 
+def set_version(v):
+    mongoDB().settings.replace_one({'_id': 'version'}, {'_id': 'version', 'version': v}, True)
+
+
+def get_version():
+    r = mongoDB().settings.find_one({'_id': 'version'})
+    if r is None:
+        return None
+    else:
+        return r['version']
+
+
 def set_wallboard_players_max(c):
     mongoDB().settings.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
 

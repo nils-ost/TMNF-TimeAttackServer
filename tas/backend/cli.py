@@ -16,6 +16,7 @@ parser.add_argument('--state', '-s', dest='state', action='store_true', default=
 parser.add_argument('--start', dest='start', action='store_true', default=False, help='If set TAS stack is started')
 parser.add_argument('--stop', dest='stop', action='store_true', default=False, help='If set TAS stack is stopped')
 parser.add_argument('--restart', dest='restart', action='store_true', default=False, help='If set TAS stack is restarted')
+parser.add_argument('--version', dest='version', action='store_true', default=False, help='Displays the Version of DB and TAS')
 args = parser.parse_args()
 
 
@@ -236,7 +237,13 @@ def mergePlayers():
         print('done')
 
 
+def version():
+    from helpers.mongodb import get_version
+    return get_version()
+
+
 def state():
+    print(f' Version of DB and TAS: {bcolors.GREEN}v{version()}{bcolors.ENDC}')
     # tmnf-tas.service
     active = subprocess.call('systemctl is-active tmnf-tas.service', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
     print(f"{' ' * 6}tmnf-tas.service: {bcolors.GREEN + 'active' if active else bcolors.FAIL + 'inactive'}{bcolors.ENDC}")
@@ -394,6 +401,10 @@ if args.stop:
 
 if args.restart:
     restart_stack()
+    sys.exit(0)
+
+if args.version:
+    print(version())
     sys.exit(0)
 
 while True:

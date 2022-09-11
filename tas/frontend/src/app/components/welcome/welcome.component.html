@@ -134,5 +134,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="connector-container flex">
+            <div class="connector hide"></div>
+            <div class="connector"></div>
+            <div class="connector hide"></div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-left">
+                <ng-container *ngIf="settings">v{{ settings.version }}</ng-container>
+            </div>
+            
+            <div class="footer-center">
+                <a target="_blank" href="https://github.com/nils-ost/TMNF-TimeAttackServer">TMNF-TimeAttackServer</a>
+            </div>
+            
+            <div class="footer-right">
+                <a target="_blank" href="https://nijos.de">by NiJO's</a>
+            </div>
+        </div>
     </div>
 </div>
