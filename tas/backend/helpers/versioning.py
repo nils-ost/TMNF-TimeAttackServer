@@ -26,6 +26,8 @@ def versions_lt(left, right):
     for i in range(4):
         if int(left[i]) < int(right[i]):
             return True
+        if int(left[i]) > int(right[i]):
+            return False
     return False
 
 
@@ -39,6 +41,8 @@ def versions_gt(left, right):
     for i in range(4):
         if int(left[i]) > int(right[i]):
             return True
+        if int(left[i]) < int(right[i]):
+            return False
     return False
 
 
