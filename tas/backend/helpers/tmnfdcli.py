@@ -57,3 +57,26 @@ def tmnfd_cli_upload_challenges():
         return int(subprocess.call(
             f"ssh root@{config['host']} tmnfd --upload_challenges", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
     return False
+
+
+def tmnfd_cli_create_backup():
+    global config
+    cli_method = get_tmnfd_cli_method()
+    if cli_method == 'bash':
+        result = subprocess.check_output('tmnfd --create_backup', shell=True, stderr=subprocess.DEVNULL).decode('utf-8')
+    if cli_method == 'ssh':
+        result = subprocess.check_output(f"ssh root@{config['host']} tmnfd --create_backup", shell=True, stderr=subprocess.DEVNULL).decode('utf-8')
+    if result and 'uploaded' in result:
+        return result.strip().split()[-1]
+    return None
+
+
+def tmnfd_cli_restore_backup():
+    global config
+    cli_method = get_tmnfd_cli_method()
+    if cli_method == 'bash':
+        return int(subprocess.call('tmnfd --restore_backup', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    if cli_method == 'ssh':
+        return int(subprocess.call(
+            f"ssh root@{config['host']} tmnfd --restore_backup", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    return False

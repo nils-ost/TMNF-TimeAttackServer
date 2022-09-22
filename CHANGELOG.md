@@ -20,6 +20,7 @@
     * Functions added to enable DB upgrades on later versions
     * The current running and the DB version are tracked and compared on server-start
     * The current running version is displayed on TAS-CLI and TAS-FE's welcome screen
+  * Added functions to TAS-CLI and TMNFD-CLI to create Backups of the whole Stack and functions to restore those Backups even on a fresh installation
 
 ## v1.0.3
 

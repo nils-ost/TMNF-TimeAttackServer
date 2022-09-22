@@ -22,6 +22,11 @@ _config = {
 }
 
 
+def reload_config():
+    global loaded
+    loaded = False
+
+
 def get_config():
     global loaded
     if not loaded:

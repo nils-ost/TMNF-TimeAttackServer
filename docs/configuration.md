@@ -109,6 +109,8 @@ Following interactive functions are available:
   * `2 List Challenges` Searches for all available Challenges and prints them with their name, path and unique ID
   * `3 Generate Thumbnails` Extracts missing thumbnails from the corresponding challange gbx and stores them in S3 to be accessed by TAS.
   * `4 Upload Challenges` Places all challenge gbx files for active MatchSetting in S3 to be accessed by TAS.
+  * `5 Create Backup` Creates a Backup of the whole TMNFD configuration, including Challeges and MatchSettigns
+  * `6 Restore Backup` Restores a previously created Backup from a ZIP-File
 
 Note to the function `Write Active MatchSettings` is executed automatically when tmnfd daemon is started. So there is no need to execute it manually if you plan to restart tmnfd anyways.
 
@@ -162,10 +164,12 @@ TAS comes with it's own interactive CLI to configure different aspects during ru
   * `12 Set Start Time` Let's you set (or delete) the time the Tournament starts. (Before this time the Gameserver get locked, that no Player can join)
   * `13 Set End Time` Let's you set (or delete) the time the Tournament ends. (After this time the Gameserver gets locked and all Players are kicked)
   * `14 Download/Provide TMNF Client` This function can be used to download the latest version of TMNF Client, store it locally and set the `Client Download URL` in one go.
-  * `15 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
-  * `16 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
-  * `17 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
-  * `18 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
+  * `15 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
+  * `16 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
+  * `17 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
+  * `18 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
+  * `19 Create Backup` Creates a Backup of all Database, Settings, Configuration and the whole TMNFD to be restored at a later point.
+  * `20 Restore Backup` Restores a previously created Backup from a ZIP-File
 
 And here we go with some notes to the functions:
 

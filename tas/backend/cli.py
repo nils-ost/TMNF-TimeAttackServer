@@ -156,31 +156,40 @@ def provideChallenges():
                 print('You need to trigger Challenges upload on TMNFD manually!')
 
 
-def clearDB():
-    if not input('Wipe all player, challenge, laptime and replay data? (y/N): ').strip() == 'y':
+def clearDB(force=False):
+    if not force and not input('Wipe all player, challenge, laptime and replay data? (y/N): ').strip() == 'y':
         return
     from helpers.mongodb import mongoDB
     from helpers.s3 import buckets_delete_all
     mongoDB().challenges.drop()
-    print('Wiped Challenges')
+    if not force:
+        print('Wiped Challenges')
     mongoDB().players.drop()
-    print('Wiped Players')
+    if not force:
+        print('Wiped Players')
     mongoDB().laptimes.drop()
-    print('Wiped Laptimes')
+    if not force:
+        print('Wiped Laptimes')
     mongoDB().laptimebackups.drop()
-    print('Wiped Laptimebackups')
+    if not force:
+        print('Wiped Laptimebackups')
     mongoDB().bestlaptimes.drop()
-    print('Wiped Bestlaptimes')
+    if not force:
+        print('Wiped Bestlaptimes')
     mongoDB().rankings.drop()
-    print('Wiped Rankings')
+    if not force:
+        print('Wiped Rankings')
     mongoDB().utils.drop()
-    print('Wiped Utils')
+    if not force:
+        print('Wiped Utils')
     buckets_delete_all()
-    print('Wiped Replays, Thumbnails and Challenges')
-    if not input('Also wipe settings? (y/N): ').strip() == 'y':
+    if not force:
+        print('Wiped Replays, Thumbnails and Challenges')
+    if not force and not input('Also wipe settings? (y/N): ').strip() == 'y':
         return
     mongoDB().settings.drop()
-    print('Wiped Settings')
+    if not force:
+        print('Wiped Settings')
 
 
 def nextChallenge():
@@ -347,6 +356,120 @@ def endTime():
             print('Invalid input!')
 
 
+def createBackup():
+    from helpers.mongodb import mongoDB
+    from helpers.version import version
+    from helpers.config import get_config
+    from helpers.s3 import botoClient, generic_get, generic_delete_all
+    from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_create_backup
+    import zipfile
+    path = input('Where do you like to store the backup?: ')
+    if not os.path.isdir(path):
+        print(f'{path} is not a valid directory!')
+        return
+    dt = datetime.now()
+    backup_file = os.path.join(path, 'tmnf-tas_backup_' + dt.strftime('%Y%m%d%M%H%S') + '.zip')
+
+    metadata = dict({
+        'ts': int(dt.timestamp()),
+        'version': version,
+        'db': dict(),
+        's3': dict(),
+        'tmnfd_backup': False
+    })
+
+    with zipfile.ZipFile(backup_file, mode='w') as zf:
+        with zf.open('config.json', 'w') as f:
+            f.write(json.dumps(get_config(), indent=2).encode('utf-8'))
+
+        for coll in [c['name'] for c in mongoDB().list_collections()]:
+            elements = list()
+            for element in mongoDB().get_collection(coll).find({}):
+                elements.append(element)
+            with zf.open(f'db/{coll}.json', 'w') as f:
+                f.write(json.dumps(elements, indent=2).encode('utf-8'))
+            metadata['db'][coll] = len(elements)
+
+        config_s3 = get_config('s3')
+        for bucket in [v for k, v in config_s3.items() if k.startswith('bucket_')]:
+            metadata['s3'][bucket] = 0
+            objects = botoClient.list_objects(Bucket=bucket)
+            for obj in [k for k in [obj['Key'] for obj in objects.get('Contents', [])]]:
+                with zf.open(f's3/{bucket}/{obj}', 'w') as f:
+                    f.write(generic_get(bucket, obj).read())
+                    metadata['s3'][bucket] += 1
+
+        if tmnfd_cli_test() is not None:
+            tmnfd_backup = tmnfd_cli_create_backup()
+            if tmnfd_backup is not None:
+                with zf.open('tmnfd_backup.zip', 'w') as f:
+                    f.write(generic_get('tmnfd-backups', tmnfd_backup).read())
+                    metadata['tmnfd_backup'] = True
+                generic_delete_all('tmnfd-backups')
+
+        with zf.open('metadata.json', 'w') as f:
+            f.write(json.dumps(metadata, indent=2).encode('utf-8'))
+    print(f'Backup written to: {backup_file}')
+
+
+def restoreBackup():
+    import zipfile
+    from helpers.version import version
+    from helpers.versioning import versions_gt
+    from helpers.config import get_config, reload_config
+    from helpers.s3 import botoClient, generic_delete_all
+    from helpers.mongodb import mongoDB
+    from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_restore_backup
+    backup_file = input('Path to backup-file: ')
+    if not os.path.isfile(backup_file):
+        print('Invalid file-backup_file!')
+        return
+
+    metadata = dict({
+        'version': 0,
+        'db': dict(),
+        's3': dict(),
+        'tmnfd_backup': False
+    })
+
+    with zipfile.ZipFile(backup_file, mode='r') as zf:
+        with zf.open('metadata.json', 'r') as f:
+            metadata.update(json.load(f))
+        if versions_gt(metadata['version'], version):
+            print(f"Version of backup ({metadata['version']}) is bigger than the currently installed version ({version})! Can't restore backup!")
+            return
+
+        clearDB(force=True)
+        with zf.open('config.json', 'r') as f:
+            with open('config.json', 'wb') as out:
+                out.write(f.read())
+        reload_config()
+        clearDB(force=True)
+
+        for coll in metadata.get('db', dict()).keys():
+            with zf.open(f'db/{coll}.json') as f:
+                for element in json.load(f):
+                    mongoDB().get_collection(coll).insert_one(element)
+
+        config_s3 = get_config('s3')
+        for bucket in [v for k, v in config_s3.items() if k.startswith('bucket_')]:
+            for obj in [o for o in zf.namelist() if o.startswith(f's3/{bucket}/')]:
+                with zf.open(obj, 'r') as inp:
+                    obj = obj.replace(f's3/{bucket}/', '')
+                    botoClient.upload_fileobj(inp, Bucket=bucket, Key=obj)
+
+        if metadata['tmnfd_backup']:
+            if 'tmnfd-backups' not in [b['Name'] for b in botoClient.list_buckets()['Buckets']]:
+                botoClient.create_bucket(Bucket='tmnfd-backups')
+            with zf.open('tmnfd_backup.zip', 'r') as inp:
+                botoClient.upload_fileobj(inp, Bucket='tmnfd-backups', Key='restore.zip')
+            if tmnfd_cli_test() is not None:
+                tmnfd_cli_restore_backup()
+            generic_delete_all('tmnfd-backups')
+
+    print(f'Restored backup: {backup_file}')
+
+
 def exit():
     sys.exit(0)
 
@@ -367,10 +490,12 @@ commands = [
     ('Set Start Time', startTime),
     ('Set End Time', endTime),
     ('Download/Provide TMNF Client', downloadClient),
-    ('Clear DB', clearDB),
     ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
     ('Merge Players', mergePlayers),
+    ('Clear DB', clearDB),
+    ('Create Backup', createBackup),
+    ('Restore Backup', restoreBackup),
     ('Exit', exit)
 ]
 

@@ -23,6 +23,12 @@ def setup_storage():
 setup_storage()
 
 
+def get_generic(bucket, name):
+    global botoClient
+    result = botoClient.get_object(Bucket=bucket, Key=name)
+    return result['Body']
+
+
 def upload_generic(bucket, path, name, rm_local=False):
     global botoClient
     if not os.path.isfile(path):
