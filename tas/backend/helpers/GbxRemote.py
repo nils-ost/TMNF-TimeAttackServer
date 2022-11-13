@@ -1,6 +1,7 @@
 import socket
 from xmlrpc.client import loads as xmlloads
 from xmlrpc.client import dumps as xmldumps
+from xmlrpc.client import Fault as xmlFault
 
 
 class GbxRemote():
@@ -64,7 +65,11 @@ class GbxRemote():
         response = self.socket.recv(size)
         while len(response) < size:
             response += self.socket.recv(size - len(response))
-        params, func = xmlloads(response.decode('utf-8'))
+        try:
+            params, func = xmlloads(response.decode('utf-8'))
+        except xmlFault as fault:
+            print(f'GbxRemote call of method "{method}" with params {argv} faulted with code {fault.faultCode} saying: {fault.faultString}')
+            params, func = (list(), None)
 
         self._incHandler()
         if func is None:

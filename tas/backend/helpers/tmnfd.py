@@ -6,7 +6,7 @@ from multiprocessing.managers import BaseManager
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set
-from helpers.mongodb import player_update, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
+from helpers.mongodb import player_update, player_get, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, replay_add, get_start_time, get_end_time
 from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_replay, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
 import time
@@ -86,7 +86,11 @@ def sendLaptimeNotice(sender, player_login, player_time=None):
         s = int(m % 60)
         m = int(m / 60)
         return f"{'-' if time < 0 else ''}{m}:{'0' if s < 10 else ''}{s}.{'0' if ms < 10 else ''}{ms}"
-    best = bestlaptime_get(player_id=clean_player_id(player_login), challenge_id=challenge_id_get(current=True))
+    player_id = clean_player_id(player_login)
+    player = player_get(player_id=player_id)
+    if player is None:
+        return
+    best = bestlaptime_get(player_id=player_id, challenge_id=challenge_id_get(current=True))
     msg = None
     if best is None:
         msg = "You don't have a PB on this Challenge yet"
@@ -99,7 +103,7 @@ def sendLaptimeNotice(sender, player_login, player_time=None):
     elif best['time'] is not None:
         msg = f"You drove {timetos(player_time)} thats {timetos(player_time - best['time'])} behind your PB ({timetos(best['time'])})"
     if msg:
-        sender.callMethod('SendNoticeToLogin', player_login, msg, '', 20)
+        sender.callMethod('SendNoticeToId', player['current_uid'], msg, 255, 20)
 
 
 def kickAllPlayers(sender, msg):
@@ -166,13 +170,18 @@ def worker_function(msg_queue, sender):
         elif func == 'TrackMania.PlayerInfoChanged':
             player = params[0]
             player_update(player['Login'], player['NickName'], player['PlayerId'])
+            player_db = player_get(clean_player_id(player['Login']))
+            if player_db is not None and not player_db['connect_msg_send']:
+                sendLaptimeNotice(sender, player['Login'])
+                player_update(player['Login'], connect_msg_send=True)
 
         elif func == 'TrackMania.PlayerConnect':
             print(f'{params[0]} connected')
-            sendLaptimeNotice(sender, params[0])
+            player_update(params[0], connected=True, connect_msg_send=False)
 
         elif func == 'TrackMania.PlayerDisconnect':
             print(f'{params[0]} disconnected')
+            player_update(params[0], connected=False)
 
 
 def receiver_function(msg_queue, receiver):

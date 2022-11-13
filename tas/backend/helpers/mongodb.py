@@ -11,7 +11,7 @@ config = get_config('mongo')
 def wait_for_mongodb_server():
     first = True
     mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=2000)
-    while(True):
+    while True:
         try:
             mongoClient.server_info()
             print('MongoDB started ... continue', flush=True)
@@ -109,7 +109,7 @@ def bestlaptime_get(player_id, challenge_id):
     return mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
 
 
-def player_update(player_id, nickname, current_uid):
+def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None):
     ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
     player = mongoDB().players.find_one({'_id': player_id})
@@ -119,9 +119,36 @@ def player_update(player_id, nickname, current_uid):
             _, player_ip = player_id.split('/', 1)
             if not len(player_ip.split('.')) == 4:
                 player_ip = None
-        mongoDB().players.insert_one({'_id': player_id, 'current_uid': current_uid, 'nickname': nickname, 'last_update': ts, 'ip': player_ip})
+        if nickname is None:
+            nickname = ''
+        if current_uid is None:
+            current_uid = 999
+        if connected is None:
+            connected = False
+        if connect_msg_send is None:
+            connect_msg_send = False
+        mongoDB().players.insert_one({
+            '_id': player_id,
+            'current_uid': current_uid,
+            'nickname': nickname,
+            'last_update': ts,
+            'ip': player_ip,
+            'connected': connected,
+            'connect_msg_send': connect_msg_send
+        })
     else:
-        mongoDB().players.update_one({'_id': player_id}, {'$set': {'nickname': nickname, 'current_uid': current_uid, 'last_update': ts}})
+        payload = dict({'last_update': ts})
+        if nickname is not None:
+            payload['nickname'] = nickname
+        if current_uid is not None:
+            payload['current_uid'] = current_uid
+        if connected is not None:
+            payload['connected'] = connected
+            if not connected:
+                payload['connect_msg_send'] = False
+        if connect_msg_send is not None:
+            payload['connect_msg_send'] = connect_msg_send
+        mongoDB().players.update_one({'_id': player_id}, {'$set': payload})
 
 
 def player_update_ip(player_id, player_ip):

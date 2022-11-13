@@ -35,7 +35,7 @@ sudo su
 cd
 
 # download latest tas-installer
-wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.1.0/tmnf-tas-installer_v1.1.0.run
+wget https://github.com/nils-ost/TMNF-TimeAttackServer/releases/download/v1.1.1/tmnf-tas-installer_v1.1.1.run
 
 # rename the file (just to be more uniform with the following commands)
 mv tmnf-tas-installer* tmnf-tas-installer.run
