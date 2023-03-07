@@ -1,5 +1,10 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.1.2
+
+  * Installer: fabric-3.0.0 seems to have broken dependencies with patchwork; therefore the fabric version is now fixed to 2.7.1
+  * TAS-FE: Applied recommended package version updates
+
 ## v1.1.1
 
   * TAS-BE: Fixed issue with player-logins containing whitespaces crashed worker on connect ([issue#1](https://github.com/nils-ost/TMNF-TimeAttackServer/issues/1))

@@ -3,7 +3,7 @@
 ### Backend / TMNFD
 
 ```
-apt install liblzo2-dev virtualenv
+apt install liblzo2-dev python3-dev virtualenv
 ```
 
 ### Frontend
