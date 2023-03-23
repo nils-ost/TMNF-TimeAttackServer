@@ -60,14 +60,30 @@ class MainScreen(BaseScreen):
             self._set_frames()
 
         startline = 0
+        avail_top_half = int(self._avail_lines / 2)
+        avail_bottom_half = self._avail_lines - avail_top_half
+        if len(self._challenges) > self._avail_lines:
+            if self._marked_item > avail_top_half:
+                startline = self._marked_item - avail_top_half
+            if len(self._challenges) - self._marked_item < avail_bottom_half:
+                startline = len(self._challenges) - self._avail_lines
+        if startline > 0:
+            self._fsa[5, 2:10] = ['\u2B9D ' * 4]
+        else:
+            self._fsa[5, 2:10] = ['--' * 4]
+        if self._marked_item < len(self._challenges) - avail_bottom_half:
+            self._fsa[self._fsa.height - 3, 2:10] = ['\u2B9F ' * 4]
+        else:
+            self._fsa[self._fsa.height - 3, 2:10] = ['--' * 4]
+        list_half = (int((self._fsa.width - 3) / 2) + (self._fsa.width - 3) % 2) - 1
         draw_line = self._draw_start
         for i in range(startline, min(len(self._challenges), self._avail_lines + startline)):
             item = sorted(self._challenges.keys())[i]
-            if len(item) > self._fsa.width - 2:
-                item = item[0:self._fsa.width - 5] + '...'
+            if len(item) > list_half:
+                item = item[0:list_half - 3] + '...'
             if i == self._marked_item:
                 item = fmtfuncs.invert(item)
-            self._fsa[draw_line, 2:len(item) + 2] = [item]
+            self._fsa[draw_line, 2:list_half + 2] = [item]
             draw_line += 1
 
         if self._display_help_overlay:
