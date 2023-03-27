@@ -1,6 +1,7 @@
 from curtsies import FullscreenWindow, Input
 from screens import MainScreen
 from helpers.config import get_config
+from helpers.settings import MatchSettings
 from pygbx import Gbx, GbxType
 from glob import glob
 import sys
@@ -36,6 +37,7 @@ for f in \
 
 
 def run():
+    selected_ms_name = None
     with FullscreenWindow(sys.stdout) as window:
         with Input() as reactor:
             ms = MainScreen(challenges, matchsettings_names)
@@ -51,16 +53,36 @@ def run():
                             ms.mark_prev_item()
                         elif reactor_event == u'<DOWN>':
                             ms.mark_next_item()
+                        elif reactor_event in [u'<LEFT>', u'<RIGHT>']:
+                            if selected_ms_name is not None:
+                                ms.toggle_item_column()
                         elif reactor_event == u'?':
                             active_screen = 'ms_help'
                             ms.display_help_overlay()
                         elif reactor_event == u'<Ctrl-j>':
                             pass
+                        elif reactor_event == u'o':
+                            active_screen = 'ms_select_ms'
+                            ms.display_select_ms_overlay()
                     elif active_screen in ['ms_help', 'ms_info']:
                         if reactor_event in [u'<Ctrl-j>', u'<ESC>']:
                             active_screen = 'ms'
                             ms.display_help_overlay(False)
                             ms.display_info_overlay(False)
+                    elif active_screen in ['ms_select_ms']:
+                        if reactor_event == u'<ESC>':
+                            active_screen = 'ms'
+                            ms.display_select_ms_overlay(False)
+                        elif reactor_event == u'<Ctrl-j>':
+                            selected_ms_name = ms.apply_marked_matchsetting()
+                            matchsettings = MatchSettings(selected_ms_name + '.txt')
+                            ms.set_matchsettings_challenges(matchsettings.get_challenges())
+                            active_screen = 'ms'
+                            ms.display_select_ms_overlay(False)
+                        elif reactor_event == u'<UP>':
+                            ms.mark_prev_matchsetting()
+                        elif reactor_event == u'<DOWN>':
+                            ms.mark_next_matchsetting()
 
                 window.render_to_terminal(ms.draw())
                 reactor_event = reactor.send(1)
