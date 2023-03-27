@@ -56,11 +56,23 @@ def run():
                         elif reactor_event in [u'<LEFT>', u'<RIGHT>']:
                             if selected_ms_name is not None:
                                 ms.toggle_item_column()
+                        elif reactor_event == u'm':
+                            ms.toggle_add_mode()
                         elif reactor_event == u'?':
                             active_screen = 'ms_help'
                             ms.display_help_overlay()
                         elif reactor_event == u'<Ctrl-j>':
-                            pass
+                            if selected_ms_name is not None:
+                                ms.add_marked_item()
+                        elif reactor_event == u'<DELETE>':
+                            if selected_ms_name is not None:
+                                ms.remove_marked_item()
+                        elif reactor_event == u'<PAGEUP>':
+                            if selected_ms_name is not None:
+                                ms.move_marked_item_up()
+                        elif reactor_event == u'<PAGEDOWN>':
+                            if selected_ms_name is not None:
+                                ms.move_marked_item_down()
                         elif reactor_event == u'o':
                             active_screen = 'ms_select_ms'
                             ms.display_select_ms_overlay()

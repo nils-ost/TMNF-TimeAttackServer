@@ -17,6 +17,7 @@ class MainScreen(BaseScreen):
         self._marked_item = [0, 0, 0]
         self._marked_matchsetting = 0
         self._matchsettings_challenges = list()
+        self._add_mode = 'append'
 
     def _set_frames(self):
         self._avail_lines = self._fsa.height
@@ -69,6 +70,10 @@ class MainScreen(BaseScreen):
         avail_top_half = int(self._avail_lines / 2)
         avail_bottom_half = self._avail_lines - avail_top_half
         list_half = (int((self._fsa.width - 3) / 2) + (self._fsa.width - 3) % 2) - 1
+
+        if self._selected_matchsettings:
+            mode = 'mode: ' + fmtfuncs.on_gray(fmtfuncs.black(self._add_mode))
+            self._fsa[5, self._fsa.width - len(mode) - 2:self._fsa.width - 2] = [mode]
 
         # first column
         startline = 0
@@ -131,8 +136,11 @@ class MainScreen(BaseScreen):
 
         if self._display_help_overlay:
             self._draw_overlay('<center>--== HELP ==--\n\n\n\
+             o: Open MatchSettings File \n\
+             m: change add mode to append or insert \n\
+       <ENTER>: add marked challenge to MatchSettings \n\
+        <ENTF>: remove marked Challenge from MatchSettings \n\
   <UP>, <DOWN>: Navigate trough Lists \n\
-       <SPACE>: add/remove marked Challenge to MatchSetting \n\
 <PAGE-UP/DOWN>: move marked Challenge in MatchSetting \n\n\
              ?: This Help\n\
       q, <ESC>: Exit \n\n\n\
@@ -171,22 +179,71 @@ class MainScreen(BaseScreen):
             self._marked_item[1] += 1
             self._marked_item[1] %= len(self._challenges)
         else:
-            self._marked_item[2] += 1
-            self._marked_item[2] %= len(self._matchsettings_challenges)
+            if len(self._matchsettings_challenges) == 0:
+                self._marked_item[2] = 0
+            else:
+                self._marked_item[2] += 1
+                self._marked_item[2] %= len(self._matchsettings_challenges)
 
     def mark_prev_item(self):
         if self._marked_item[0] == 0:
             self._marked_item[1] -= 1
             self._marked_item[1] %= len(self._challenges)
         else:
-            self._marked_item[2] -= 1
-            self._marked_item[2] %= len(self._matchsettings_challenges)
+            if len(self._matchsettings_challenges) == 0:
+                self._marked_item[2] = 0
+            else:
+                self._marked_item[2] -= 1
+                self._marked_item[2] %= len(self._matchsettings_challenges)
 
     def toggle_item_column(self):
         self._marked_item[0] += 1
         self._marked_item[0] %= 2
         self._marked_item[1] %= len(self._challenges)
+        if len(self._matchsettings_challenges) == 0:
+            self._marked_item[2] = 0
+        else:
+            self._marked_item[2] %= len(self._matchsettings_challenges)
+
+    def toggle_add_mode(self):
+        if self._add_mode == 'append':
+            self._add_mode = 'insert'
+        else:
+            self._add_mode = 'append'
+
+    def add_marked_item(self):
+        challenge = sorted(self._challenges.keys())[self._marked_item[1]]
+        challenge = self._challenges[challenge]
+        if self._add_mode == 'append' or self._marked_item[2] >= len(self._matchsettings_challenges) - 1:
+            self._matchsettings_challenges.append((challenge['id'], challenge['path']))
+        else:
+            self._matchsettings_challenges.insert(self._marked_item[2] + 1, (challenge['id'], challenge['path']))
+
+    def remove_marked_item(self):
+        self._matchsettings_challenges.pop(self._marked_item[2])
+        if self._marked_item[2] >= len(self._matchsettings_challenges):
+            self._marked_item[2] = len(self._matchsettings_challenges) - 1
+        self._redraw_frame = True
+
+    def move_marked_item_up(self):
+        self._marked_item[0] = 1
+        item = self._matchsettings_challenges.pop(self._marked_item[2])
+        self.mark_prev_item()
+        if self._marked_item[2] >= len(self._matchsettings_challenges) - 1:
+            self._matchsettings_challenges.append(item)
+            self.mark_next_item()
+        else:
+            self._matchsettings_challenges.insert(self._marked_item[2], item)
+
+    def move_marked_item_down(self):
+        self._marked_item[0] = 1
+        item = self._matchsettings_challenges.pop(self._marked_item[2])
         self._marked_item[2] %= len(self._matchsettings_challenges)
+        if self._marked_item[2] == 0:
+            self._matchsettings_challenges.insert(0, item)
+        else:
+            self.mark_next_item()
+            self._matchsettings_challenges.insert(self._marked_item[2], item)
 
     def mark_next_matchsetting(self):
         self._marked_matchsetting += 1
