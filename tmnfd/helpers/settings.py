@@ -56,3 +56,22 @@ class MatchSettings():
             path = c.find('file').text
             result.append((ident, path))
         return result
+
+    def replace_challenges(self, newlist):
+        for c in self.tree.findall('challenge'):
+            self.tree.getroot().remove(c)
+
+        for ident, f in newlist:
+            newe = ET.Element('challenge')
+            newe.text = '\n\t\t'
+            newe.tail = '\n\t'
+            newe.append(ET.Element('file'))
+            newe.append(ET.Element('ident'))
+            newe.find('file').text = f
+            newe.find('file').tail = '\n\t\t'
+            newe.find('ident').text = ident
+            newe.find('ident').tail = '\n\t'
+            self.tree.getroot().append(newe)
+
+        lastc = self.tree.findall('challenge')[-1]
+        lastc.tail = '\n'

@@ -37,6 +37,7 @@ for f in \
 
 
 def run():
+    matchsettings = None
     selected_ms_name = None
     with FullscreenWindow(sys.stdout) as window:
         with Input() as reactor:
@@ -76,11 +77,20 @@ def run():
                         elif reactor_event == u'o':
                             active_screen = 'ms_select_ms'
                             ms.display_select_ms_overlay()
+                        elif reactor_event == u's':
+                            if matchsettings is not None:
+                                ms.display_confirm_save()
+                                active_screen = 'ms_confirm_save'
+                            else:
+                                ms.display_info_overlay('You need to open a MatchSettings File first')
+                                active_screen = 'ms_info'
+                    # Help- und Info-Overlay
                     elif active_screen in ['ms_help', 'ms_info']:
                         if reactor_event in [u'<Ctrl-j>', u'<ESC>']:
                             active_screen = 'ms'
                             ms.display_help_overlay(False)
                             ms.display_info_overlay(False)
+                    # Select MatchSettings File
                     elif active_screen in ['ms_select_ms']:
                         if reactor_event == u'<ESC>':
                             active_screen = 'ms'
@@ -95,6 +105,27 @@ def run():
                             ms.mark_prev_matchsetting()
                         elif reactor_event == u'<DOWN>':
                             ms.mark_next_matchsetting()
+                    elif active_screen == 'ms_confirm_save':
+                        if reactor_event == u'y':
+                            ms.display_confirm_save(False)
+                            ms.display_ask_active()
+                            active_screen = 'ms_ask_active'
+                        elif reactor_event == u'n':
+                            ms.display_confirm_save(False)
+                            active_screen = 'ms'
+                    elif active_screen == 'ms_ask_active':
+                        if reactor_event == u'y':
+                            matchsettings.replace_challenges(ms.get_matchsettings_challenges())
+                            matchsettings.save(activate=True)
+                            ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name} \n<center> And activated it!')
+                            ms.display_ask_active(False)
+                            active_screen = 'ms_info'
+                        elif reactor_event == u'n':
+                            matchsettings.replace_challenges(ms.get_matchsettings_challenges())
+                            matchsettings.save()
+                            ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name}')
+                            ms.display_ask_active(False)
+                            active_screen = 'ms_info'
 
                 window.render_to_terminal(ms.draw())
                 reactor_event = reactor.send(1)

@@ -13,6 +13,8 @@ class MainScreen(BaseScreen):
         self._display_help_overlay = False
         self._display_info_overlay = False
         self._display_select_ms_overlay = False
+        self._display_confirm_save = False
+        self._display_ask_active = False
         self._redraw_frame = True
         self._marked_item = [0, 0, 0]
         self._marked_matchsetting = 0
@@ -138,6 +140,7 @@ class MainScreen(BaseScreen):
             self._draw_overlay('<center>--== HELP ==--\n\n\n\
              o: Open MatchSettings File \n\
              m: change add mode to append or insert \n\
+             s: Save MatchSettings File \n\
        <ENTER>: add marked challenge to MatchSettings \n\
         <ENTF>: remove marked Challenge from MatchSettings \n\
   <UP>, <DOWN>: Navigate trough Lists \n\
@@ -159,6 +162,16 @@ class MainScreen(BaseScreen):
             lines.append('')
             lines.append('<center> Hit <ESC> to return ')
             self._draw_overlay(lines)
+        elif self._display_confirm_save:
+            self._draw_overlay(''.join([
+                '<center> --== CONFIRM ==-- \n\n',
+                '<center> Do you want to save MatchSettings as: ' + self._selected_matchsettings + '.txt \n\n',
+                '<center> Choose y or n to continue ']))
+        elif self._display_ask_active:
+            self._draw_overlay(''.join([
+                '<center> --== CHOOSE ==-- \n\n',
+                '<center> Do you want to set the current MatchSettings as active? \n\n',
+                '<center> Choose y or n to continue ']))
         return self._fsa
 
     def display_info_overlay(self, text=False):
@@ -171,6 +184,16 @@ class MainScreen(BaseScreen):
 
     def display_select_ms_overlay(self, enabled=True):
         self._display_select_ms_overlay = enabled
+        if not enabled:
+            self._redraw_frame = True
+
+    def display_confirm_save(self, enabled=True):
+        self._display_confirm_save = enabled
+        if not enabled:
+            self._redraw_frame = True
+
+    def display_ask_active(self, enabled=True):
+        self._display_ask_active = enabled
         if not enabled:
             self._redraw_frame = True
 
@@ -253,3 +276,6 @@ class MainScreen(BaseScreen):
 
     def set_matchsettings_challenges(self, challenges):
         self._matchsettings_challenges = challenges
+
+    def get_matchsettings_challenges(self):
+        return self._matchsettings_challenges
