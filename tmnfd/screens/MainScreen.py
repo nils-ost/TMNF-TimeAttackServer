@@ -227,23 +227,17 @@ class MainScreen(BaseScreen):
 
     def move_marked_item_up(self):
         self._marked_item[0] = 1
-        item = self._matchsettings_challenges.pop(self._marked_item[2])
+        remove_id = self._marked_item[2]
         self.mark_prev_item()
-        if self._marked_item[2] >= len(self._matchsettings_challenges) - 1:
-            self._matchsettings_challenges.append(item)
-            self.mark_next_item()
-        else:
-            self._matchsettings_challenges.insert(self._marked_item[2], item)
+        item = self._matchsettings_challenges.pop(remove_id)
+        self._matchsettings_challenges.insert(self._marked_item[2], item)
 
     def move_marked_item_down(self):
         self._marked_item[0] = 1
-        item = self._matchsettings_challenges.pop(self._marked_item[2])
-        self._marked_item[2] %= len(self._matchsettings_challenges)
-        if self._marked_item[2] == 0:
-            self._matchsettings_challenges.insert(0, item)
-        else:
-            self.mark_next_item()
-            self._matchsettings_challenges.insert(self._marked_item[2], item)
+        remove_id = self._marked_item[2]
+        self.mark_next_item()
+        item = self._matchsettings_challenges.pop(remove_id)
+        self._matchsettings_challenges.insert(self._marked_item[2], item)
 
     def mark_next_matchsetting(self):
         self._marked_matchsetting += 1
