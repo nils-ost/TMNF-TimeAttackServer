@@ -15,11 +15,13 @@ class MainScreen(BaseScreen):
         self._display_select_ms_overlay = False
         self._display_confirm_save = False
         self._display_ask_active = False
+        self._display_new_file = False
         self._redraw_frame = True
         self._marked_item = [0, 0, 0]
         self._marked_matchsetting = 0
         self._matchsettings_challenges = list()
         self._add_mode = 'append'
+        self._new_file = ''
 
     def _set_frames(self):
         self._avail_lines = self._fsa.height
@@ -139,6 +141,7 @@ class MainScreen(BaseScreen):
         if self._display_help_overlay:
             self._draw_overlay('<center>--== HELP ==--\n\n\n\
              o: Open MatchSettings File \n\
+             n: Create new MatchSettings File \n\
              m: change add mode to append or insert \n\
              s: Save MatchSettings File \n\
        <ENTER>: add marked challenge to MatchSettings \n\
@@ -148,8 +151,10 @@ class MainScreen(BaseScreen):
              ?: This Help\n\
       q, <ESC>: Exit \n\n\n\
 <center>Hit <ENTER>/<ESC> to return')
+        # Display info overlay
         elif self._display_info_overlay:
             self._draw_overlay('<center> --== INFO ==-- \n\n<center> ' + self._display_info_overlay + ' \n\n<center> Hit <ENTER>/<ESC> to return ')
+        # Display select MatchSettings overlay
         elif self._display_select_ms_overlay:
             lines = list()
             lines.append('<center> --==Select MatchSettings File ==-- ')
@@ -160,18 +165,40 @@ class MainScreen(BaseScreen):
                     ms = fmtfuncs.invert(ms)
                 lines.append('<center> ' + ms + ' ')
             lines.append('')
+            ms = '<NEW FILE>'
+            if self._marked_matchsetting == len(self._ms_names):
+                ms = fmtfuncs.invert(ms)
+            lines.append('<center> ' + ms + ' ')
+            lines.append('')
             lines.append('<center> Hit <ESC> to return ')
             self._draw_overlay(lines)
+        # Display confirm save dialog
         elif self._display_confirm_save:
             self._draw_overlay(''.join([
                 '<center> --== CONFIRM ==-- \n\n',
                 '<center> Do you want to save MatchSettings as: ' + self._selected_matchsettings + '.txt \n\n',
                 '<center> Choose y or n to continue ']))
+        # Display ask active dialog
         elif self._display_ask_active:
             self._draw_overlay(''.join([
                 '<center> --== CHOOSE ==-- \n\n',
                 '<center> Do you want to set the current MatchSettings as active? \n\n',
                 '<center> Choose y or n to continue ']))
+        # Display new file dialog
+        elif self._display_new_file:
+            field = self._new_file + '_'
+            if len(field) > 30:
+                field = field[-30:-1] + '_'
+            else:
+                field += ' ' * (30 - len(field))
+            field = fmtfuncs.invert(field)
+            lines = list()
+            lines.append('<center> --== NEW MATCHSETTINGS ==-- ')
+            lines.append('')
+            lines.append('<center> ' + field + ' ')
+            lines.append('')
+            lines.append('<center> Enter file-name and hit <ENTER>; use <ESC> to abort ')
+            self._draw_overlay(lines)
         return self._fsa
 
     def display_info_overlay(self, text=False):
@@ -194,6 +221,11 @@ class MainScreen(BaseScreen):
 
     def display_ask_active(self, enabled=True):
         self._display_ask_active = enabled
+        if not enabled:
+            self._redraw_frame = True
+
+    def display_new_file(self, enabled=True):
+        self._display_new_file = enabled
         if not enabled:
             self._redraw_frame = True
 
@@ -264,18 +296,39 @@ class MainScreen(BaseScreen):
 
     def mark_next_matchsetting(self):
         self._marked_matchsetting += 1
-        self._marked_matchsetting %= len(self._ms_names)
+        self._marked_matchsetting %= (len(self._ms_names) + 1)
 
     def mark_prev_matchsetting(self):
         self._marked_matchsetting -= 1
-        self._marked_matchsetting %= len(self._ms_names)
+        self._marked_matchsetting %= (len(self._ms_names) + 1)
 
     def apply_marked_matchsetting(self):
-        self._selected_matchsettings = sorted(self._ms_names)[self._marked_matchsetting]
+        if self._marked_matchsetting >= len(self._ms_names):
+            self._selected_matchsettings = None
+            self._matchsettings_challenges.clear()
+        else:
+            self._selected_matchsettings = sorted(self._ms_names)[self._marked_matchsetting]
         return self._selected_matchsettings
+
+    def apply_new_matchsetting(self):
+        if not self._new_file == '':
+            self._selected_matchsettings = self._new_file
+        return self._new_file
 
     def set_matchsettings_challenges(self, challenges):
         self._matchsettings_challenges = challenges
 
     def get_matchsettings_challenges(self):
         return self._matchsettings_challenges
+
+    def new_file_input(self, input_c):
+        if input_c == u'<BACKSPACE>':
+            if len(self._new_file) > 0:
+                self._new_file = self._new_file[0:-1]
+        elif input_c == u'<SPACE>':
+            self._new_file += ' '
+        else:
+            self._new_file += input_c
+
+    def clear_new_file(self):
+        self._new_file = ''

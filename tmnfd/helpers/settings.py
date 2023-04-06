@@ -57,9 +57,12 @@ class MatchSettings():
             result.append((ident, path))
         return result
 
-    def replace_challenges(self, newlist):
+    def clear_challenges(self):
         for c in self.tree.findall('challenge'):
             self.tree.getroot().remove(c)
+
+    def replace_challenges(self, newlist):
+        self.clear_challenges()
 
         for ident, f in newlist:
             newe = ET.Element('challenge')

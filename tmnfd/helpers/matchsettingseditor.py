@@ -16,9 +16,17 @@ alphanumerical = [
 ]
 
 matchsettings_names = list()
-path = os.path.normpath(get_config()['match_settings']) + '/'
-for f in glob(os.path.join(path, '*.txt')):
-    matchsettings_names.append(f.replace(path, '').replace('.txt', ''))
+
+
+def rebuild_matchsettings_names():
+    global matchsettings_names
+    matchsettings_names.clear()
+    path = os.path.normpath(get_config()['match_settings']) + '/'
+    for f in glob(os.path.join(path, '*.txt')):
+        matchsettings_names.append(f.replace(path, '').replace('.txt', ''))
+
+
+rebuild_matchsettings_names()
 
 
 challenges = dict()
@@ -77,6 +85,10 @@ def run():
                         elif reactor_event == u'o':
                             active_screen = 'ms_select_ms'
                             ms.display_select_ms_overlay()
+                        elif reactor_event == u'n':
+                            active_screen = 'ms_new_file'
+                            ms.clear_new_file()
+                            ms.display_new_file()
                         elif reactor_event == u's':
                             if matchsettings is not None:
                                 ms.display_confirm_save()
@@ -97,14 +109,21 @@ def run():
                             ms.display_select_ms_overlay(False)
                         elif reactor_event == u'<Ctrl-j>':
                             selected_ms_name = ms.apply_marked_matchsetting()
-                            matchsettings = MatchSettings(selected_ms_name + '.txt')
-                            ms.set_matchsettings_challenges(matchsettings.get_challenges())
-                            active_screen = 'ms'
+                            if selected_ms_name is not None:
+                                matchsettings = MatchSettings(selected_ms_name + '.txt')
+                                ms.set_matchsettings_challenges(matchsettings.get_challenges())
+                                active_screen = 'ms'
+                            else:
+                                matchsettings = None
+                                active_screen = 'ms_new_file'
+                                ms.clear_new_file()
+                                ms.display_new_file()
                             ms.display_select_ms_overlay(False)
                         elif reactor_event == u'<UP>':
                             ms.mark_prev_matchsetting()
                         elif reactor_event == u'<DOWN>':
                             ms.mark_next_matchsetting()
+                    # Confirm Save
                     elif active_screen == 'ms_confirm_save':
                         if reactor_event == u'y':
                             ms.display_confirm_save(False)
@@ -113,19 +132,42 @@ def run():
                         elif reactor_event == u'n':
                             ms.display_confirm_save(False)
                             active_screen = 'ms'
+                    # Ask Active
                     elif active_screen == 'ms_ask_active':
                         if reactor_event == u'y':
                             matchsettings.replace_challenges(ms.get_matchsettings_challenges())
                             matchsettings.save(activate=True)
                             ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name} \n<center> And activated it!')
                             ms.display_ask_active(False)
+                            rebuild_matchsettings_names()
                             active_screen = 'ms_info'
                         elif reactor_event == u'n':
                             matchsettings.replace_challenges(ms.get_matchsettings_challenges())
                             matchsettings.save()
                             ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name}')
                             ms.display_ask_active(False)
+                            rebuild_matchsettings_names()
                             active_screen = 'ms_info'
+                    # New File
+                    elif active_screen == 'ms_new_file':
+                        if reactor_event == u'<ESC>':
+                            active_screen = 'ms'
+                            ms.display_new_file(False)
+                        elif reactor_event in alphanumerical or reactor_event == u'<BACKSPACE>':
+                            ms.new_file_input(reactor_event)
+                        elif reactor_event == u'<Ctrl-j>':
+                            selected_ms_name = ms.apply_new_matchsetting()
+                            if not selected_ms_name == '':
+                                matchsettings = MatchSettings(matchsettings_names[0] + '.txt')
+                                matchsettings.name = selected_ms_name + '.txt'
+                                matchsettings.clear_challenges()
+                                ms.set_matchsettings_challenges(matchsettings.get_challenges())
+                                active_screen = 'ms'
+                            else:
+                                selected_ms_name = None
+                                ms.display_info_overlay('Invalid file-name')
+                                active_screen = 'ms_info'
+                            ms.display_new_file(False)
 
                 window.render_to_terminal(ms.draw())
                 reactor_event = reactor.send(1)
