@@ -1,6 +1,6 @@
 from curtsies import FullscreenWindow, Input
 from screens import MainScreen
-from helpers.config import get_config
+from helpers.config import get_config, save_config
 from helpers.settings import MatchSettings
 from pygbx import Gbx, GbxType
 from glob import glob
@@ -84,6 +84,12 @@ def run():
                                 ms.move_marked_item_down()
                         elif reactor_event == u'o':
                             active_screen = 'ms_select_ms'
+                            ms.display_select_ms_overlay(new_option=True)
+                        elif reactor_event == u'r':
+                            active_screen = 'ms_remove_ms'
+                            ms.display_select_ms_overlay()
+                        elif reactor_event == u'a':
+                            active_screen = 'ms_active_ms'
                             ms.display_select_ms_overlay()
                         elif reactor_event == u'n':
                             active_screen = 'ms_new_file'
@@ -103,22 +109,33 @@ def run():
                             ms.display_help_overlay(False)
                             ms.display_info_overlay(False)
                     # Select MatchSettings File
-                    elif active_screen in ['ms_select_ms']:
+                    elif active_screen in ['ms_select_ms', 'ms_remove_ms', 'ms_active_ms']:
                         if reactor_event == u'<ESC>':
                             active_screen = 'ms'
-                            ms.display_select_ms_overlay(False)
+                            ms.display_select_ms_overlay(enabled=False)
                         elif reactor_event == u'<Ctrl-j>':
                             selected_ms_name = ms.apply_marked_matchsetting()
-                            if selected_ms_name is not None:
+                            if active_screen == 'ms_select_ms':
+                                if selected_ms_name is not None:
+                                    matchsettings = MatchSettings(selected_ms_name + '.txt')
+                                    ms.set_matchsettings_challenges(matchsettings.get_challenges())
+                                    active_screen = 'ms'
+                                else:
+                                    matchsettings = None
+                                    active_screen = 'ms_new_file'
+                                    ms.clear_new_file()
+                                    ms.display_new_file()
+                            elif active_screen == 'ms_remove_ms':
                                 matchsettings = MatchSettings(selected_ms_name + '.txt')
                                 ms.set_matchsettings_challenges(matchsettings.get_challenges())
-                                active_screen = 'ms'
-                            else:
-                                matchsettings = None
-                                active_screen = 'ms_new_file'
-                                ms.clear_new_file()
-                                ms.display_new_file()
-                            ms.display_select_ms_overlay(False)
+                                ms.display_confirm_remove()
+                                active_screen = 'ms_confirm_remove'
+                            elif active_screen == 'ms_active_ms':
+                                matchsettings = MatchSettings(selected_ms_name + '.txt')
+                                ms.set_matchsettings_challenges(matchsettings.get_challenges())
+                                ms.display_ask_active()
+                                active_screen = 'ms_ask_active'
+                            ms.display_select_ms_overlay(enabled=False)
                         elif reactor_event == u'<UP>':
                             ms.mark_prev_matchsetting()
                         elif reactor_event == u'<DOWN>':
@@ -127,27 +144,39 @@ def run():
                     elif active_screen == 'ms_confirm_save':
                         if reactor_event == u'y':
                             ms.display_confirm_save(False)
-                            ms.display_ask_active()
-                            active_screen = 'ms_ask_active'
+                            matchsettings.replace_challenges(ms.get_matchsettings_challenges())
+                            matchsettings.save(matchsettings.is_active)
+                            ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name}')
+                            rebuild_matchsettings_names()
+                            active_screen = 'ms_info'
                         elif reactor_event == u'n':
                             ms.display_confirm_save(False)
+                            active_screen = 'ms'
+                    # Confirm Remove
+                    elif active_screen == 'ms_confirm_remove':
+                        if reactor_event == u'y':
+                            ms.display_confirm_remove(enabled=False)
+                            active_screen = 'ms'
+                            matchsettings.delete()
+                            matchsettings = None
+                            ms.set_matchsettings_challenges([])
+                            rebuild_matchsettings_names()
+                        elif reactor_event == u'n':
+                            ms.display_confirm_remove(enabled=False)
                             active_screen = 'ms'
                     # Ask Active
                     elif active_screen == 'ms_ask_active':
                         if reactor_event == u'y':
-                            matchsettings.replace_challenges(ms.get_matchsettings_challenges())
                             matchsettings.save(activate=True)
-                            ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name} \n<center> And activated it!')
+                            config = get_config()
+                            config['active_matchsetting'] = matchsettings.name
+                            save_config(config)
+                            ms.display_info_overlay(f'Set MatchSettings File: {matchsettings.name} as active.')
                             ms.display_ask_active(False)
-                            rebuild_matchsettings_names()
                             active_screen = 'ms_info'
                         elif reactor_event == u'n':
-                            matchsettings.replace_challenges(ms.get_matchsettings_challenges())
-                            matchsettings.save()
-                            ms.display_info_overlay(f'Saved MatchSettings File as: {matchsettings.name}')
                             ms.display_ask_active(False)
-                            rebuild_matchsettings_names()
-                            active_screen = 'ms_info'
+                            active_screen = 'ms'
                     # New File
                     elif active_screen == 'ms_new_file':
                         if reactor_event == u'<ESC>':

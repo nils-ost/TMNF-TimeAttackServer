@@ -13,8 +13,10 @@ class MainScreen(BaseScreen):
         self._display_help_overlay = False
         self._display_info_overlay = False
         self._display_select_ms_overlay = False
+        self._select_ms_overlay_new_option = False
         self._display_confirm_save = False
         self._display_ask_active = False
+        self._display_confirm_remove = False
         self._display_new_file = False
         self._redraw_frame = True
         self._marked_item = [0, 0, 0]
@@ -56,7 +58,9 @@ class MainScreen(BaseScreen):
         self._draw_start += 2
 
     def _set_footer(self):
-        q = fmtfuncs.bold('ENTER') + ' to continue; ' + fmtfuncs.bold('q') + ' or ' + fmtfuncs.bold('ESC') + ' to exit; ' + fmtfuncs.bold('?') + ' for Help'
+        q = fmtfuncs.bold('o') + ' to open MatchSettings; '
+        q += fmtfuncs.bold('q') + ' or ' + fmtfuncs.bold('ESC') + ' to exit; '
+        q += fmtfuncs.bold('?') + ' for Help'
         self.write_centered(self._fsa.height - 1, q)
         self._avail_lines -= 2
 
@@ -140,16 +144,19 @@ class MainScreen(BaseScreen):
 
         if self._display_help_overlay:
             self._draw_overlay('<center>--== HELP ==--\n\n\n\
-             o: Open MatchSettings File \n\
-             n: Create new MatchSettings File \n\
-             m: change add mode to append or insert \n\
-             s: Save MatchSettings File \n\
-       <ENTER>: add marked challenge to MatchSettings \n\
-        <ENTF>: remove marked Challenge from MatchSettings \n\
-  <UP>, <DOWN>: Navigate trough Lists \n\
-<PAGE-UP/DOWN>: move marked Challenge in MatchSetting \n\n\
-             ?: This Help\n\
-      q, <ESC>: Exit \n\n\n\
+              o: Open MatchSettings File \n\
+              n: Create new MatchSettings File \n\
+              s: Save MatchSettings File \n\
+              a: Set a MatchSettings File as active \n\
+              r: Remove a MatchSettings File \n\
+              m: change add mode to append or insert \n\
+        <ENTER>: add marked challenge to MatchSettings \n\
+         <ENTF>: remove marked Challenge from MatchSettings \n\
+   <UP>, <DOWN>: Navigate trough Lists \n\
+<LEFT>, <RIGHT>: Jump between Lists \n\
+ <PAGE-UP/DOWN>: move marked Challenge in MatchSetting \n\n\
+              ?: This Help\n\
+       q, <ESC>: Exit \n\n\n\
 <center>Hit <ENTER>/<ESC> to return')
         # Display info overlay
         elif self._display_info_overlay:
@@ -157,7 +164,7 @@ class MainScreen(BaseScreen):
         # Display select MatchSettings overlay
         elif self._display_select_ms_overlay:
             lines = list()
-            lines.append('<center> --==Select MatchSettings File ==-- ')
+            lines.append('<center> --== Select MatchSettings File ==-- ')
             lines.append('')
             for i in range(len(self._ms_names)):
                 ms = sorted(self._ms_names)[i]
@@ -165,11 +172,12 @@ class MainScreen(BaseScreen):
                     ms = fmtfuncs.invert(ms)
                 lines.append('<center> ' + ms + ' ')
             lines.append('')
-            ms = '<NEW FILE>'
-            if self._marked_matchsetting == len(self._ms_names):
-                ms = fmtfuncs.invert(ms)
-            lines.append('<center> ' + ms + ' ')
-            lines.append('')
+            if self._select_ms_overlay_new_option:
+                ms = '<NEW FILE>'
+                if self._marked_matchsetting == len(self._ms_names):
+                    ms = fmtfuncs.invert(ms)
+                lines.append('<center> ' + ms + ' ')
+                lines.append('')
             lines.append('<center> Hit <ESC> to return ')
             self._draw_overlay(lines)
         # Display confirm save dialog
@@ -182,7 +190,13 @@ class MainScreen(BaseScreen):
         elif self._display_ask_active:
             self._draw_overlay(''.join([
                 '<center> --== CHOOSE ==-- \n\n',
-                '<center> Do you want to set the current MatchSettings as active? \n\n',
+                '<center> Do you want to set ' + self._selected_matchsettings + ' as active? \n\n',
+                '<center> Choose y or n to continue ']))
+        # Display ask remove dialog
+        elif self._display_confirm_remove:
+            self._draw_overlay(''.join([
+                '<center> --== CHOOSE ==-- \n\n',
+                '<center> Do you really want to delete: ' + self._selected_matchsettings + '.txt \n\n',
                 '<center> Choose y or n to continue ']))
         # Display new file dialog
         elif self._display_new_file:
@@ -209,8 +223,9 @@ class MainScreen(BaseScreen):
         if not enabled:
             self._redraw_frame = True
 
-    def display_select_ms_overlay(self, enabled=True):
+    def display_select_ms_overlay(self, new_option=False, enabled=True):
         self._display_select_ms_overlay = enabled
+        self._select_ms_overlay_new_option = new_option
         if not enabled:
             self._redraw_frame = True
 
@@ -221,6 +236,11 @@ class MainScreen(BaseScreen):
 
     def display_ask_active(self, enabled=True):
         self._display_ask_active = enabled
+        if not enabled:
+            self._redraw_frame = True
+
+    def display_confirm_remove(self, enabled=True):
+        self._display_confirm_remove = enabled
         if not enabled:
             self._redraw_frame = True
 
@@ -296,11 +316,17 @@ class MainScreen(BaseScreen):
 
     def mark_next_matchsetting(self):
         self._marked_matchsetting += 1
-        self._marked_matchsetting %= (len(self._ms_names) + 1)
+        if self._select_ms_overlay_new_option:
+            self._marked_matchsetting %= (len(self._ms_names) + 1)
+        else:
+            self._marked_matchsetting %= len(self._ms_names)
 
     def mark_prev_matchsetting(self):
         self._marked_matchsetting -= 1
-        self._marked_matchsetting %= (len(self._ms_names) + 1)
+        if self._select_ms_overlay_new_option:
+            self._marked_matchsetting %= (len(self._ms_names) + 1)
+        else:
+            self._marked_matchsetting %= len(self._ms_names)
 
     def apply_marked_matchsetting(self):
         if self._marked_matchsetting >= len(self._ms_names):
