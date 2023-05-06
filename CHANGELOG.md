@@ -1,5 +1,9 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.2.0
+
+  * TAS-BE: Added support for string versions in versioning-compares to support alpha and beta versions
+
 ## v1.1.2
 
   * Installer: fabric-3.0.0 seems to have broken dependencies with patchwork; therefore the fabric version is now fixed to 2.7.1
