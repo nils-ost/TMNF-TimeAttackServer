@@ -10,6 +10,8 @@ _config = {
     'challenges_path': 'dedicated/GameData/Tracks',
     'active_matchsetting': 'NationsWhite.txt',
     'replays_path': 'dedicated/GameData/Tracks/Replays',
+    'hot_seat_mode': False,
+    'saved_max_players': 32,
     's3': {
         'host': 'localhost',
         'port': 9000,

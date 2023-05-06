@@ -93,6 +93,8 @@ But here is an explanation of all available attributes:
   * `challenges_path` Path where the cli tool searches for challenges
   * `active_matchsetting` Name of the MatchSetting file that should be activated on the next daemon start
   * `replays_path` Directory in which TMNF-Dedicated is storing saved replays, this path is required by tmnfd-cli to find the replays for uploading them to S3
+  * `hot_seat_mode` If set to true TMNFD settings are modified for TAS-HotSeat-Mode on startup
+  * `saved_max_players` When switching to TAS-HotSeat-Mode via TAS-CLI this attribute holds the previous configured max_players count from dedicated_cfg, as this is overwritten when enableing TAS-HotSeat-Mode. When switching back from TAS-HotSeat-Mode this attribute is used to restore max_players in dedicated_cfg
   * `s3` Section containing the S3 connection and configuration info. By default it is confugured to use the local, by TAS installer installed, minio but it is also possible to use an external S3 if you like.
   * `init` Internal marker if initial-startup configuration is done
 

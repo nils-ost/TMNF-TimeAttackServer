@@ -17,6 +17,8 @@ parser.add_argument('--generate_thumbnails', dest='generate_thumbnails', action=
 parser.add_argument('--upload_challenges', dest='upload_challenges', action='store_true', help='Uploads challenges files of active machsetting to S3 storage')
 parser.add_argument('--create_backup', dest='create_backup', action='store_true', help='Creates backup of tmnfd config and stores it to S3')
 parser.add_argument('--restore_backup', dest='restore_backup', action='store_true', help='Restores backup of tmnfd config from S3')
+parser.add_argument('--enable_hsm', dest='enable_hsm', action='store_true', help='Enables TAS-HotSeat-Mode')
+parser.add_argument('--disable_hsm', dest='disable_hsm', action='store_true', help='Disables TAS-HotSeat-Mode')
 args = parser.parse_args()
 
 
@@ -37,8 +39,20 @@ def init_config(force=True):
 
 def write_active():
     from helpers.config import get_config
-    ms = MatchSettings(get_config()['active_matchsetting'])
-    ms.save(activate=True)
+    config = get_config()
+    if not config['hot_seat_mode']:
+        ms = MatchSettings(config['active_matchsetting'])
+        ms.save(activate=True)
+    else:
+        dc = DedicatedCfg()
+        dc.set_max_players(count=1)
+        dc.save()
+        ms = MatchSettings(config['active_matchsetting'])
+        new_c = list()
+        new_c.append(ms.get_challenges()[0])
+        ms.replace_challenges(new_c)
+        ms.set_timeattack_limit(minutes=60)
+        ms.save(activate=True, keep_original=True)
 
 
 def list_challenges():
@@ -218,6 +232,29 @@ def restore_backup(s3=False):
         subprocess.call(f'rm -f {backup_file}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
+def enable_hotseat_mode():
+    from helpers.config import get_config, save_config
+    config = get_config()
+    if not config['hot_seat_mode']:
+        dc = DedicatedCfg()
+        config['saved_max_players'] = dc.get_max_players()
+        config['hot_seat_mode'] = True
+        save_config(config)
+        write_active()
+
+
+def disable_hotseat_mode():
+    from helpers.config import get_config, save_config
+    config = get_config()
+    if config['hot_seat_mode']:
+        dc = DedicatedCfg()
+        dc.set_max_players(count=config['saved_max_players'])
+        dc.save()
+        config['hot_seat_mode'] = False
+        save_config(config)
+        write_active()
+
+
 def open_matchsettings_editor():
     from helpers.matchsettingseditor import run as editor
     print('handing over to interactive MatchSettings Editor')
@@ -260,6 +297,12 @@ elif args.create_backup:
 
 elif args.restore_backup:
     restore_backup(s3=True)
+
+elif args.enable_hsm:
+    enable_hotseat_mode()
+
+elif args.disable_hsm:
+    disable_hotseat_mode()
 
 else:
     while True:

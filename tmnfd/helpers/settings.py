@@ -16,6 +16,12 @@ class DedicatedCfg():
     def get_name(self):
         return self.tree.find('server_options').find('name').text
 
+    def set_max_players(self, count=1):
+        self.tree.find('server_options').find('max_players').text = str(count)
+
+    def get_max_players(self):
+        return int(self.tree.find('server_options').find('max_players').text)
+
     def set_xmlrpc(self, port=5000, allowremote=True):
         self.tree.find('system_config').find('xmlrpc_port').text = str(port)
         self.tree.find('system_config').find('xmlrpc_allowremote').text = str(allowremote)
@@ -42,8 +48,9 @@ class MatchSettings():
     def delete(self):
         os.remove(os.path.join(get_config()['match_settings'], self.name))
 
-    def save(self, activate=False):
-        self.tree.write(os.path.join(get_config()['match_settings'], self.name), encoding='utf-8', xml_declaration=True, short_empty_elements=False)
+    def save(self, activate=False, keep_original=False):
+        if not keep_original:
+            self.tree.write(os.path.join(get_config()['match_settings'], self.name), encoding='utf-8', xml_declaration=True, short_empty_elements=False)
         if activate:
             self.is_active = True
             self.tree.write(get_config()['active_path'], encoding='utf-8', xml_declaration=True, short_empty_elements=False)
@@ -53,6 +60,17 @@ class MatchSettings():
 
     def get_random_map_order(self):
         return (True if self.tree.find('filter').find('random_map_order').text == '1' else False)
+
+    def set_timeattack_limit(self, seconds=None, minutes=None):
+        if minutes is not None:
+            seconds = minutes * 60
+        elif seconds is None:
+            seconds = 300
+        self.tree.find('gameinfos').find('timeattack_limit').text = str(seconds * 1000)
+
+    def get_timeattack_limit(self):
+        t = int(self.tree.find('gameinfos').find('timeattack_limit').text)
+        return int(t / 1000)
 
     def get_challenges(self):
         result = list()
