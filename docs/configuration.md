@@ -107,10 +107,11 @@ Following interactive functions are available:
   * `0 Force Config Init` Ignores the `init` attribute from `config.json` and writes mandatory attributes to `dedicated_cfg.txt`
   * `1 Write Active MatchSettings` Takes `active_matchsetting` config, copies it over to the `active_path` and applys TAS's requirements to it
   * `2 List Challenges` Searches for all available Challenges and prints them with their name, path and unique ID
-  * `3 Generate Thumbnails` Extracts missing thumbnails from the corresponding challange gbx and stores them in S3 to be accessed by TAS.
-  * `4 Upload Challenges` Places all challenge gbx files for active MatchSetting in S3 to be accessed by TAS.
-  * `5 Create Backup` Creates a Backup of the whole TMNFD configuration, including Challeges and MatchSettigns
-  * `6 Restore Backup` Restores a previously created Backup from a ZIP-File
+  * `3 Open MatchSettings Editor` Opens the interactive MatchSettings Editor, to dynamically create, delete and modify MatchSettings. For more information view the [MatchSettigsEditor](matchsettingseditor.md) docu.
+  * `4 Generate Thumbnails` Extracts missing thumbnails from the corresponding challange gbx and stores them in S3 to be accessed by TAS.
+  * `5 Upload Challenges` Places all challenge gbx files for active MatchSetting in S3 to be accessed by TAS.
+  * `6 Create Backup` Creates a Backup of the whole TMNFD configuration, including Challeges and MatchSettigns
+  * `7 Restore Backup` Restores a previously created Backup from a ZIP-File
 
 Note to the function `Write Active MatchSettings` is executed automatically when tmnfd daemon is started. So there is no need to execute it manually if you plan to restart tmnfd anyways.
 

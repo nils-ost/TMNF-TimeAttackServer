@@ -218,10 +218,18 @@ def restore_backup(s3=False):
         subprocess.call(f'rm -f {backup_file}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
+def open_matchsettings_editor():
+    from helpers.matchsettingseditor import run as editor
+    print('handing over to interactive MatchSettings Editor')
+    editor()
+    print('interactive MatchSettings Editor exited')
+
+
 commands = [
     ('Force Config Init', init_config),
     ('Write Active MatchSettings', write_active),
     ('List Challenges', list_challenges),
+    ('Open MatchSettings Editor', open_matchsettings_editor),
     ('Generate Thumbnails', generate_thumbnails),
     ('Upload Challenges', upload_challenges),
     ('Create Backup', create_backup),

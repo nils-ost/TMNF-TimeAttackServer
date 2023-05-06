@@ -3,6 +3,8 @@
 ## v1.2.0
 
   * TAS-BE: Added support for string versions in versioning-compares to support alpha and beta versions
+  * TMNFD-CLI: Added MatchSettings Editor as requested in [issue#2](https://github.com/nils-ost/TMNF-TimeAttackServer/issues/2)  
+  Also read [MatchSettings Editor Readme](docs/matchsettingseditor.md) to get started on the usage
 
 ## v1.1.2
 

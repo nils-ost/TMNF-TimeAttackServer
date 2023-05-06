@@ -137,7 +137,7 @@ def upload_tmnfd_files(c):
     for f in ['cli.py', 'requirements.txt']:
         print(f'Uploading {f}')
         c.put(os.path.join('tmnfd', f), remote=os.path.join(tmnfd_dir, f))
-    for d in ['tmnfd/helpers']:
+    for d in ['tmnfd/helpers', 'tmnfd/screens']:
         print(f'Uploading {d}')
         patchwork.transfers.rsync(c, d, tmnfd_dir, exclude=['*.pyc', '*__pycache__'], delete=True)
 
