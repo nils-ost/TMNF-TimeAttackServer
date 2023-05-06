@@ -1,5 +1,10 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.2.0
+
+  * TMNFD-CLI: Added MatchSettings Editor as requested in [issue#2](https://github.com/nils-ost/TMNF-TimeAttackServer/issues/2)  
+  Also read [MatchSettings Editor Readme](docs/matchsettingseditor.md) to get started on the usage
+
 ## v1.1.2
 
   * Installer: fabric-3.0.0 seems to have broken dependencies with patchwork; therefore the fabric version is now fixed to 2.7.1

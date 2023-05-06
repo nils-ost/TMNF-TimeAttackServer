@@ -152,7 +152,7 @@ class MainScreen(BaseScreen):
               m: change add mode to append or insert \n\
         <ENTER>: add marked challenge to MatchSettings \n\
          <ENTF>: remove marked Challenge from MatchSettings \n\
-   <UP>, <DOWN>: Navigate trough Lists \n\
+   <UP>, <DOWN>: Navigate through Lists \n\
 <LEFT>, <RIGHT>: Jump between Lists \n\
  <PAGE-UP/DOWN>: move marked Challenge in MatchSetting \n\n\
               ?: This Help\n\

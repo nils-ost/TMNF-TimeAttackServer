@@ -223,7 +223,6 @@ def open_matchsettings_editor():
     print('handing over to interactive MatchSettings Editor')
     editor()
     print('interactive MatchSettings Editor exited')
-    sys.exit(0)  # TODO: remove later on, just for testing
 
 
 commands = [
@@ -263,7 +262,6 @@ elif args.restore_backup:
     restore_backup(s3=True)
 
 else:
-    open_matchsettings_editor()  # TODO: remove later on, just for testing
     while True:
         index = 0
         for display, func in commands:

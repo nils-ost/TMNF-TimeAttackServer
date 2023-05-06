@@ -41,14 +41,14 @@ def ng_build(c):
 @task(pre=[ng_build], name='create-bundle')
 def create_bundle(c):
     c.run('rm -rf /tmp/tmnf-tas; mkdir -p /tmp/tmnf-tas/tas/backend; mkdir -p /tmp/tmnf-tas/tmnfd;')
-    c.run('rm -rf tas/backend/helpers/__pycache__; rm -rf tmnfd/helpers/__pycache__')
+    c.run('rm -rf tas/backend/helpers/__pycache__; rm -rf tmnfd/helpers/__pycache__; rm -rf tmnfd/screens/__pycache__')
     for item in ['tas/backend/timeAttackServer.py', 'tas/backend/cli.py', 'tas/backend/requirements.txt', 'tas/backend/helpers', 'tas/backend/static']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/tas/backend/')
     for item in ['/tmp/tmnf-tas/tas/backend/static/download']:
         c.run(f'rm -rf {item}', warn=True)
     for item in ['fabfile.py', 'install']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/')
-    for item in ['tmnfd/cli.py', 'tmnfd/requirements.txt', 'tmnfd/helpers']:
+    for item in ['tmnfd/cli.py', 'tmnfd/requirements.txt', 'tmnfd/helpers', 'tmnfd/screens']:
         c.run(f'cp -r {item} /tmp/tmnf-tas/tmnfd/')
     version = c.run('git describe')
     version = version.stdout.strip().replace('v', '', 1).rsplit('-', 1)[0].replace('-', '.')
