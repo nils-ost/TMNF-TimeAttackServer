@@ -80,3 +80,15 @@ def tmnfd_cli_restore_backup():
         return int(subprocess.call(
             f"ssh root@{config['host']} tmnfd --restore_backup", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
     return False
+
+
+def tmnfd_cli_hotseat_mode(enable=False):
+    global config
+    action = 'enable' if enable else 'disable'
+    cli_method = get_tmnfd_cli_method()
+    if cli_method == 'bash':
+        return int(subprocess.call(f'tmnfd --{action}_hsm', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    if cli_method == 'ssh':
+        return int(subprocess.call(
+            f"ssh root@{config['host']} tmnfd --{action}_hsm", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)) == 0
+    return False

@@ -170,9 +170,10 @@ TAS comes with it's own interactive CLI to configure different aspects during ru
   * `15 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
   * `16 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
   * `17 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
-  * `18 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
-  * `19 Create Backup` Creates a Backup of all Database, Settings, Configuration and the whole TMNFD to be restored at a later point.
-  * `20 Restore Backup` Restores a previously created Backup from a ZIP-File
+  * `18 Set TAS-HotSeat-Mode` Let's you enable or disable the TAS-HotSeat-Mode
+  * `19 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
+  * `20 Create Backup` Creates a Backup of all Database, Settings, Configuration and the whole TMNFD to be restored at a later point.
+  * `21 Restore Backup` Restores a previously created Backup from a ZIP-File
 
 And here we go with some notes to the functions:
 

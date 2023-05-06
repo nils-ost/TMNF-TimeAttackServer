@@ -8,11 +8,11 @@ from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
 from helpers.versioning import run as versioning_run
-from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get
+from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get, player_update
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
-from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild
+from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild, hotseat_player_name_get, hotseat_player_name_set
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
-from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version
+from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version, get_hotseat_mode
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.tmnfd import connect as start_tmnfd_connection
@@ -49,6 +49,7 @@ class Settings():
         result['provide_challenges'] = get_provide_challenges()
         result['start_time'] = get_start_time()
         result['end_time'] = get_end_time()
+        result['hotseat_mode'] = get_hotseat_mode()
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
         return result
 
@@ -155,6 +156,31 @@ class Players():
                     return {'s': s, 'm': 'IP allready assigned to different player'}
                 else:
                     return None
+            else:
+                return None
+        elif player_id == 'hotseat':
+            if cherrypy.request.method == 'OPTIONS':
+                cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
+            if cherrypy.request.method == 'GET':
+                if get_hotseat_mode():
+                    result = player_get(player_id=hotseat_player_name_get())
+                else:
+                    result = None
+                if result is not None:
+                    result['id'] = result.pop('_id', None)
+                    result['name'] = result.pop('nickname', None)
+                cherrypy.response.headers['Cache-Control'] = 'no-cache'
+                return result
+            elif cherrypy.request.method == 'PATCH':
+                if not get_hotseat_mode():
+                    return {'s': 1, 'm': 'TAS-HotSeat-Mode not enabled'}
+                player_name = cherrypy.request.json.get('name', None)
+                if player_name is None:
+                    return {'s': 2, 'm': 'name is missing in request'}
+                # TODO: validate player_name to be allowed characters
+                player_update(player_id=player_name, nickname=player_name, connected=True, connect_msg_send=False)
+                hotseat_player_name_set(name=player_name)
+                return {'s': 0, 'm': 'OK'}
             else:
                 return None
         else:

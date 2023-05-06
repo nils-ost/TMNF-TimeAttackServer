@@ -350,6 +350,17 @@ def ranking_clear():
     mongoDB().rankings.drop()
 
 
+def hotseat_player_name_set(name):
+    mongoDB().utils.replace_one({'_id': 'hotseat_player_name'}, {'_id': 'hotseat_player_name', 'value': name}, True)
+
+
+def hotseat_player_name_get():
+    hpm = mongoDB().utils.find_one({'_id': 'hotseat_player_name'})
+    if hpm is None:
+        return None
+    return hpm.get('value', None)
+
+
 """
 Settings
 """
@@ -505,6 +516,17 @@ def get_end_time():
     if r is None:
         return None
     return r.get('endts', None)
+
+
+def set_hotseat_mode(enabled=True):
+    mongoDB().settings.replace_one({'_id': 'hotseat_mode'}, {'_id': 'hotseat_mode', 'enabled': enabled}, True)
+
+
+def get_hotseat_mode():
+    r = mongoDB().settings.find_one({'_id': 'hotseat_mode'})
+    if r is None:
+        return False
+    return r.get('enabled', False)
 
 
 """

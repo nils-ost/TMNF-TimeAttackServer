@@ -136,7 +136,7 @@ JSON-Document with following Attributes:
 JSON-Document with following Attributes:
 
   * `s` *(integer)* Return state
-  * `m` *(string)* Message describeing state
+  * `m` *(string)* Message describing state
 
 ##### Possible States
 
@@ -146,6 +146,49 @@ Following states are possible to be returned:
   * `1` player_id is missing in request data or invalid player_id
   * `2` Player does allready have a IP assigned
   * `3` IP allready assigned to a different Player
+
+### GET /players/hotseat/
+
+Returns the current TAS-HotSeat-Mode Player (or `Null` if HotSeat-Mode is not enabled or no Player-name is set currently)
+
+#### Cache-Control
+
+  * `no-cache`
+
+#### Attributes
+
+  * `id` *(string)* Internally used unique ID of Player
+  * `name` *(string)* Ingame nickname of Player
+  * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
+  * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
+  * `ip` *(string)* IP of Players computer (should allways be `Null` in this case)
+
+### PATCH /players/hotseat/
+
+Assigns the, in payload, given name as the new hotseat Player.
+
+! Ensure the tailing /
+
+#### Request Data
+
+JSON-Document with following Attributes:
+
+  * `name` *(string)* Name of the new Player
+
+#### Response Data
+
+JSON-Document with following Attributes:
+
+  * `s` *(integer)* Return state
+  * `m` *(string)* Message describing state
+
+##### Possible States
+
+Following states are possible to be returned:
+
+  * `0` Operation executed as requested
+  * `1` The TAS-HotSeat-Mode not enabled
+  * `2` name is missing in request data
 
 
 ### GET /players/{player_id}/rankings/
@@ -301,6 +344,7 @@ Returns dynamic settings
   * `provide_challenges` *(boolean)* Indicates if challenge Gbx files are provided or not
   * `start_time` *(integer)* Timestamp at which the Tournament starts (or `Null` if not set)
   * `end_time` *(integer)* Timestamp at which the Tournament ends (or `Null` if not set)
+  * `hotseat_mode` *(boolean)* Indicates if server is running in TAS-HotSeat-Mode or not
 
 ### GET /stats/
 

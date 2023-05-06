@@ -470,6 +470,19 @@ def restoreBackup():
     print(f'Restored backup: {backup_file}')
 
 
+def hotSeatMode():
+    from helpers.mongodb import get_hotseat_mode, set_hotseat_mode
+    from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_hotseat_mode
+    hsm = get_hotseat_mode()
+    print(f"TAS-HotSeat-Mode is currently {'enabled' if hsm else 'disabled'}")
+    selection = input(f"{'disable' if hsm else 'enable'} it? (y/N): ").strip()
+    if selection == 'y':
+        set_hotseat_mode(not hsm)
+        if tmnfd_cli_test() is not None:
+            tmnfd_cli_hotseat_mode(not hsm)
+        print(f"TAS-HotSeat-Mode is now {'disabled' if hsm else 'enabled'}")
+
+
 def exit():
     sys.exit(0)
 
@@ -493,6 +506,7 @@ commands = [
     ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
     ('Merge Players', mergePlayers),
+    ('Set TAS-HotSeat-Mode', hotSeatMode),
     ('Clear DB', clearDB),
     ('Create Backup', createBackup),
     ('Restore Backup', restoreBackup),
