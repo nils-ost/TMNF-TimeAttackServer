@@ -8,6 +8,7 @@ from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_add, challenge_update, challenge_deactivate_all, challenge_id_get, challenge_id_set
 from helpers.mongodb import player_update, player_get, ranking_clear, ranking_rebuild, set_tmnfd_name, bestlaptime_get, clean_player_id
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, replay_add, get_start_time, get_end_time
+from helpers.mongodb import hotseat_player_name_get, get_hotseat_mode, hotseat_player_ingameid_set, hotseat_player_ingameid_get
 from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_replay, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
 import time
 import sys
@@ -57,7 +58,10 @@ def prepareChallenges(sender):
         for challenge in sender.callMethod('GetChallengeList', infos_returned, starting_index)[0]:
             challenge = sender.callMethod('GetChallengeInfo', challenge['FileName'])[0]
             rel_time = challenge.get(challenge_config['rel_time'], 30000)
-            time_limit = calcTimeLimit(rel_time, challenge['LapRace'], challenge['NbLaps'])
+            if get_hotseat_mode():
+                time_limit = 60 * 60 * 1000
+            else:
+                time_limit = calcTimeLimit(rel_time, challenge['LapRace'], challenge['NbLaps'])
             challenge_add(challenge['UId'], challenge['Name'], time_limit, rel_time, challenge['LapRace'])
             fetched_count += 1
         if fetched_count % infos_returned == 0:
@@ -103,7 +107,10 @@ def sendLaptimeNotice(sender, player_login, player_time=None):
     elif best['time'] is not None:
         msg = f"You drove {timetos(player_time)} thats {timetos(player_time - best['time'])} behind your PB ({timetos(best['time'])})"
     if msg:
-        sender.callMethod('SendNoticeToId', player['current_uid'], msg, 255, 20)
+        if get_hotseat_mode():
+            sender.callMethod('SendNoticeToId', hotseat_player_ingameid_get(), msg, 255, 20)
+        else:
+            sender.callMethod('SendNoticeToId', player['current_uid'], msg, 255, 20)
 
 
 def kickAllPlayers(sender, msg):
@@ -119,10 +126,19 @@ def worker_function(msg_queue, sender):
             current_challenge = challenge_id_get(current=True)
             if current_challenge is not None:
                 player_id, player_login, player_time = params
+                if get_hotseat_mode():
+                    player_login = hotseat_player_name_get()
+                    if player_login is None:
+                        continue
+                    player_db = player_get(clean_player_id(player_login))
+                    if player_db is not None and not player_db['connect_msg_send']:
+                        sendLaptimeNotice(sender, player_login)
+                        player_update(player_login, connect_msg_send=True)
                 ts, new_best = laptime_add(player_login, current_challenge, player_time)
                 if player_time > 0:
                     print(f'{player_login} drove: {player_time / 1000}')
                 sendLaptimeNotice(sender, player_login, player_time)
+                player_update(player_login)  # keep track of last update, even if player never reaches finish
                 if new_best and get_provide_replays():
                     player_hash = hashlib.md5(player_login.encode('utf-8')).hexdigest()
                     replay_name = f'{player_hash}_{ts}'
@@ -156,8 +172,9 @@ def worker_function(msg_queue, sender):
                 challenge_id_set(params[0]['UId'], current=True)
                 print(f"Challenge begin: {params[0]['Name']}")
                 prepareNextChallenge(sender)
-                for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
-                    sendLaptimeNotice(sender, p['Login'])
+                if not get_hotseat_mode():
+                    for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
+                        sendLaptimeNotice(sender, p['Login'])
 
         elif func == 'TrackMania.EndRace':
             if not isPreStart() and not isPostEnd():
@@ -167,8 +184,27 @@ def worker_function(msg_queue, sender):
                     ranking_rebuild(old_challenge)
                 print(f"Challenge end: {params[1]['Name']}")
 
+        elif func == 'TrackMania.PlayerCheckpoint':
+            if get_hotseat_mode():
+                player_login = hotseat_player_name_get()
+                if player_login is not None:
+                    player_db = player_get(clean_player_id(player_login))
+                    if player_db is not None and not player_db['connect_msg_send']:
+                        sendLaptimeNotice(sender, player_login)
+                        player_update(player_login, connect_msg_send=True)
+                    else:
+                        player_update(player_login)  # keep track of last update, even if player never reaches finish
+            else:
+                player_update(params[1])  # keep track of last update, even if player never reaches finish
+
         elif func == 'TrackMania.PlayerInfoChanged':
             player = params[0]
+            if get_hotseat_mode():
+                hotseat_player_ingameid_set(player['PlayerId'])
+                player['Login'] = hotseat_player_name_get()
+                player['NickName'] = player['Login']
+                if player['Login'] is None:
+                    continue
             player_update(player['Login'], player['NickName'], player['PlayerId'])
             player_db = player_get(clean_player_id(player['Login']))
             if player_db is not None and not player_db['connect_msg_send']:
@@ -176,12 +212,22 @@ def worker_function(msg_queue, sender):
                 player_update(player['Login'], connect_msg_send=True)
 
         elif func == 'TrackMania.PlayerConnect':
-            print(f'{params[0]} connected')
-            player_update(params[0], connected=True, connect_msg_send=False)
+            player_login = params[0]
+            if get_hotseat_mode():
+                player_login = hotseat_player_name_get()
+                if player_login is None:
+                    continue
+            print(f'{player_login} connected')
+            player_update(player_login, connected=True, connect_msg_send=False)
 
         elif func == 'TrackMania.PlayerDisconnect':
-            print(f'{params[0]} disconnected')
-            player_update(params[0], connected=False)
+            player_login = params[0]
+            if get_hotseat_mode():
+                player_login = hotseat_player_name_get()
+                if player_login is None:
+                    continue
+            print(f'{player_login} disconnected')
+            player_update(player_login, connected=False)
 
 
 def receiver_function(msg_queue, receiver):

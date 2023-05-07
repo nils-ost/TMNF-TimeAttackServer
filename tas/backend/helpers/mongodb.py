@@ -361,6 +361,17 @@ def hotseat_player_name_get():
     return hpm.get('value', None)
 
 
+def hotseat_player_ingameid_set(pid):
+    mongoDB().utils.replace_one({'_id': 'hotseat_player_ingameid'}, {'_id': 'hotseat_player_ingameid', 'value': pid}, True)
+
+
+def hotseat_player_ingameid_get():
+    hpm = mongoDB().utils.find_one({'_id': 'hotseat_player_ingameid'})
+    if hpm is None:
+        return None
+    return hpm.get('value', None)
+
+
 """
 Settings
 """
