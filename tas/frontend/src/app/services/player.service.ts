@@ -54,4 +54,17 @@ export class PlayerService {
     };
     return this.http.patch<any>(this.playerUrl + 'me/', {'player_id': player_id}, httpOptions).pipe(catchError(handleError));
   }
+
+  public getPlayerHotseat(): Observable<Player | null> {
+    return this.http.get<Player | null>(this.playerUrl + 'hotseat/').pipe(catchError(handleError), map((player) => this.cleanPlayerName(player)));
+  }
+
+  public setPlayerHotseat(player_name: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this.http.patch<any>(this.playerUrl + 'hotseat/', {'name': player_name}, httpOptions).pipe(catchError(handleError));
+  }
 }

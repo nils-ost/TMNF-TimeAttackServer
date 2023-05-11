@@ -11,4 +11,5 @@ export interface Settings {
     provide_challenges: boolean;
     start_time: number | null;
     end_time: number | null;
+    hotseat_mode: boolean;
 }

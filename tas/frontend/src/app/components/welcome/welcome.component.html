@@ -59,12 +59,20 @@
         </div>
 
         <div class="card-container flex">
-            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/playerhud" routerLinkActive="active" pRipple>
+            <a class="card" *ngIf="!settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/playerhud" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-user"></i>
                 </div>
                 <div i18n="Text of link to PlayerHUD screen@@PlayerHUDScreenLinkText">
                     PlayerHUD
+                </div>
+            </a>
+            <a class="card" *ngIf="settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/hotseat-name" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-user"></i>
+                </div>
+                <div i18n="Text of link to HotseatName screen@@HotseatNameScreenLinkText">
+                    Hotseat
                 </div>
             </a>
             <a class="card" *ngIf="start_countdown" routerLink="/start-countdown" routerLinkActive="active" pRipple>

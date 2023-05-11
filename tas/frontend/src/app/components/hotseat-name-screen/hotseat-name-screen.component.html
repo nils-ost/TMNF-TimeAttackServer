@@ -1,0 +1,8 @@
+<div *ngIf="!playerHotseat">
+    No Playername set, all Laptimes will be lost.
+</div>
+<div *ngIf="playerHotseat">
+    All upcoming Laptimes will be stored in the name of: {{ playerHotseat.name }}
+</div>
+<input type="text" pInputText [(ngModel)]="newPlayerName" autofocus>
+<button pButton type="button" label="Submit" (click)="sendPlayerHotseat()"></button>

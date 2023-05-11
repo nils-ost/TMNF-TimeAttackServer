@@ -35,6 +35,7 @@ import { PlayerhudCurrentListComponent } from './components/playerhud-current-li
 import { PlayerhudGlobalListComponent } from './components/playerhud-global-list/playerhud-global-list.component';
 import { StartCountdownComponent } from './components/start-countdown/start-countdown.component';
 import { EndCountdownComponent } from './components/end-countdown/end-countdown.component';
+import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hotseat-name-screen.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { EndCountdownComponent } from './components/end-countdown/end-countdown.
     PlayerhudCurrentListComponent,
     PlayerhudGlobalListComponent,
     StartCountdownComponent,
-    EndCountdownComponent
+    EndCountdownComponent,
+    HotseatNameScreenComponent
   ],
   imports: [
     BrowserModule,
