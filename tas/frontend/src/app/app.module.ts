@@ -15,6 +15,7 @@ import { MessageModule } from 'primeng/message';
 import { ImageModule } from 'primeng/image';
 import { ListboxModule } from 'primeng/listbox';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -36,6 +37,7 @@ import { PlayerhudGlobalListComponent } from './components/playerhud-global-list
 import { StartCountdownComponent } from './components/start-countdown/start-countdown.component';
 import { EndCountdownComponent } from './components/end-countdown/end-countdown.component';
 import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hotseat-name-screen.component';
+import { AutoFocusDirective } from './directives/auto-focus.directive';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,8 @@ import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hot
     PlayerhudGlobalListComponent,
     StartCountdownComponent,
     EndCountdownComponent,
-    HotseatNameScreenComponent
+    HotseatNameScreenComponent,
+    AutoFocusDirective
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hot
     MessageModule,
     ImageModule,
     ListboxModule,
-    TooltipModule
+    TooltipModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

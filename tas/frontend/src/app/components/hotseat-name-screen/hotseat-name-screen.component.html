@@ -1,8 +1,36 @@
-<div *ngIf="!playerHotseat">
-    No Playername set, all Laptimes will be lost.
+<div id="top-cards">
+    <div id="hotseat-name">
+        <div class="row-box" i18n="Title of the change playername box@@hotseatTitle">This is HotSeat-Mode</div>
+        <div class="row-box" i18n="Description how to change playername@@hotseatChangePlayernameInfo">Type in your Playername in the box below and hit enter to start playing</div>
+        <div class="row-box alert-box" *ngIf="!playerHotseat" i18n="Warning indicating no playername is set@@hotseatWarningNoPlayername">Currently no Playername is set, all Laptimes will be lost!</div>
+        <div class="row-box"><input type="text" pInputText [(ngModel)]="newPlayerName" (keyup.enter)="sendPlayerHotseat()" autofocus></div>
+    </div>
 </div>
-<div *ngIf="playerHotseat">
-    All upcoming Laptimes will be stored in the name of: {{ playerHotseat.name }}
+
+<div id="info-cards" *ngIf="playerHotseat">
+    <div id="player-name" class="info-card">
+        <div class="title" i18n="Title of infobox as which player one is driving@@hotseatDrivingAs">Driving as</div>
+        <div class="name">
+            {{ playerHotseat.name }}
+        </div>
+        <div class="appendix">
+            <ng-container i18n="Info where the hotseat player name can be changed@@changeHotseatName">Change in the box above</ng-container>
+        </div>
+    </div>
+
+    <div id="challenge-rank" class="info-card rank-short">
+        <div class="title" i18n="Challenge Rank Title@@titleChallengeRank">Challenge Rank</div>
+        <div class="rank">
+            {{ meChallengeRank ? meChallengeRank : '---' }}
+        </div>
+        <div class="diff-{{ (meChallengeRank || 0) === 1 ? 'pos' : 'neg' }}">
+            {{ meChallengeDiff ? meChallengeDiff / 1000 : '---' }}
+        </div>
+    </div>
 </div>
-<input type="text" pInputText [(ngModel)]="newPlayerName" autofocus>
-<button pButton type="button" label="Submit" (click)="sendPlayerHotseat()"></button>
+
+<div id="ranking-card" *ngIf="playerHotseat">
+    <div class="ranking-table">
+        <app-playerhud-current-list [challengeRankings]="challengeRankings" [players]="players" [selectedPlayer]="playerHotseat" [additionalTop]="4" [additionalBottom]="3"></app-playerhud-current-list>
+    </div>
+</div>

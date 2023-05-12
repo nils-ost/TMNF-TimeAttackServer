@@ -19,6 +19,8 @@ export class PlayerhudCurrentListComponent implements OnInit, OnChanges {
   @Input() challengeRankings!: ChallengeRanking[];
   @Input() players!: Player[];
   @Input() selectedPlayer!: Player;
+  @Input() additionalTop: number = 2;
+  @Input() additionalBottom: number = 2;
   rankingDisplay: RankingDisplay[] = [];
 
   constructor() { }
@@ -36,21 +38,21 @@ export class PlayerhudCurrentListComponent implements OnInit, OnChanges {
     let selectedCR: ChallengeRanking | null = this.getChallengeRankingByPlayer(this.selectedPlayer.id);
     if (selectedCR) {
       crs.push(selectedCR);
-      if (selectedCR.rank >= 4) {
+      if (selectedCR.rank >= (this.additionalTop + 2)) {
         let cr: ChallengeRanking | null = this.getChallengeRankingByRank(1);
         if (cr) crs.push(cr);
       }
-      for (let i = selectedCR.rank - 1; i > selectedCR.rank - 3; i--) {
+      for (let i = selectedCR.rank - 1; i > selectedCR.rank - (this.additionalTop + 1); i--) {
         let cr: ChallengeRanking | null = this.getChallengeRankingByRank(i);
         if (cr) crs.push(cr);
       }
-      for (let i = selectedCR.rank + 1; i < selectedCR.rank + 3; i++) {
+      for (let i = selectedCR.rank + 1; i < selectedCR.rank + (this.additionalBottom + 1); i++) {
         let cr: ChallengeRanking | null = this.getChallengeRankingByRank(i);
         if (cr) crs.push(cr);
       }
     }
     else {
-      for(let i = 1; i < 4; i++) {
+      for(let i = 1; i < (this.additionalTop + 2); i++) {
         let cr: ChallengeRanking | null = this.getChallengeRankingByRank(i);
         if (cr) crs.push(cr);
       }

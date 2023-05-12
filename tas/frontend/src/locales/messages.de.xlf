@@ -82,7 +82,7 @@
         <target state="signed-off">Server Admin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Server Admin</note>
       </trans-unit>
@@ -91,7 +91,7 @@
         <target state="signed-off">Anzahl Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Count</note>
       </trans-unit>
@@ -100,7 +100,7 @@
         <target state="signed-off">Summe Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Sum</note>
       </trans-unit>
@@ -109,7 +109,7 @@
         <target state="signed-off">Aktive Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Active Players</note>
       </trans-unit>
@@ -118,7 +118,7 @@
         <target state="signed-off">Anzahl Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Total Players</note>
       </trans-unit>
@@ -127,7 +127,7 @@
         <target state="signed-off">Servername im Spiel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Ingame Server Name</note>
       </trans-unit>
@@ -136,7 +136,7 @@
         <target state="signed-off">Strecken insgesamt gesehen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
       </trans-unit>
@@ -145,7 +145,7 @@
         <target state="signed-off">Neuste kompatible Spieleversion herunterladen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>
@@ -772,6 +772,10 @@
         <source>Challenge Rank</source>
         <target state="signed-off">Strecken Platzierung</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
@@ -934,7 +938,7 @@
         <target state="signed-off">Start Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Text of link to start-countdown screen</note>
       </trans-unit>
@@ -943,9 +947,63 @@
         <target state="signed-off">Ende Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">Text of link to end-countdown screen</note>
+      </trans-unit>
+      <trans-unit id="hotseatDrivingAs" datatype="html">
+        <source>Driving as</source>
+        <target state="signed-off">Du fährst als</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Title of infobox as which player one is driving</note>
+      </trans-unit>
+      <trans-unit id="changeHotseatName" datatype="html">
+        <source>Change in the box above</source>
+        <target state="signed-off">Ändern oben in der box</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Info where the hotseat player name can be changed</note>
+      </trans-unit>
+      <trans-unit id="HotseatNameScreenLinkText" datatype="html">
+        <source>Hotseat</source>
+        <target state="signed-off">Hotseat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to HotseatName screen</note>
+      </trans-unit>
+      <trans-unit id="hotseatTitle" datatype="html">
+        <source>This is HotSeat-Mode</source>
+        <target state="signed-off">Du befindest dich im HotSeat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">Title of the change playername box</note>
+      </trans-unit>
+      <trans-unit id="hotseatChangePlayernameInfo" datatype="html">
+        <source>Type in your Playername in the box below and hit enter to start playing</source>
+        <target state="signed-off">Gibt unten in der Box deinen Spielernamen und bestätige mit Enter um mit dem Spielen los zu legen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Description how to change playername</note>
+      </trans-unit>
+      <trans-unit id="hotseatWarningNoPlayername" datatype="html">
+        <source>Currently no Playername is set, all Laptimes will be lost!</source>
+        <target state="signed-off">Aktuell ist kein Spielername gesetzt, alle Rundenzeiten werden verloren gehen!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Warning indicating no playername is set</note>
       </trans-unit>
     </body>
   </file>

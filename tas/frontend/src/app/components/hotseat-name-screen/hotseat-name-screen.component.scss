@@ -1,5 +1,135 @@
-:host ::ng-deep div {
+:host ::ng-deep .playerInfo {
     background-color: var(--surface-card);
     font-family: var(--font-family);
     color: var(--text-color);
+}
+
+:host ::ng-deep #top-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    #hotseat-name {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 0.5rem;
+        background-color: var(--surface-card);
+        font-family: var(--font-family);
+        color: var(--text-color);
+        margin: 0;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        margin-bottom: 1rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        width: 27rem;
+
+        .row-box {
+            max-width: 20rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-box {
+            color: #f03e3e;
+        }
+    }
+}
+
+:host ::ng-deep #info-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .info-card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 0.5rem;
+        background-color: var(--surface-card);
+        font-family: var(--font-family);
+        color: var(--text-color);
+        margin: 0;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        width: 13rem;
+        height: 13rem;
+
+        .title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 1.5rem;
+        }
+    }
+
+    #player-name {
+        .name {
+            font-size: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .appendix {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    .rank-short {
+        justify-content: center;
+    
+        .rank {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5em;
+            flex-grow: 1;
+        }
+    
+        .diff-neg {
+            display: flex;
+            justify-content: center;
+            color: #f03e3e;
+        }
+
+        .diff-pos {
+            display: flex;
+            justify-content: center;
+            color: #66d9e8;
+        }
+    }
+}
+
+:host ::ng-deep #ranking-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .ranking-table {
+        width: 28rem;
+        margin-top: 1rem;
+    }
+}
+
+:host ::ng-deep .ranking-table-style {
+    padding: 0;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--surface-card);
+    
+        tr, tr th, .p-datatable-header {
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        tr:last-child {
+            td {
+                border-bottom: 0;
+            }
+        }
 }
