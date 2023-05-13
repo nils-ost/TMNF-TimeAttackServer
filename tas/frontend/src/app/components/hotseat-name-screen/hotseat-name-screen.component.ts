@@ -8,6 +8,8 @@ import { ChallengeService } from 'src/app/services/challenge.service';
 import { Challenge } from 'src/app/interfaces/challenge';
 import { RankingService } from 'src/app/services/ranking.service';
 import { ChallengeRanking } from 'src/app/interfaces/ranking';
+import { Router } from "@angular/router";
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-hotseat-name-screen',
@@ -30,15 +32,36 @@ export class HotseatNameScreenComponent implements OnInit, OnDestroy {
   challengeRankings: ChallengeRanking[] = [];
   meChallengeRank: number | undefined;
   meChallengeDiff: number | undefined;
+  speeddail_menu: MenuItem[] = [];
 
   constructor(
     private playerService: PlayerService,
     private settingsService: SettingsService,
     private challengeService: ChallengeService,
-    private rankingService: RankingService
+    private rankingService: RankingService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.speeddail_menu = [
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Players Screen@@LinkTextOpenPlayersScreen:Open Players Screen`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-users',
+        routerLink: ['/players']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Home Screen@@LinkTextOpenHomeScreen:Open Home Screen`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-home',
+        routerLink: ['/']
+      }
+    ]
+
     this.refreshSettings();
     this.refreshPlayerHotseat();
     this.refreshRankings();
@@ -55,6 +78,7 @@ export class HotseatNameScreenComponent implements OnInit, OnDestroy {
       .subscribe(
         (settings: Settings) => {
           this.settings = settings
+          if (!settings.hotseat_mode) this.router.navigate(['/playerhud']);
         }
       );
   }

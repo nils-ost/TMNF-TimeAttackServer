@@ -9,6 +9,7 @@ import { ChallengeService } from '../../services/challenge.service';
 import { SettingsService } from '../../services/settings.service';
 import { Subscription, timer, Subject } from 'rxjs';
 import { MenuItem } from 'primeng/api';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-wallboard',
@@ -62,7 +63,8 @@ export class WallboardComponent implements OnInit, OnDestroy {
     private playerService: PlayerService,
     private rankingService: RankingService,
     private challengeService: ChallengeService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -221,6 +223,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
         (s: Settings) => {
           this.settings = s;
           if (s.end_time) this.time_left = s.end_time - Math.floor(Date.now()/1000);
+          if (s.hotseat_mode) this.router.navigate(['/hotseat-wallboard']);
         }
       );
   }

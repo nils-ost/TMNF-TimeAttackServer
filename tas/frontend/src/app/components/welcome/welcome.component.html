@@ -26,12 +26,28 @@
         </div>
         
         <div class="card-container flex">
-            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/wallboard" routerLinkActive="active" pRipple>
+            <a class="card" *ngIf="!settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/wallboard" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-window-maximize"></i>
                 </div>
                 <div i18n="Text of link to wallboard screen@@WallboardScreenLinkText">
                     Wallboard
+                </div>
+            </a>
+            <a class="card" *ngIf="settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/hotseat-wallboard" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-window-maximize"></i>
+                </div>
+                <div i18n="Text of link to wallboard screen@@WallboardScreenLinkText">
+                    Wallboard
+                </div>
+            </a>
+            <a class="card" *ngIf="settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/hotseat-name" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-user"></i>
+                </div>
+                <div i18n="Text of link to HotseatName screen@@HotseatNameScreenLinkText">
+                    Hotseat
                 </div>
             </a>
             <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/players" routerLinkActive="active" pRipple>
@@ -42,7 +58,7 @@
                     Players
                 </div>
             </a>
-            <a class="card" [ngClass]="{'disabled': start_countdown}" routerLink="/challenges" routerLinkActive="active" pRipple>
+            <a class="card" *ngIf="!settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/challenges" routerLinkActive="active" pRipple>
                 <div class="icon">
                     <i class="pi pi-list"></i>
                 </div>
@@ -53,7 +69,7 @@
         </div>
 
         <div class="connector-container flex">
-            <div class="connector"></div>
+            <div class="connector" *ngIf="!settings?.hotseat_mode"></div>
             <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
         </div>
@@ -65,14 +81,6 @@
                 </div>
                 <div i18n="Text of link to PlayerHUD screen@@PlayerHUDScreenLinkText">
                     PlayerHUD
-                </div>
-            </a>
-            <a class="card" *ngIf="settings?.hotseat_mode" [ngClass]="{'disabled': start_countdown}" routerLink="/hotseat-name" routerLinkActive="active" pRipple>
-                <div class="icon">
-                    <i class="pi pi-user"></i>
-                </div>
-                <div i18n="Text of link to HotseatName screen@@HotseatNameScreenLinkText">
-                    Hotseat
                 </div>
             </a>
             <a class="card" *ngIf="start_countdown" routerLink="/start-countdown" routerLinkActive="active" pRipple>
@@ -110,15 +118,21 @@
         </div>
 
         <div class="connector-container flex">
-            <div class="connector"></div>
+            <div class="connector" *ngIf="!settings?.hotseat_mode"></div>
             <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+        </div>
+
+        <div class="connector-container flex" *ngIf="settings?.hotseat_mode && !(start_countdown || end_countdown) && !(uri.startsWith('/en/') || uri.startsWith('/de/'))">
+            <div class="connector"></div>
+            <div class="connector"></div>
+            <div class="connector"></div>
         </div>
 
         <div class="info-container">
             <div class="info-row">
                 <div class="settings">
-                    <p><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
                     <p><ng-container i18n="Label prefixing Server Admin@@LabelServerAdmin">Server Admin</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
                 </div>
             </div>
@@ -127,16 +141,16 @@
                 <div class="stats">
                     <p><ng-container i18n="Label prefixing Laptimes Count@@LabelLaptimesCount">Laptimes Count</ng-container>: {{ stats?.laptimes_count }}</p>
                     <p><ng-container i18n="Label prefixing Laptimes Sum@@LabelLaptimesSum">Laptimes Sum</ng-container>: {{ laptimes_sum_h }}h {{ laptimes_sum_m }}m {{ laptimes_sum_s }}s</p>
-                    <p><ng-container i18n="Label prefixing Challenges Total Seen Count@@LabelChallengesTotalSeenCount">Challenges Total Seen</ng-container>: {{ stats?.challenges_total_seen_count }}</p>
+                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Challenges Total Seen Count@@LabelChallengesTotalSeenCount">Challenges Total Seen</ng-container>: {{ stats?.challenges_total_seen_count }}</p>
                 </div>
 
                 <div class="stats">
                     <p><ng-container i18n="Label prefixing Total Players@@LabelTotalPlayers">Total Players</ng-container>: {{ stats?.total_players }}</p>
-                    <p><ng-container i18n="Label prefixing Active Players@@LabelActivePlayers">Active Players</ng-container>: {{ stats?.active_players }}</p>
+                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Active Players@@LabelActivePlayers">Active Players</ng-container>: {{ stats?.active_players }}</p>
                 </div>
             </div>
 
-            <div class="info-row" *ngIf="client_download_url">
+            <div class="info-row" *ngIf="client_download_url && !settings?.hotseat_mode">
                 <div class="settings">
                     <p><a href="{{ client_download_url }}" i18n="Label prefixing TMNF Client Download URL@@LabelClientDownloadURL">Download latest compatible Client</a></p>
                 </div>

@@ -9,6 +9,7 @@ import { RankingService } from '../../services/ranking.service';
 import { ChallengeService } from '../../services/challenge.service';
 import { Subscription, timer, Subject } from 'rxjs';
 import { MenuItem } from 'primeng/api';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-playerhud',
@@ -69,7 +70,8 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
     private playerService: PlayerService,
     private settingsService: SettingsService,
     private rankingService: RankingService,
-    private challengeService: ChallengeService
+    private challengeService: ChallengeService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -131,6 +133,7 @@ export class PlayerhudComponent implements OnInit, OnDestroy {
       .subscribe(
         (settings: Settings) => {
           this.settings = settings
+          if (settings.hotseat_mode) this.router.navigate(['/hotseat-name']);
         }
       );
   }

@@ -8,6 +8,7 @@ import { PlayerhudComponent } from './components/playerhud/playerhud.component';
 import { StartCountdownComponent } from './components/start-countdown/start-countdown.component';
 import { EndCountdownComponent } from './components/end-countdown/end-countdown.component';
 import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hotseat-name-screen.component';
+import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-screen/hotseat-wallboard-screen.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'start-countdown', component: StartCountdownComponent },
   { path: 'end-countdown', component: EndCountdownComponent },
   { path: 'hotseat-name', component: HotseatNameScreenComponent },
+  { path: 'hotseat-wallboard', component: HotseatWallboardScreenComponent },
   { path: '**', component: WelcomeComponent },
 ];
 

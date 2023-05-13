@@ -38,6 +38,7 @@ import { StartCountdownComponent } from './components/start-countdown/start-coun
 import { EndCountdownComponent } from './components/end-countdown/end-countdown.component';
 import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hotseat-name-screen.component';
 import { AutoFocusDirective } from './directives/auto-focus.directive';
+import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-screen/hotseat-wallboard-screen.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { AutoFocusDirective } from './directives/auto-focus.directive';
     StartCountdownComponent,
     EndCountdownComponent,
     HotseatNameScreenComponent,
-    AutoFocusDirective
+    AutoFocusDirective,
+    HotseatWallboardScreenComponent
   ],
   imports: [
     BrowserModule,

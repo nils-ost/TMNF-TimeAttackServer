@@ -9,6 +9,7 @@ import { ChallengeRanking } from '../../interfaces/ranking';
 import { PlayerChallengeLaptime } from '../../interfaces/laptime';
 import { Player } from '../../interfaces/player';
 import { MenuItem } from 'primeng/api';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-challenges',
@@ -31,7 +32,8 @@ export class ChallengesComponent implements OnInit {
     private challengeService: ChallengeService,
     private rankingService: RankingService,
     private playerService: PlayerService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -168,6 +170,7 @@ export class ChallengesComponent implements OnInit {
         (settings: Settings) => {
           this.settings = settings;
           this.provide_replays = settings.provide_replays;
+          if (settings.hotseat_mode) this.router.navigate(['/players']);
         }
       );
   }
