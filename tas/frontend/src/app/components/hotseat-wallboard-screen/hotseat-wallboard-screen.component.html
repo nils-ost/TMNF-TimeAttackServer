@@ -1,1 +1,6 @@
-<p>hotseat-wallboard-screen works!</p>
+<div class="rankings-container">
+    <div class="ranking-challenge" *ngFor="let item of [].constructor(numRows); let i = index">
+        <div class="challenge-connector"></div>
+        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings" [currentChallenge]="c_current" [nextChallenge]="c_current"></app-ranking-challenge>
+    </div>
+</div>
