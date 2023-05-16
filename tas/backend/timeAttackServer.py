@@ -11,7 +11,7 @@ from helpers.versioning import run as versioning_run
 from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get, player_update
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild, hotseat_player_name_get, hotseat_player_name_set
-from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_tmnfd_name
+from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_wallboard_tables_max, get_tmnfd_name
 from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version, get_hotseat_mode
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
@@ -40,6 +40,7 @@ class Settings():
         result['version'] = get_version()
         result['wallboard_players_max'] = get_wallboard_players_max()
         result['wallboard_challenges_max'] = get_wallboard_challenges_max()
+        result['wallboard_tables_max'] = get_wallboard_tables_max()
         result['tmnfd_name'] = get_tmnfd_name()
         result['display_self_url'] = get_display_self_url()
         result['display_admin'] = get_display_admin()

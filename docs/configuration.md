@@ -158,22 +158,23 @@ TAS comes with it's own interactive CLI to configure different aspects during ru
   * `3 Restart Stack` Restarts all services of TAS-Stack
   * `4 Set Wallboard Players Max` Sets the maximum amount of players displayed in the tables `Current Challenge` and `Global Ranking` on the wallboard screen. This can be used to utilize the maximum of the available space but avoid scrolling.
   * `5 Set Wallboard Challenges Max` Sets the maximum amount of challenges displayed in `Challenge Schedule` on wallboard screen. This can be used to optimize `Challenge Schedule` to the available horizontal space.
-  * `6 Set Display Admin` With this option a responsible persion for this server can be named, that is displayed in different locations in the frontend.
-  * `7 Set Display Self URL` This defines the URL that is displayed in the info-box on wallboard screen to where the players can connect to access the frontend them-selfs.
-  * `8 Set Client Download URL` If you like to provide a download URL for the latest version of TMNF client on the welcome screen, this is the place to set this URL. With this option the download link can also be disabled.
-  * `9 Set Provide Replays` Enables (or disables) function to automatically store Players best laptimes in S3 and provides them for download on frontend.
-  * `10 Set Provide Thumbnails` Enables (or disables) Thumbnails on frontend.
-  * `11 Set Provide Challenges` Enables (or disables) the option to download challenge Gbx files on frontend.
-  * `12 Set Start Time` Let's you set (or delete) the time the Tournament starts. (Before this time the Gameserver get locked, that no Player can join)
-  * `13 Set End Time` Let's you set (or delete) the time the Tournament ends. (After this time the Gameserver gets locked and all Players are kicked)
-  * `14 Download/Provide TMNF Client` This function can be used to download the latest version of TMNF Client, store it locally and set the `Client Download URL` in one go.
-  * `15 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
-  * `16 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
-  * `17 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
-  * `18 Set TAS-HotSeat-Mode` Let's you enable or disable the TAS-HotSeat-Mode
-  * `19 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
-  * `20 Create Backup` Creates a Backup of all Database, Settings, Configuration and the whole TMNFD to be restored at a later point.
-  * `21 Restore Backup` Restores a previously created Backup from a ZIP-File
+  * `6 Set Wallboard Tables Max` Sets the maximum amount of tables, displaying Player records, that are allowed side-by-side on the `Hotseat Wallboard Screen`. Therefore multiply `Wallboard Players Max` with `Wallboard Tables Max` to get the maximum amount of Players displayed simultaniously on `Hotseat Wallboard Screen`.
+  * `7 Set Display Admin` With this option a responsible persion for this server can be named, that is displayed in different locations in the frontend.
+  * `8 Set Display Self URL` This defines the URL that is displayed in the info-box on wallboard screen to where the players can connect to access the frontend them-selfs.
+  * `9 Set Client Download URL` If you like to provide a download URL for the latest version of TMNF client on the welcome screen, this is the place to set this URL. With this option the download link can also be disabled.
+  * `10 Set Provide Replays` Enables (or disables) function to automatically store Players best laptimes in S3 and provides them for download on frontend.
+  * `11 Set Provide Thumbnails` Enables (or disables) Thumbnails on frontend.
+  * `12 Set Provide Challenges` Enables (or disables) the option to download challenge Gbx files on frontend.
+  * `13 Set Start Time` Let's you set (or delete) the time the Tournament starts. (Before this time the Gameserver get locked, that no Player can join)
+  * `14 Set End Time` Let's you set (or delete) the time the Tournament ends. (After this time the Gameserver gets locked and all Players are kicked)
+  * `15 Download/Provide TMNF Client` This function can be used to download the latest version of TMNF Client, store it locally and set the `Client Download URL` in one go.
+  * `16 Next Challenge` This immediately starts the next challenge (or a specific one if specified in the dialog).
+  * `17 Clear Player's IP` With this function the IP of a player can be reset, to make the player selectable again in PlayerHUD.
+  * `18 Merge Players` This option enables you to merge the laptimes of two players into one account. This can't be undone and might lead to dataloss.
+  * `19 Set TAS-HotSeat-Mode` Let's you enable or disable the TAS-HotSeat-Mode
+  * `20 Clear DB` This function wipes the whole database, this can't be undone! Also it's highly recommended to first stop tmnf-tas service before executing this function.
+  * `21 Create Backup` Creates a Backup of all Database, Settings, Configuration and the whole TMNFD to be restored at a later point.
+  * `22 Restore Backup` Restores a previously created Backup from a ZIP-File
 
 And here we go with some notes to the functions:
 

@@ -1,6 +1,6 @@
-<div class="rankings-container">
-    <div class="ranking-challenge" *ngFor="let item of [].constructor(numRows); let i = index">
+<div class="rankings-container" *ngIf="settings">
+    <div class="ranking-challenge" *ngFor="let item of [].constructor(numTables); let i = index">
         <div class="challenge-connector"></div>
-        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings" [currentChallenge]="c_current" [nextChallenge]="c_current"></app-ranking-challenge>
+        <app-hotseat-ranking-challenge [players]="players" [challengeRankings]="challengeRankings" [pageSize]="settings.wallboard_players_max" [pageNum]="i + 1"></app-hotseat-ranking-challenge>
     </div>
 </div>

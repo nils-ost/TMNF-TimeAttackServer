@@ -39,6 +39,7 @@ import { EndCountdownComponent } from './components/end-countdown/end-countdown.
 import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hotseat-name-screen.component';
 import { AutoFocusDirective } from './directives/auto-focus.directive';
 import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-screen/hotseat-wallboard-screen.component';
+import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-challenge/hotseat-ranking-challenge.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-
     EndCountdownComponent,
     HotseatNameScreenComponent,
     AutoFocusDirective,
-    HotseatWallboardScreenComponent
+    HotseatWallboardScreenComponent,
+    HotseatRankingChallengeComponent
   ],
   imports: [
     BrowserModule,

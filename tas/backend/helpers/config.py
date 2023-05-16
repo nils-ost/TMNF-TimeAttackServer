@@ -37,7 +37,8 @@ config = {
     },
     'util': {
         'wallboard_players_max_default': 10,
-        'wallboard_challenges_max_default': 8
+        'wallboard_challenges_max_default': 8,
+        'wallboard_tables_max_default': 3
     }
 }
 
@@ -46,7 +47,9 @@ def reload_config():
     global config
     if os.path.isfile('config.json'):
         with open('config.json', 'r') as f:
-            config.update(json.load(f))
+            fconfig = json.load(f)
+        for k in fconfig.keys():
+            config[k].update(fconfig[k])
     else:
         with open('config.json', 'w') as f:
             f.write(json.dumps(config, indent=4))

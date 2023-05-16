@@ -44,6 +44,14 @@ def wallboardChallengesMax():
         set_wallboard_challenges_max(int(selection))
 
 
+def wallboardTablesMax():
+    from helpers.mongodb import get_wallboard_tables_max, set_wallboard_tables_max
+    current = get_wallboard_tables_max()
+    selection = input(f'\nSet new wallboard tables max ({current}): ')
+    if not selection == '' and not int(selection) == current and int(selection) > 0:
+        set_wallboard_tables_max(int(selection))
+
+
 def displayAdmin():
     from helpers.mongodb import get_display_admin, set_display_admin
     current = get_display_admin()
@@ -494,6 +502,7 @@ commands = [
     ('Restart Stack', restart_stack),
     ('Set Wallboard Players Max', wallboardPalyersMax),
     ('Set Wallboard Challenges Max', wallboardChallengesMax),
+    ('Set Wallboard Tables Max', wallboardTablesMax),
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
     ('Set Client Download URL', clientDownloadURL),

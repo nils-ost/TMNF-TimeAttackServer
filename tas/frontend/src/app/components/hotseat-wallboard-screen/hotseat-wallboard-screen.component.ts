@@ -18,7 +18,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 export class HotseatWallboardScreenComponent implements OnInit {
   refreshPlayersTimer = timer(30000, 30000);
   refreshCurrentChallengeTimer = timer(5000, 5000);
-  refreshSettingsTimer = timer(60000, 60000);
+  refreshSettingsTimer = timer(20000, 20000);
   refreshRankingsTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
   refreshCurrentChallengeTimerSubscription: Subscription | undefined;
@@ -29,7 +29,7 @@ export class HotseatWallboardScreenComponent implements OnInit {
   c_current?: Challenge;
   players: Player[] = [];
   challengeRankings: ChallengeRanking[] = [];
-  numRows: number = 2;
+  numTables: number = 2;
 
   constructor(
     private settingsService: SettingsService,
@@ -44,7 +44,6 @@ export class HotseatWallboardScreenComponent implements OnInit {
     this.refreshSettings();
     this.refreshCurrentChallenge();
     this.refreshPlayers();
-    this.refreshRankings();
   }
 
   enableAutoRefresh() {
@@ -102,6 +101,7 @@ export class HotseatWallboardScreenComponent implements OnInit {
           if (c) {
             this.c_current = c;
             this.refreshCurrentChallengeTimerSubscription?.unsubscribe();
+            this.refreshRankings();
           }
           else this.c_current = undefined;
         }
@@ -111,7 +111,9 @@ export class HotseatWallboardScreenComponent implements OnInit {
   alignChallengeRankings(rankings: ChallengeRanking[]): ChallengeRanking[] {
     let result: ChallengeRanking[] = [];
     if (this.settings) {
-      let max_display_players = this.settings['wallboard_players_max'];  // TODO: add some max_row_count value here
+      let numTables = Math.min(Math.ceil(rankings.length / this.settings.wallboard_players_max), this.settings.wallboard_tables_max);
+      this.numTables = Math.max(numTables, 2);  // Allways display at least two tables
+      let max_display_players = this.settings.wallboard_players_max * this.numTables;
       rankings.sort((a, b) => a.rank - b.rank);
       if (rankings.length <= max_display_players) return rankings;
       let i = 0;

@@ -2,6 +2,7 @@ export interface Settings {
     version: string;
     wallboard_players_max: number;
     wallboard_challenges_max: number;
+    wallboard_tables_max: number;
     tmnfd_name: string;
     display_self_url: string;
     display_admin: string;

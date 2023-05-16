@@ -417,6 +417,20 @@ def get_wallboard_challenges_max():
         return r['count']
 
 
+def set_wallboard_tables_max(c):
+    mongoDB().settings.replace_one({'_id': 'wallboard_tables_max'}, {'_id': 'wallboard_tables_max', 'count': int(c)}, True)
+
+
+def get_wallboard_tables_max():
+    r = mongoDB().settings.find_one({'_id': 'wallboard_tables_max'})
+    if r is None:
+        wtmd = get_config('util')['wallboard_tables_max_default']
+        set_wallboard_players_max(wtmd)
+        return wtmd
+    else:
+        return r['count']
+
+
 def set_tmnfd_name(name):
     mongoDB().settings.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
 
