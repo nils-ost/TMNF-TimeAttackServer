@@ -425,7 +425,7 @@ def get_wallboard_tables_max():
     r = mongoDB().settings.find_one({'_id': 'wallboard_tables_max'})
     if r is None:
         wtmd = get_config('util')['wallboard_tables_max_default']
-        set_wallboard_players_max(wtmd)
+        set_wallboard_tables_max(wtmd)
         return wtmd
     else:
         return r['count']

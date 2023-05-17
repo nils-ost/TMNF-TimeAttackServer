@@ -1,3 +1,21 @@
+:host ::ng-deep .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-radius: 0.5rem;
+    background-color: var(--surface-card);
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+
+    .title {
+        font-family: var(--font-family);
+        color: var(--primary-color);
+        font-size: 2rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
 :host ::ng-deep .rankings-container {
     display: flex;
     flex-direction: row;
@@ -39,4 +57,26 @@
                 border-bottom: 0;
             }
         }
+}
+
+:host ::ng-deep .p-speeddial-direction-left {
+    right: 1rem;
+    bottom: 1rem;
+
+    .p-speeddial-button {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .p-speeddial-action {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.35rem;
+        margin-right: 0.35rem;
+        text-decoration: none;
+    }
+
+    .p-speeddial-action-icon {
+        font-size: 0.9rem;
+    }
 }

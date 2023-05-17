@@ -9,6 +9,7 @@ import { ChallengeService } from 'src/app/services/challenge.service';
 import { PlayerService } from 'src/app/services/player.service';
 import { RankingService } from 'src/app/services/ranking.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-hotseat-wallboard-screen',
@@ -30,6 +31,7 @@ export class HotseatWallboardScreenComponent implements OnInit {
   players: Player[] = [];
   challengeRankings: ChallengeRanking[] = [];
   numTables: number = 2;
+  speeddail_menu: MenuItem[] = [];
 
   constructor(
     private settingsService: SettingsService,
@@ -44,6 +46,33 @@ export class HotseatWallboardScreenComponent implements OnInit {
     this.refreshSettings();
     this.refreshCurrentChallenge();
     this.refreshPlayers();
+
+    this.speeddail_menu = [
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Players Screen@@LinkTextOpenPlayersScreen:Open Players Screen`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-users',
+        routerLink: ['/players']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Hotseat Screen@@LinkTextOpenHotseatNameScreen:Open Hotseat Screen`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-user',
+        routerLink: ['/hotseat-name']
+      },
+      {
+        tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Home Screen@@LinkTextOpenHomeScreen:Open Home Screen`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-home',
+        routerLink: ['/']
+      }
+    ]
   }
 
   enableAutoRefresh() {

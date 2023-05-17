@@ -54,6 +54,14 @@ export class HotseatNameScreenComponent implements OnInit, OnDestroy {
       },
       {
         tooltipOptions: {
+          tooltipLabel: $localize `:Text for link to open Wallboard Screen@@LinkTextOpenWallboardScreen:Open Wallboard`,
+          tooltipPosition: "top"
+        },
+        icon: 'pi pi-window-maximize',
+        routerLink: ['/hotseat-wallboard']
+      },
+      {
+        tooltipOptions: {
           tooltipLabel: $localize `:Text for link to open Home Screen@@LinkTextOpenHomeScreen:Open Home Screen`,
           tooltipPosition: "top"
         },

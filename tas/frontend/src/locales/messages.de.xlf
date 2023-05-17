@@ -10,6 +10,10 @@
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-ranking-challenge/hotseat-ranking-challenge.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
@@ -48,6 +52,10 @@
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
         <note priority="1" from="description">Text of link to wallboard screen</note>
       </trans-unit>
       <trans-unit id="PlayersScreenLinkText" datatype="html">
@@ -55,7 +63,7 @@
         <target state="signed-off">Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">Text of link to players scrren</note>
       </trans-unit>
@@ -64,7 +72,7 @@
         <target state="signed-off">Strecken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">Text of link to challenges screen</note>
       </trans-unit>
@@ -73,7 +81,7 @@
         <target state="signed-off">Cockpit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Text of link to PlayerHUD screen</note>
       </trans-unit>
@@ -82,7 +90,7 @@
         <target state="signed-off">Server Admin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Server Admin</note>
       </trans-unit>
@@ -91,7 +99,7 @@
         <target state="signed-off">Anzahl Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Count</note>
       </trans-unit>
@@ -100,7 +108,7 @@
         <target state="signed-off">Summe Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Sum</note>
       </trans-unit>
@@ -109,7 +117,7 @@
         <target state="signed-off">Aktive Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Active Players</note>
       </trans-unit>
@@ -118,7 +126,7 @@
         <target state="signed-off">Anzahl Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Total Players</note>
       </trans-unit>
@@ -127,7 +135,7 @@
         <target state="signed-off">Servername im Spiel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Ingame Server Name</note>
       </trans-unit>
@@ -136,7 +144,7 @@
         <target state="signed-off">Strecken insgesamt gesehen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
       </trans-unit>
@@ -145,7 +153,7 @@
         <target state="signed-off">Neuste kompatible Spieleversion herunterladen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>
@@ -171,11 +179,11 @@
         <target state="signed-off">Automatische Aktualisierung aktivieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <note priority="1" from="description">Text for link to enable autorefresh</note>
       </trans-unit>
@@ -184,11 +192,11 @@
         <target state="signed-off">Automatische Aktualisierung deaktivieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
       </trans-unit>
@@ -197,7 +205,7 @@
         <target state="signed-off">Cockpit öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -205,7 +213,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
@@ -214,7 +222,7 @@
         <target state="signed-off">Strecken Liste öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -222,7 +230,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
       </trans-unit>
@@ -231,15 +239,23 @@
         <target state="signed-off">Spieler Liste öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-wallboard-screen/hotseat-wallboard-screen.component.ts</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
@@ -248,11 +264,19 @@
         <target state="signed-off">Startseite öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-wallboard-screen/hotseat-wallboard-screen.component.ts</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -260,7 +284,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Home Screen</note>
       </trans-unit>
@@ -332,7 +356,7 @@
         <target state="signed-off">Anzeige aktualisieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -363,11 +387,15 @@
         <target state="signed-off">Anzeigetafel öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -380,6 +408,10 @@
         <target state="signed-off">Platzierung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-ranking-challenge/hotseat-ranking-challenge.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
@@ -452,6 +484,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-player-list/challenges-player-list.component.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-ranking-challenge/hotseat-ranking-challenge.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
@@ -622,7 +658,7 @@
         <target state="signed-off">Seiten-URL Nachricht ausblenden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <note priority="1" from="description">Text for link to hide Page-URL Message on bottom of screen</note>
       </trans-unit>
@@ -660,7 +696,7 @@
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <note priority="1" from="description">Says what the user needs to do if he can&amp;apos;t find his username</note>
+        <note priority="1" from="description">Says what the user needs to do if he can&amp;amp;amp;amp;amp;amp;amp;apos;t find his username</note>
       </trans-unit>
       <trans-unit id="tableCurrentChallengeTitle" datatype="html">
         <source>Current Challenge</source>
@@ -938,7 +974,7 @@
         <target state="signed-off">Start Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <note priority="1" from="description">Text of link to start-countdown screen</note>
       </trans-unit>
@@ -947,7 +983,7 @@
         <target state="signed-off">Ende Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <note priority="1" from="description">Text of link to end-countdown screen</note>
       </trans-unit>
@@ -974,7 +1010,7 @@
         <target state="signed-off">Hotseat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <note priority="1" from="description">Text of link to HotseatName screen</note>
       </trans-unit>
@@ -1004,6 +1040,24 @@
           <context context-type="linenumber">5</context>
         </context-group>
         <note priority="1" from="description">Warning indicating no playername is set</note>
+      </trans-unit>
+      <trans-unit id="hostseatWallboardScreenTitle" datatype="html">
+        <source>TMNF-TimeAttackServer HotSeat-Mode</source>
+        <target state="signed-off">TMNF-TimeAttackServer HotSeat-Modus</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-wallboard-screen/hotseat-wallboard-screen.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">Title of the hotsear-wallboard screen</note>
+      </trans-unit>
+      <trans-unit id="LinkTextOpenHotseatNameScreen" datatype="html">
+        <source>Open Hotseat Screen</source>
+        <target state="signed-off">Hotseat öffnen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/hotseat-wallboard-screen/hotseat-wallboard-screen.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <note priority="1" from="description">Text for link to open Hotseat Screen</note>
       </trans-unit>
     </body>
   </file>

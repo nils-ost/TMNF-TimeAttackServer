@@ -1,6 +1,14 @@
+<div class="title-bar">
+    <div class="title">
+        <span i18n="Title of the hotsear-wallboard screen@@hostseatWallboardScreenTitle">TMNF-TimeAttackServer HotSeat-Mode</span>
+    </div>
+</div>
+
 <div class="rankings-container" *ngIf="settings">
     <div class="ranking-challenge" *ngFor="let item of [].constructor(numTables); let i = index">
         <div class="challenge-connector"></div>
         <app-hotseat-ranking-challenge [players]="players" [challengeRankings]="challengeRankings" [pageSize]="settings.wallboard_players_max" [pageNum]="i + 1"></app-hotseat-ranking-challenge>
     </div>
 </div>
+
+<p-speedDial [model]="speeddail_menu" direction="left" buttonClassName="p-button-outlined"></p-speedDial>
