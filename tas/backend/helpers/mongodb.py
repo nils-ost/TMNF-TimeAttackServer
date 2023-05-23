@@ -109,8 +109,9 @@ def bestlaptime_get(player_id, challenge_id):
     return mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
 
 
-def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None):
-    ts = int(datetime.now().timestamp())
+def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None, ts=None):
+    if ts is None:
+        ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
     player = mongoDB().players.find_one({'_id': player_id})
     if player is None:

@@ -189,6 +189,7 @@ Following states are possible to be returned:
   * `0` Operation executed as requested
   * `1` The TAS-HotSeat-Mode not enabled
   * `2` name is missing in request data
+  * `3` invalid character in name (validation error)
 
 
 ### GET /players/{player_id}/rankings/

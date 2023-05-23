@@ -21,6 +21,14 @@ from helpers.config import get_config
 from helpers.metrics import start_metrics_exporter
 
 
+valid_name_chars = [
+    u'a', u'b', u'c', u'd', u'e', u'f', u'g', u'h', u'i', u'j', u'k', u'l', u'm', u'n', u'o', u'p',
+    u'q', u'r', u's', u't', u'u', u'v', u'w', u'x', u'y', u'z', u'A', u'B', u'C', u'D', u'E', u'F',
+    u'G', u'H', u'I', u'J', u'K', u'L', u'M', u'N', u'O', u'P', u'Q', u'R', u'S', u'T', u'U', u'V',
+    u'W', u'X', u'Y', u'Z', u'1', u'2', u'3', u'4', u'5', u'6', u'7', u'8', u'9', u'0', u' '
+]
+
+
 class TimeAttackServer():
     def __init__(self):
         self.challenges = Challenges()
@@ -178,10 +186,15 @@ class Players():
                 player_name = cherrypy.request.json.get('name', None)
                 if player_name is None:
                     return {'s': 2, 'm': 'name is missing in request'}
-                # TODO: validate player_name to be allowed characters
-                player_update(player_id=player_name, nickname=player_name, connected=True, connect_msg_send=False)
-                hotseat_player_name_set(name=player_name)
-                return {'s': 0, 'm': 'OK'}
+                # validate player_name to be allowed characters
+                for c in player_name:
+                    if c not in valid_name_chars:
+                        return {'s': 3, 'm': 'invalid character in name'}
+                        break
+                else:
+                    player_update(player_id=player_name, nickname=player_name, connected=True, connect_msg_send=False)
+                    hotseat_player_name_set(name=player_name)
+                    return {'s': 0, 'm': 'OK'}
             else:
                 return None
         else:
@@ -294,12 +307,25 @@ class Thumbnails():
             return file_generator(thumbnail_get(thumbnail_name))
 
 
-def periodic_ranking_rebuild_function():
+def periodic_events_function():
     while True:
         time.sleep(5)
+        # rebuild rankings
         current_challenge = challenge_id_get(current=True)
         if current_challenge is not None:
             ranking_rebuild(current_challenge)
+        # check active players for hotseat-mode
+        if get_hotseat_mode():
+            ts = int(datetime.now().timestamp())
+            one_playing = False
+            for p in player_all():
+                if p.get('connected'):
+                    if (ts - p.get('ts', ts)) > 60:
+                        player_update(player_id=p.get('_id'), connected=False, ts=ts)
+                    else:
+                        one_playing = True
+            if not one_playing:
+                hotseat_player_name_set(None)
 
 
 if __name__ == '__main__':
@@ -335,7 +361,7 @@ if __name__ == '__main__':
 
     wait_for_mongodb_server()
     start_tmnfd_connection()
-    periodic_ranking_rebuild_process = Process(target=periodic_ranking_rebuild_function, daemon=True)
-    periodic_ranking_rebuild_process.start()
+    periodic_events_process = Process(target=periodic_events_function, daemon=True)
+    periodic_events_process.start()
     start_metrics_exporter()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)
