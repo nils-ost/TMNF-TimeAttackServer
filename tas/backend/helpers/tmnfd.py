@@ -97,9 +97,15 @@ def sendLaptimeNotice(sender, player_login, player_time=None):
     best = bestlaptime_get(player_id=player_id, challenge_id=challenge_id_get(current=True))
     msg = None
     if best is None:
-        msg = "You don't have a PB on this Challenge yet"
+        if get_hotseat_mode():
+            msg = f'Hello {player_login}. Have fun on the HotSeat!'
+        else:
+            msg = "You don't have a PB on this Challenge yet"
     elif player_time is None:
-        msg = f"Your PB on this Challenge is: {timetos(best['time'])}"
+        if get_hotseat_mode():
+            msg = f"Welcome back {player_login}! Your PB is: {timetos(best['time'])}"
+        else:
+            msg = f"Your PB on this Challenge is: {timetos(best['time'])}"
     elif player_time == 0:
         pass
     elif player_time == best['time']:

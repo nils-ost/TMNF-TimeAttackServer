@@ -62,6 +62,8 @@ Assuming you don't like to allways play the NationsWhite challenge-rotation you 
 
 If you like to play tracks besides the default ones you can place the gbx files in this directory: `/opt/middleware/tmnfd/dedicated/GameData/Tracks/Challenges` (feel free to create subdirectorys if you like)
 
+If you don't like to create your MatchSettings-Files by hand you can use the [Interactive MatchSettings Editor](matchsettingseditor.md) CLI tool I've created. Otherwise keep on reading.
+
 For the next step you need the unique IDs of the challenges. I've created a simple helper tool to extract those. Just type `tmnfd` on the commandline and hit enter, this should launch the tmnfd-cli. Now enter 2 (List Challenges) and hit enter. This is printing all available challenges with their path and unique ID. (You might copy the whole list to have it available for the next step)
 
 Now change to the directory `/opt/middleware/tmnfd/MatchSettings` here are all the available MatchSetting configurations stored. Just copy one of them to be used as a template for your own configuration. How these configurations work is documented here: [readme_dedicated](https://www.gamers.org/tmn/docs/readme_dedicated.html). For the challenges list you extracted the required path's and ident's in the previous step via the tmnfd-cli. Feel free to configure the MatchSettings to your needs. But be aware of the following:
@@ -72,6 +74,10 @@ As TAS is designed to be used as a TimeAttackServer on LAN-Partys the following 
   * filter->is_internet = 0 (no)
 
 Finally after creating your own MatchSetting you now need to tell TMNFD to use them. Just open `/opt/middleware/tmnfd/config.json` and enter the MatchSetting's filename in the attribute `active_matchsetting`. Save the file and restart tmnfd `systemctl restart tmnfd`
+
+## HotSeat-Mode
+
+New in version 1.2.0 is the HotSeat-Mode where only one Challenge is play on one static station. If you like to read more on how to configure this mode jump to the [HotSeat-Mode Configuration](hotseatmode.md). But if you like to configure the normal mode or want to have some detailed information of all the configuration options, keep on reading.
 
 ## Advanced
 
@@ -156,10 +162,10 @@ TAS comes with it's own interactive CLI to configure different aspects during ru
   * `1 Start Stack` Starts all services of TAS-Stack
   * `2 Stop Stack` Stops all services of TAS-Stack
   * `3 Restart Stack` Restarts all services of TAS-Stack
-  * `4 Set Wallboard Players Max` Sets the maximum amount of players displayed in the tables `Current Challenge` and `Global Ranking` on the wallboard screen. This can be used to utilize the maximum of the available space but avoid scrolling.
+  * `4 Set Wallboard Players Max` Sets the maximum amount of players displayed in the tables `Current Challenge` and `Global Ranking` on the wallboard screen. This value is also relevant for `HotSeat Mode` see `Wallboard Tables Max`. It can be used to utilize the maximum of the available space but avoid scrolling.
   * `5 Set Wallboard Challenges Max` Sets the maximum amount of challenges displayed in `Challenge Schedule` on wallboard screen. This can be used to optimize `Challenge Schedule` to the available horizontal space.
   * `6 Set Wallboard Tables Max` Sets the maximum amount of tables, displaying Player records, that are allowed side-by-side on the `Hotseat Wallboard Screen`. Therefore multiply `Wallboard Players Max` with `Wallboard Tables Max` to get the maximum amount of Players displayed simultaniously on `Hotseat Wallboard Screen`.
-  * `7 Set Display Admin` With this option a responsible persion for this server can be named, that is displayed in different locations in the frontend.
+  * `7 Set Display Admin` With this option a responsible person for this server can be named, that is displayed in different locations in the frontend.
   * `8 Set Display Self URL` This defines the URL that is displayed in the info-box on wallboard screen to where the players can connect to access the frontend them-selfs.
   * `9 Set Client Download URL` If you like to provide a download URL for the latest version of TMNF client on the welcome screen, this is the place to set this URL. With this option the download link can also be disabled.
   * `10 Set Provide Replays` Enables (or disables) function to automatically store Players best laptimes in S3 and provides them for download on frontend.
@@ -180,7 +186,11 @@ And here we go with some notes to the functions:
 
 ##### Set Wallboard * Max
 
-The wallboard screen is designed to be displayed via a projector during LAN-Partys. As not all projectors does have the same resolution it was quiet hard (during development) to decide how much information should be displayed on this screen. This two functions give you the option to align the player-lists and challenge ticker to your specific needs without the need to fiddle around with the sourcecode. Just try out which settings look the best on your projector.
+The wallboard screen is designed to be displayed via a projector during LAN-Partys. As not all projectors does have the same resolution it was quiet hard (during development) to decide how much information should be displayed on this screen. This functions give you the option to align Wallboard lists to your specific needs without fiddleing around with the sourcecode. Just try out which settings look the best on your projector.
+
+In the normal mode `Wallboard Players Max` influences the length of both player-lists and `Wallboard Challenges Max` sets the maximum amount of Challenges displayed in the Challenge-Ticker.
+
+But if you have set your server to play in HotSeat-Mode the value of `Wallboard Tables Max` lets you set the maximum number of Player-records tables side-by-side where each table does have the maximum amount of `Wallboard Players Max` entries. Therefore you can multiply `Wallboard Players Max` with `Wallboard Tables Max` to get the maximum amount of Players displayed simultaniously on `Hotseat Wallboard Screen`.
 
 ##### Set Provide *
 

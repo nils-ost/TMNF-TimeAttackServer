@@ -2,9 +2,11 @@
 
 ## v1.2.0
 
-  * TAS-BE: Added support for string versions in versioning-compares to support alpha and beta versions
+  * Added HotSeat-Mode that totally alters the way in which TMNF-TAS works  
+  Read the [HotSeat-Mode Readme](docs/hotseatmode.md) to learn more about it
   * TMNFD-CLI: Added MatchSettings Editor as requested in [issue#2](https://github.com/nils-ost/TMNF-TimeAttackServer/issues/2)  
   Also read [MatchSettings Editor Readme](docs/matchsettingseditor.md) to get started on the usage
+  * TAS-BE: Added support for string versions in versioning-compares to support alpha and beta versions
 
 ## v1.1.2
 

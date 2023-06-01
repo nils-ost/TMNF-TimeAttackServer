@@ -51,6 +51,8 @@ And thats just it, your TMNF-TAS instance is ready to be explored.
 
 A lot more detailed installation instructions can be found here: [docs/install.md](docs/install.md) and if you are interested in a configuration guide visit [docs/configuration.md](docs/configuration.md)
 
+At this point I like to highlight the new HotSeat-Mode that came with version 1.2.0. If you like to read more about it go to: [docs/hotseatmode.md](docs/hotseatmode.md)
+
 And now have fun playing Trackmania Nations Forever ;)
 
 Besides GitHub I'm also reachable on twitter [@nils_ost](https://twitter.com/nils_ost) if you have questions or like to get in touch with me.

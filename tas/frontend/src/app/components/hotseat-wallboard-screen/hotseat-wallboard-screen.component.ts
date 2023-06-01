@@ -19,7 +19,7 @@ import { MenuItem } from 'primeng/api';
 export class HotseatWallboardScreenComponent implements OnInit {
   refreshPlayersTimer = timer(30000, 30000);
   refreshCurrentChallengeTimer = timer(5000, 5000);
-  refreshSettingsTimer = timer(20000, 20000);
+  refreshSettingsTimer = timer(60000, 60000);
   refreshRankingsTimer = timer(10000, 10000);
   refreshPlayersTimerSubscription: Subscription | undefined;
   refreshCurrentChallengeTimerSubscription: Subscription | undefined;
