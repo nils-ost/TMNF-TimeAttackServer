@@ -329,8 +329,6 @@ def periodic_events_function():
 
 
 if __name__ == '__main__':
-    versioning_run()
-
     conf = {
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
@@ -360,6 +358,7 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
 
     wait_for_mongodb_server()
+    versioning_run()
     start_tmnfd_connection()
     periodic_events_process = Process(target=periodic_events_function, daemon=True)
     periodic_events_process.start()
