@@ -393,6 +393,7 @@ def createBackup():
         for coll in [c['name'] for c in mongoDB().list_collections()]:
             elements = list()
             for element in mongoDB().get_collection(coll).find({}):
+                element['_id'] = str(element['_id'])
                 elements.append(element)
             with zf.open(f'db/{coll}.json', 'w') as f:
                 f.write(json.dumps(elements, indent=2).encode('utf-8'))

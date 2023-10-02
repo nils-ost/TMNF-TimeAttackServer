@@ -1,5 +1,9 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.2.1
+
+  * TAS-CLI: Fixed bug in backup creation
+
 ## v1.2.0
 
   * Added HotSeat-Mode that totally alters the way in which TMNF-TAS works  
