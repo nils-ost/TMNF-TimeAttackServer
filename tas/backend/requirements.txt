@@ -1,6 +1,7 @@
 boto3
 CherryPy @ git+https://github.com/nils-ost/cherrypy.git@v18.6.1-1
 cherrypy-cors==1.6
+pika
 pymongo==4.0.1
 requests
 tqdm==4.64.0

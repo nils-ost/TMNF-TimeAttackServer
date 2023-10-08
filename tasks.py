@@ -17,10 +17,15 @@ def start_development(c):
             --add-host=host.docker.internal:host-gateway \
             --sysctl net.ipv4.ip_unprivileged_port_start=0 -d haproxy:lts-alpine')
 
+    r = c.run('sudo docker ps -f name=dev-rabbit', hide=True)
+    if 'dev-rabbit' not in r.stdout:
+        print('Starting rabbitMQ')
+        c.run('sudo docker run --name dev-rabbit --rm -p 5672:5672 -p 15672:15672 -d rabbitmq:3.12-management-alpine')
+
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-mongo', 'dev-haproxy']:
+    for name in ['dev-rabbit', 'dev-mongo', 'dev-haproxy']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')
