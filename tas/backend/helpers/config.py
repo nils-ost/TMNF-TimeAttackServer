@@ -10,7 +10,7 @@ config = {
         'password': 'SuperAdmin'
     },
     'mongo': {
-        'host': 'localhost',
+        'host': 'mongodb',
         'port': 27017,
         'database': 'tmnf-tas'
     },
@@ -27,7 +27,7 @@ config = {
         'port': 8001
     },
     's3': {
-        'host': 'localhost',
+        'host': 'minio',
         'port': 9000,
         'access_key': 'tmnftas',
         'access_secret': 'password',
@@ -36,7 +36,7 @@ config = {
         'bucket_challenges': 'tas-challenges'
     },
     'rabbit': {
-        'host': 'localhost',
+        'host': 'rabbitmq',
         'port': 5672,
         'queue_dedicated_received_messages': 'ded_rx_msg',
         'queue_dedicated_state_changes': 'ded_st_chg'
