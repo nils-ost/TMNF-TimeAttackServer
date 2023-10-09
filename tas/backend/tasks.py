@@ -48,3 +48,10 @@ def generate_testdata_real(c):
     player_update('mid', 'MiddleMan', 100)
     for c in challenge_all():
         laptime_add('mid', c['_id'], c['rel_time'])
+
+
+@task(name='build-container-image')
+def build_container_image(c, version=None):
+    c.run('sudo docker build -t TimeAttackServer:latest .')
+    if version is not None:
+        c.run(f'sudo docker tag TimeAttackServer:latest TimeAttackServer:{version}')
