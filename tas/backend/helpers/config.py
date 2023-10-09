@@ -35,6 +35,12 @@ config = {
         'bucket_thumbnails': 'tas-thumbnails',
         'bucket_challenges': 'tas-challenges'
     },
+    'rabbit': {
+        'host': 'localhost',
+        'port': 5672,
+        'queue_dedicated_received_messages': 'ded_rx_msg',
+        'queue_dedicated_state_changes': 'ded_st_chg'
+    },
     'util': {
         'wallboard_players_max_default': 10,
         'wallboard_challenges_max_default': 8,
