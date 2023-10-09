@@ -52,6 +52,6 @@ def generate_testdata_real(c):
 
 @task(name='build-container-image')
 def build_container_image(c, version=None):
-    c.run('sudo docker build -t TimeAttackServer:latest .')
+    c.run('sudo docker build -t nilsost/tas:latest .')
     if version is not None:
-        c.run(f'sudo docker tag TimeAttackServer:latest TimeAttackServer:{version}')
+        c.run(f'sudo docker tag nilsost/tas:latest nilsost/tas:{version}')

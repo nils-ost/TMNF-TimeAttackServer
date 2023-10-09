@@ -51,14 +51,18 @@ config = {
 
 def reload_config():
     global config
-    if os.path.isfile('config.json'):
-        with open('config.json', 'r') as f:
+    cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
+    if os.path.isfile(cfg_file):
+        with open(cfg_file, 'r') as f:
             fconfig = json.load(f)
         for k in fconfig.keys():
             config[k].update(fconfig[k])
     else:
-        with open('config.json', 'w') as f:
-            f.write(json.dumps(config, indent=4))
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write(json.dumps(config, indent=4))
+        except Exception:
+            print(f'Could not write: {cfg_file}')
 
 
 def get_config(portion=None):
@@ -71,12 +75,16 @@ def get_config(portion=None):
 
 def set_config(nconfig, portion=None):
     global config
+    cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
     if portion is None:
         config = nconfig
     else:
         config[portion] = nconfig
-    with open('config.json', 'w') as f:
-        f.write(json.dumps(config, indent=4))
+    try:
+        with open(cfg_file, 'w') as f:
+            f.write(json.dumps(config, indent=4))
+    except Exception:
+        print(f'Could not write: {cfg_file}')
 
 
 reload_config()

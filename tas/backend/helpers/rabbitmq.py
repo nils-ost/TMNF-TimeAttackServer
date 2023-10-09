@@ -1,5 +1,6 @@
 from helpers.config import get_config
 import pika
+import json
 
 rabbit_config = get_config('rabbit')
 mq_connection = None
@@ -23,7 +24,7 @@ def consume_dedicated_received_messages(callback_func):
     callback_func needs to take func, params, ch and delivery_tag as arguments
     """
     def _callback_func(ch, method, properties, body):
-        func, params = body.decode()
+        func, params = json.loads(body.decode())
         callback_func(func=func, params=params, ch=ch, delivery_tag=method.delivery_tag)
     channel = _get_channel()
     channel.basic_consume(queue=rabbit_config['queue_dedicated_received_messages'], on_message_callback=_callback_func, auto_ack=False, exclusive=True)
@@ -33,7 +34,7 @@ def consume_dedicated_received_messages(callback_func):
 
 def send_dedicated_received_message(func, params=None):
     channel = _get_channel()
-    channel.basic_publish(exchange='', routing_key=rabbit_config['queue_dedicated_received_messages'], body=(func, params))
+    channel.basic_publish(exchange='', routing_key=rabbit_config['queue_dedicated_received_messages'], body=json.dumps([func, params]))
 
 
 def consume_dedicated_state_changes(callback_func, timeout=1):

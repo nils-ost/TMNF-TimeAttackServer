@@ -2,39 +2,47 @@ version: '3.6'
 
 services:
   backend:
-    image: TimeAttackServer:${TAS_VERSION:-latest}
+    image: nilsost/tas:${TAS_VERSION:-latest}
     command: main
     depends_on:
       - mongodb
+    environment:
+      - TAS_CONFIG_FILE:/app/cfg/config.json
     volumes:
-      - tas_config:/app/config.json:rw
+      - tas_config:/app/cfg:rw
 
   dedicated-receiver:
-    image: TimaAttackServer:${TAS_VERSION:-latest}
+    image: nilsost/tas:${TAS_VERSION:-latest}
     command: dreceiver
     depends_on:
       - mongodb
       - rabbitmq
+    environment:
+      - TAS_CONFIG_FILE:/app/cfg/config.json
     volumes:
-      - tas_config:/app/config.json:ro
+      - tas_config:/app/cfg:ro
 
   dedicated-worker:
-    image: TimaAttackServer:${TAS_VERSION:-latest}
+    image: nilsost/tas:${TAS_VERSION:-latest}
     command: dworker
     depends_on:
       - mongodb
       - rabbitmq
+    environment:
+      - TAS_CONFIG_FILE:/app/cfg/config.json
     volumes:
-      - tas_config:/app/config.json:ro
+      - tas_config:/app/cfg:ro
 
   dedicated-watcher:
-    image: TimaAttackServer:${TAS_VERSION:-latest}
+    image: nilsost/tas:${TAS_VERSION:-latest}
     command: dwatcher
     depends_on:
       - mongodb
       - rabbitmq
+    environment:
+      - TAS_CONFIG_FILE:/app/cfg/config.json
     volumes:
-      - tas_config:/app/config.json:ro
+      - tas_config:/app/cfg:ro
 
   haproxy:
     image: haproxy:lts-alpine
@@ -45,7 +53,7 @@ services:
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     volumes:
-      - install/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./install/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
 
   mongodb:
     image: mongo:4.4
