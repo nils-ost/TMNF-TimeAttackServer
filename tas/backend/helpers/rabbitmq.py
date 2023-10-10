@@ -1,6 +1,7 @@
 from helpers.config import get_config
 import pika
 import json
+import time
 
 rabbit_config = get_config('rabbit')
 mq_connection = None
@@ -11,7 +12,17 @@ def _get_channel():
     global mq_connection
     global mq_channel
     if mq_connection is None:
-        mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_config['host'], port=rabbit_config['port']))
+        first = True
+        while True:
+            try:
+                mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_config['host'], port=rabbit_config['port']))
+                print('RabbitMQ started ... continue', flush=True)
+                break
+            except Exception:
+                if first:
+                    first = False
+                    print('RabbitMQ pending ... waiting', flush=True)
+            time.sleep(0.5)
     if mq_channel is None:
         mq_channel = mq_connection.channel()
         mq_channel.queue_declare(queue=rabbit_config['queue_dedicated_received_messages'])

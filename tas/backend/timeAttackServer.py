@@ -8,7 +8,7 @@ from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
 from helpers.versioning import run as versioning_run
-from helpers.mongodb import wait_for_mongodb_server, challenge_all, challenge_get, challenge_id_get, player_update
+from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_update
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild, hotseat_player_name_get, hotseat_player_name_set
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_wallboard_tables_max, get_tmnfd_name
@@ -356,7 +356,6 @@ if __name__ == '__main__':
     cherrypy_cors.install()
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
 
-    wait_for_mongodb_server()
     versioning_run()
     periodic_events_process = Process(target=periodic_events_function, daemon=True)
     periodic_events_process.start()

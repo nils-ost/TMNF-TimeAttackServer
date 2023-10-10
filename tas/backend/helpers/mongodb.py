@@ -27,6 +27,7 @@ def wait_for_mongodb_server():
 
 def start_mongodb_connection():
     global _mongoDB
+    wait_for_mongodb_server()
     mongoClient = MongoClient(host=config['host'], port=int(config['port']), serverSelectionTimeoutMS=500)
     _mongoDB[multiprocessing.current_process().name] = mongoClient.get_database(config['database'])
 
