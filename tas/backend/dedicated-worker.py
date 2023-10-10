@@ -20,7 +20,7 @@ sender = GbxRemote(config['host'], config['port'], config['user'], config['passw
 
 def worker_function(func, params, ch, delivery_tag):
     global sender
-    logger.info('Received:', func, params)
+    logger.info(f'Received: {func} {params}')
 
     if func == 'TrackMania.PlayerFinish':
         current_challenge = challenge_id_get(current=True)

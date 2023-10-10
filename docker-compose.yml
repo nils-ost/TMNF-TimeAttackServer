@@ -7,7 +7,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - TAS_CONFIG_FILE:/app/cfg/config.json
+      - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:rw
 
@@ -18,7 +18,7 @@ services:
       - mongodb
       - rabbitmq
     environment:
-      - TAS_CONFIG_FILE:/app/cfg/config.json
+      - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:ro
 
@@ -29,7 +29,7 @@ services:
       - mongodb
       - rabbitmq
     environment:
-      - TAS_CONFIG_FILE:/app/cfg/config.json
+      - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:ro
 
@@ -40,7 +40,7 @@ services:
       - mongodb
       - rabbitmq
     environment:
-      - TAS_CONFIG_FILE:/app/cfg/config.json
+      - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:ro
 
