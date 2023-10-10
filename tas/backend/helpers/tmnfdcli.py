@@ -1,11 +1,15 @@
 from helpers.mongodb import set_tmnfd_cli_method, get_tmnfd_cli_method, set_provide_replays
 from helpers.config import get_config
 import subprocess
+import logging
+import sys
 
+logger = logging.getLogger(__name__)
 config = get_config('tmnf-server')
 
 
 def tmnfd_cli_test_method():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     r = subprocess.call('tmnfd --test', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     if int(r) == 0:
@@ -17,16 +21,18 @@ def tmnfd_cli_test_method():
 
 
 def tmnfd_cli_test():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     method = tmnfd_cli_test_method()
     if method is None:
-        print('TMNF - Dedicated CLI is not reachable!')
+        logger.warning('TMNF - Dedicated CLI is not reachable!')
         set_provide_replays(False)
-        print('  Disableing replay-provider')
+        logger.info('  Disableing replay-provider')
     set_tmnfd_cli_method(method)
     return method
 
 
 def tmnfd_cli_upload_replay(name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cli_method = get_tmnfd_cli_method()
     if cli_method == 'bash':
@@ -38,6 +44,7 @@ def tmnfd_cli_upload_replay(name):
 
 
 def tmnfd_cli_generate_thumbnails():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cli_method = get_tmnfd_cli_method()
     if cli_method == 'bash':
@@ -49,6 +56,7 @@ def tmnfd_cli_generate_thumbnails():
 
 
 def tmnfd_cli_upload_challenges():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cli_method = get_tmnfd_cli_method()
     if cli_method == 'bash':
@@ -60,6 +68,7 @@ def tmnfd_cli_upload_challenges():
 
 
 def tmnfd_cli_create_backup():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cli_method = get_tmnfd_cli_method()
     if cli_method == 'bash':
@@ -72,6 +81,7 @@ def tmnfd_cli_create_backup():
 
 
 def tmnfd_cli_restore_backup():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cli_method = get_tmnfd_cli_method()
     if cli_method == 'bash':
@@ -83,6 +93,7 @@ def tmnfd_cli_restore_backup():
 
 
 def tmnfd_cli_hotseat_mode(enable=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     action = 'enable' if enable else 'disable'
     cli_method = get_tmnfd_cli_method()

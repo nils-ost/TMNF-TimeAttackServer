@@ -11,14 +11,16 @@ from helpers.tmnfdcli import tmnfd_cli_upload_replay
 from helpers.rabbitmq import consume_dedicated_received_messages, send_dedicated_state_changes
 import time
 import hashlib
+import logging
 
+logger = logging.getLogger(__name__)
 config = get_config('tmnf-server')
 sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
 
 
 def worker_function(func, params, ch, delivery_tag):
     global sender
-    print('Received:', func, params)
+    logger.info('Received:', func, params)
 
     if func == 'TrackMania.PlayerFinish':
         current_challenge = challenge_id_get(current=True)
@@ -35,7 +37,7 @@ def worker_function(func, params, ch, delivery_tag):
                     player_update(player_login, connect_msg_send=True)
             ts, new_best = laptime_add(player_login, current_challenge, player_time)
             if player_time > 0:
-                print(f'{player_login} drove: {player_time / 1000}')
+                logger.info(f'{player_login} drove: {player_time / 1000}')
             sendLaptimeNotice(sender, player_login, player_time)
             player_update(player_login)  # keep track of last update, even if player never reaches finish
             if new_best and get_provide_replays():
@@ -44,11 +46,11 @@ def worker_function(func, params, ch, delivery_tag):
                 if sender.callMethod('SaveBestGhostsReplay', player_login, replay_name)[0]:
                     if tmnfd_cli_upload_replay(replay_name):
                         replay_add(player_login, current_challenge, ts, replay_name)
-                        print(f'Providing Replay: {replay_name}')
+                        logger.info(f'Providing Replay: {replay_name}')
                     else:
-                        print('Replay could not be provided!')
+                        logger.warning('Replay could not be provided!')
                 else:
-                    print('Replay could not be provided!')
+                    logger.warning('Replay could not be provided!')
 
     elif func == 'TrackMania.BeginRace':
         if isPreStart() or isPostEnd():
@@ -56,11 +58,11 @@ def worker_function(func, params, ch, delivery_tag):
                 challenge_id_set(params[0]['UId'], current=True)
                 next_challenge = sender.callMethod('GetNextChallengeInfo')[0]
                 challenge_id_set(next_challenge['UId'], next=True)
-                print(f"Post End Challenge begin: {params[0]['Name']}")
+                logger.info(f"Post End Challenge begin: {params[0]['Name']}")
             else:
                 challenge_id_set(None, current=True)
                 challenge_id_set(None, next=True)
-                print(f"Pre Start Challenge begin: {params[0]['Name']}")
+                logger.info(f"Pre Start Challenge begin: {params[0]['Name']}")
         else:
             challenge_db = challenge_get(params[0]['UId'])
             if challenge_db['lap_race'] and challenge_db['nb_laps'] == -1:
@@ -69,7 +71,7 @@ def worker_function(func, params, ch, delivery_tag):
             else:
                 challenge_update(params[0]['UId'])
             challenge_id_set(params[0]['UId'], current=True)
-            print(f"Challenge begin: {params[0]['Name']}")
+            logger.info(f"Challenge begin: {params[0]['Name']}")
             prepareNextChallenge(sender)
             if not get_hotseat_mode():
                 for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
@@ -81,7 +83,7 @@ def worker_function(func, params, ch, delivery_tag):
             challenge_id_set(None, current=True)
             if old_challenge is not None:
                 ranking_rebuild(old_challenge)
-            print(f"Challenge end: {params[1]['Name']}")
+            logger.info(f"Challenge end: {params[1]['Name']}")
 
     elif func == 'TrackMania.PlayerCheckpoint':
         if get_hotseat_mode():
@@ -118,7 +120,7 @@ def worker_function(func, params, ch, delivery_tag):
             if player_login is None:
                 ch.basic_ack(delivery_tag=delivery_tag)
                 return
-        print(f'{player_login} connected')
+        logger.info(f'{player_login} connected')
         player_update(player_login, connected=True, connect_msg_send=False)
 
     elif func == 'TrackMania.PlayerDisconnect':
@@ -128,7 +130,7 @@ def worker_function(func, params, ch, delivery_tag):
             if player_login is None:
                 ch.basic_ack(delivery_tag=delivery_tag)
                 return
-        print(f'{player_login} disconnected')
+        logger.info(f'{player_login} disconnected')
         player_update(player_login, connected=False)
 
     elif func == 'Dedicated.Disconnected':
@@ -145,4 +147,5 @@ def worker_function(func, params, ch, delivery_tag):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     consume_dedicated_received_messages(worker_function)

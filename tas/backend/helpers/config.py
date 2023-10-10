@@ -1,6 +1,9 @@
 import os
 import json
+import logging
+import sys
 
+logger = logging.getLogger(__name__)
 
 config = {
     'tmnf-server': {
@@ -50,6 +53,7 @@ config = {
 
 
 def reload_config():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
     if os.path.isfile(cfg_file):
@@ -62,10 +66,11 @@ def reload_config():
             with open(cfg_file, 'w') as f:
                 f.write(json.dumps(config, indent=4))
         except Exception:
-            print(f'Could not write: {cfg_file}')
+            logger.warning(f'Could not write: {cfg_file}')
 
 
 def get_config(portion=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if portion is None:
         return config
@@ -74,6 +79,7 @@ def get_config(portion=None):
 
 
 def set_config(nconfig, portion=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
     if portion is None:
@@ -84,7 +90,7 @@ def set_config(nconfig, portion=None):
         with open(cfg_file, 'w') as f:
             f.write(json.dumps(config, indent=4))
     except Exception:
-        print(f'Could not write: {cfg_file}')
+        logger.warning(f'Could not write: {cfg_file}')
 
 
 reload_config()

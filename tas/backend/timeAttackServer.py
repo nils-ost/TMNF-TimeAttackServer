@@ -3,6 +3,7 @@ import cherrypy_cors
 import time
 import os
 import json
+import logging
 from multiprocessing import Process
 from urllib.parse import unquote
 from cherrypy.lib import file_generator
@@ -328,6 +329,7 @@ def periodic_events_function():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     conf = {
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),

@@ -3,29 +3,33 @@ from helpers.config import get_config
 from datetime import datetime
 import multiprocessing
 import sys
+import logging
 
+logger = logging.getLogger(__name__)
 _mongoDB = dict()
 config = get_config('mongo')
 
 
 def wait_for_mongodb_server():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     first = True
     mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=2000)
     while True:
         try:
             mongoClient.server_info()
-            print('MongoDB started ... continue', flush=True)
+            logger.info('MongoDB started ... continue')
             return
         except mongo_errors.ServerSelectionTimeoutError:
             if first:
-                print('MongoDB pending ... waiting', flush=True)
+                logger.warning('MongoDB pending ... waiting')
                 first = False
         except Exception:
-            print('MongoDB unknown error ... aborting', flush=True)
+            logger.error('MongoDB unknown error ... aborting')
             sys.exit(1)
 
 
 def start_mongodb_connection():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global _mongoDB
     wait_for_mongodb_server()
     mongoClient = MongoClient(host=config['host'], port=int(config['port']), serverSelectionTimeoutMS=500)
@@ -33,6 +37,7 @@ def start_mongodb_connection():
 
 
 def mongoDB():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global _mongoDB
     p = multiprocessing.current_process().name
     if p not in _mongoDB:
@@ -41,6 +46,7 @@ def mongoDB():
 
 
 def is_connected():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     try:
         mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=1000)
         mongoClient.server_info()
@@ -55,10 +61,12 @@ TMNF-TimeAttack
 
 
 def clean_player_id(player_id):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     return player_id.rsplit(':', 1)[0]
 
 
 def laptime_add(player_id, challenge_id, time):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
     new_best = False
@@ -80,6 +88,7 @@ def laptime_add(player_id, challenge_id, time):
 
 
 def laptime_filter(player_id=None, challenge_id=None, replay=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     f = dict({'time': {'$ne': None}})
     if player_id is not None:
         f['player_id'] = player_id
@@ -91,12 +100,14 @@ def laptime_filter(player_id=None, challenge_id=None, replay=False):
 
 
 def laptime_get(replay=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if replay is None:
         return None
     return mongoDB().laptimes.find_one({'replay': replay})
 
 
 def replay_add(player_id, challenge_id, ts, replay_name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     player_id = clean_player_id(player_id)
     blt = mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id, 'created_at': ts})
     if blt is not None:
@@ -107,10 +118,12 @@ def replay_add(player_id, challenge_id, ts, replay_name):
 
 
 def bestlaptime_get(player_id, challenge_id):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     return mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
 
 
 def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None, ts=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if ts is None:
         ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
@@ -154,6 +167,7 @@ def player_update(player_id, nickname=None, current_uid=None, connected=None, co
 
 
 def player_update_ip(player_id, player_ip):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     player = mongoDB().players.find_one({'_id': player_id})
     if player is None:
         return 1  # invalid player
@@ -167,10 +181,12 @@ def player_update_ip(player_id, player_ip):
 
 
 def player_all():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     return mongoDB().players.find({})
 
 
 def player_get(player_id=None, player_ip=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if player_id is not None:
         return mongoDB().players.find_one({'_id': player_id})
     if player_ip is not None:
@@ -179,6 +195,7 @@ def player_get(player_id=None, player_ip=None):
 
 
 def player_merge(survivor, merged):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if player_get(survivor) is None or player_get(merged) is None:
         return
     for laptime in mongoDB().laptimes.find({'player_id': merged}):
@@ -203,6 +220,7 @@ def player_merge(survivor, merged):
 
 
 def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     challenge = mongoDB().challenges.find_one({'_id': challenge_id})
     if challenge is None:
         mongoDB().challenges.insert_one({
@@ -224,6 +242,7 @@ def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
 
 
 def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     updates = dict({'$set': dict()})
     if time_limit is not None:
         updates['$set']['time_limit'] = time_limit
@@ -240,10 +259,12 @@ def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None
 
 
 def challenge_all():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     return mongoDB().challenges.find({'active': True})
 
 
 def challenge_get(challenge_id=None, current=False, next=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if current:
         challenge_id = challenge_id_get(current=True)
     if next:
@@ -252,10 +273,12 @@ def challenge_get(challenge_id=None, current=False, next=False):
 
 
 def challenge_deactivate_all():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().challenges.update_many({}, {'$set': {'active': False}})
 
 
 def challenge_id_get(current=False, next=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     cid = None
     if current:
         cid = mongoDB().utils.find_one({'_id': 'current_challenge_id'})
@@ -267,6 +290,7 @@ def challenge_id_get(current=False, next=False):
 
 
 def challenge_id_set(challenge_id, current=False, next=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if current:
         mongoDB().utils.replace_one({'_id': 'current_challenge_id'}, {'_id': 'current_challenge_id', 'value': challenge_id}, True)
     else:
@@ -274,6 +298,7 @@ def challenge_id_set(challenge_id, current=False, next=False):
 
 
 def ranking_player(player_id):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     result = list()
     for rp in mongoDB().rankings.find({'player_id': player_id}):
         rp.pop('_id')
@@ -283,6 +308,7 @@ def ranking_player(player_id):
 
 
 def ranking_challenge(challenge_id):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     result = list()
     for rc in mongoDB().rankings.find({'challenge_id': challenge_id}).sort('rank', ASCENDING):
         rc.pop('_id')
@@ -292,6 +318,7 @@ def ranking_challenge(challenge_id):
 
 
 def ranking_global():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     result = list()
     rank = 0
     step = 1
@@ -311,6 +338,7 @@ def ranking_rebuild(challenge_id=None):
     """
     Rebuilds ranking cache for all challenges (or a single challenge)
     """
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if challenge_id is not None:
         players = dict()
         players_none = list()
@@ -349,14 +377,17 @@ def ranking_clear():
     """
     Clears whole ranking cache
     """
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().rankings.drop()
 
 
 def hotseat_player_name_set(name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().utils.replace_one({'_id': 'hotseat_player_name'}, {'_id': 'hotseat_player_name', 'value': name}, True)
 
 
 def hotseat_player_name_get():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     hpm = mongoDB().utils.find_one({'_id': 'hotseat_player_name'})
     if hpm is None:
         return None
@@ -364,10 +395,12 @@ def hotseat_player_name_get():
 
 
 def hotseat_player_ingameid_set(pid):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().utils.replace_one({'_id': 'hotseat_player_ingameid'}, {'_id': 'hotseat_player_ingameid', 'value': pid}, True)
 
 
 def hotseat_player_ingameid_get():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     hpm = mongoDB().utils.find_one({'_id': 'hotseat_player_ingameid'})
     if hpm is None:
         return None
@@ -380,10 +413,12 @@ Settings
 
 
 def set_version(v):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'version'}, {'_id': 'version', 'version': v}, True)
 
 
 def get_version():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'version'})
     if r is None:
         return None
@@ -392,10 +427,12 @@ def get_version():
 
 
 def set_wallboard_players_max(c):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'wallboard_players_max'}, {'_id': 'wallboard_players_max', 'count': int(c)}, True)
 
 
 def get_wallboard_players_max():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_players_max'})
     if r is None:
         wpmd = get_config('util')['wallboard_players_max_default']
@@ -406,10 +443,12 @@ def get_wallboard_players_max():
 
 
 def set_wallboard_challenges_max(c):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'wallboard_challenges_max'}, {'_id': 'wallboard_challenges_max', 'count': int(c)}, True)
 
 
 def get_wallboard_challenges_max():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_challenges_max'})
     if r is None:
         wcmd = get_config('util')['wallboard_challenges_max_default']
@@ -420,10 +459,12 @@ def get_wallboard_challenges_max():
 
 
 def set_wallboard_tables_max(c):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'wallboard_tables_max'}, {'_id': 'wallboard_tables_max', 'count': int(c)}, True)
 
 
 def get_wallboard_tables_max():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_tables_max'})
     if r is None:
         wtmd = get_config('util')['wallboard_tables_max_default']
@@ -434,10 +475,12 @@ def get_wallboard_tables_max():
 
 
 def set_tmnfd_name(name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'tmnfd_name'}, {'_id': 'tmnfd_name', 'name': name}, True)
 
 
 def get_tmnfd_name():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'tmnfd_name'})
     if r is None:
         return '--unknown--'
@@ -445,10 +488,12 @@ def get_tmnfd_name():
 
 
 def set_display_self_url(url):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'display_self_url'}, {'_id': 'display_self_url', 'url': url}, True)
 
 
 def get_display_self_url():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'display_self_url'})
     if r is None:
         return '--unknown--'
@@ -456,10 +501,12 @@ def get_display_self_url():
 
 
 def set_display_admin(admin):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'display_admin'}, {'_id': 'display_admin', 'admin': admin}, True)
 
 
 def get_display_admin():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'display_admin'})
     if r is None:
         return 'Admin'
@@ -467,10 +514,12 @@ def get_display_admin():
 
 
 def set_client_download_url(url=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'client_download_url'}, {'_id': 'client_download_url', 'url': url}, True)
 
 
 def get_client_download_url():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'client_download_url'})
     if r is None:
         return None
@@ -478,10 +527,12 @@ def get_client_download_url():
 
 
 def set_tmnfd_cli_method(method=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'tmnfd_cli_method'}, {'_id': 'tmnfd_cli_method', 'method': method}, True)
 
 
 def get_tmnfd_cli_method():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'tmnfd_cli_method'})
     if r is None:
         return None
@@ -489,10 +540,12 @@ def get_tmnfd_cli_method():
 
 
 def set_provide_replays(provide=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'provide_replays'}, {'_id': 'provide_replays', 'provide': provide}, True)
 
 
 def get_provide_replays():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'provide_replays'})
     if r is None:
         return False
@@ -500,10 +553,12 @@ def get_provide_replays():
 
 
 def set_provide_thumbnails(provide=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'provide_thumbnails'}, {'_id': 'provide_thumbnails', 'provide': provide}, True)
 
 
 def get_provide_thumbnails():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'provide_thumbnails'})
     if r is None:
         return False
@@ -511,10 +566,12 @@ def get_provide_thumbnails():
 
 
 def set_provide_challenges(provide=False):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'upload_challenges'}, {'_id': 'upload_challenges', 'provide': provide}, True)
 
 
 def get_provide_challenges():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'upload_challenges'})
     if r is None:
         return False
@@ -522,11 +579,13 @@ def get_provide_challenges():
 
 
 def set_start_time(startts=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if startts is None or (isinstance(startts, int) and startts >= 0):
         mongoDB().settings.replace_one({'_id': 'start_time'}, {'_id': 'start_time', 'startts': startts}, True)
 
 
 def get_start_time():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'start_time'})
     if r is None:
         return None
@@ -534,11 +593,13 @@ def get_start_time():
 
 
 def set_end_time(endts=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if endts is None or (isinstance(endts, int) and endts >= 0):
         mongoDB().settings.replace_one({'_id': 'end_time'}, {'_id': 'end_time', 'endts': endts}, True)
 
 
 def get_end_time():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'end_time'})
     if r is None:
         return None
@@ -546,10 +607,12 @@ def get_end_time():
 
 
 def set_hotseat_mode(enabled=True):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     mongoDB().settings.replace_one({'_id': 'hotseat_mode'}, {'_id': 'hotseat_mode', 'enabled': enabled}, True)
 
 
 def get_hotseat_mode():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'hotseat_mode'})
     if r is None:
         return False
@@ -562,6 +625,7 @@ Stats
 
 
 def get_players_count():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'players_count'})
     if r is None or ts - r.get('ts', 0) > 10:
@@ -573,6 +637,7 @@ def get_players_count():
 
 
 def get_active_players_count():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'active_players_count'})
     if r is None or ts - r.get('ts', 0) > 10:
@@ -584,6 +649,7 @@ def get_active_players_count():
 
 
 def get_laptimes_count():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'laptimes_count'})
     if r is None or ts - r.get('ts', 0) > 10:
@@ -595,6 +661,7 @@ def get_laptimes_count():
 
 
 def get_laptimes_sum():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'laptimes_sum'})
     if r is None or ts - r.get('ts', 0) > 10:
@@ -609,6 +676,7 @@ def get_laptimes_sum():
 
 
 def get_total_seen_count():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ts = int(datetime.now().timestamp())
     r = mongoDB().utils.find_one({'_id': 'total_seen_count'})
     if r is None or ts - r.get('ts', 0) > 10:

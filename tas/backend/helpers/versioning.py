@@ -1,9 +1,13 @@
 from helpers.mongodb import get_version, set_version
 from helpers.version import version as current_version
 import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def versions_eq(left, right):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -29,6 +33,7 @@ def versions_eq(left, right):
 
 
 def versions_lt(left, right):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -58,6 +63,7 @@ def versions_lt(left, right):
 
 
 def versions_gt(left, right):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -87,6 +93,7 @@ def versions_gt(left, right):
 
 
 def versions_lte(left, right):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if versions_eq(left, right):
         return True
     if versions_lt(left, right):
@@ -95,6 +102,7 @@ def versions_lte(left, right):
 
 
 def versions_gte(left, right):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if versions_eq(left, right):
         return True
     if versions_gt(left, right):
@@ -129,22 +137,23 @@ def test_compares():
 
 
 def run():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     db_version = get_version()
     if db_version is None:
         # new install nothing todo
-        print('Versioning detected a new install!')
+        logger.info('Versioning detected a new install!')
         set_version(current_version)
         return
     if versions_eq(db_version, current_version):
         # nothing todo allready the desired version
-        print(f'Versioning detected the DB matches the current version {current_version}')
+        logger.info(f'Versioning detected the DB matches the current version {current_version}')
         return
     if versions_gt(db_version, current_version):
         # error DB is on a newer version that software, better just terminate
-        print('Versioning detected the Database is on a newer Version than the software provides! Exiting...')
+        logger.error('Versioning detected the Database is on a newer Version than the software provides! Exiting...')
         sys.exit(0)
 
-    print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
+    logger.info(f'Versioning performing upgrade from v{db_version} to v{current_version}')
     # here could now be done updates on the DB structure if this is required in the future
 
     set_version(current_version)

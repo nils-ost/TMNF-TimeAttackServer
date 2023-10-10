@@ -11,7 +11,9 @@ from helpers.rabbitmq import consume_dedicated_state_changes
 import time
 import hashlib
 import random
+import logging
 
+logger = logging.getLogger(__name__)
 config = get_config('tmnf-server')
 sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
 pre_start_executed = False
@@ -31,31 +33,31 @@ def watcher_function(timeout, new_state, ch, delivery_tag):
         elif new_state == 'connected':
             while not sender.connect():
                 time.sleep(1)
-            print('Connected to: TMNF - Dedicated Server')
+            logger.info('Connected to: TMNF - Dedicated Server')
             dedicated_connected = True
             prepareChallenges(sender)
 
             if get_provide_replays() or get_provide_thumbnails() or get_provide_challenges():
                 tmnfd_cli_test()
                 if get_provide_thumbnails() and tmnfd_cli_generate_thumbnails():
-                    print('Generated Thumbnails')
+                    logger.info('Generated Thumbnails')
                 if get_provide_challenges() and tmnfd_cli_upload_challenges():
-                    print('Uploaded Challenges')
+                    logger.info('Uploaded Challenges')
 
             server_name = sender.callMethod('GetServerName')[0]
             set_tmnfd_name(server_name)
-            print(f'TMNF - Dedicated Server Name: {server_name}')
+            logger.info(f'TMNF - Dedicated Server Name: {server_name}')
             if not isPreStart() and not isPostEnd():
                 current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
                 challenge_update(current_challenge['UId'], force_inc=False)
-                print(f"Challenge current: {current_challenge['Name']}")
+                logger.info(f"Challenge current: {current_challenge['Name']}")
                 challenge_id_set(current_challenge['UId'], current=True)
                 prepareNextChallenge(sender)
         ch.basic_ack(delivery_tag=delivery_tag)
 
     elif dedicated_connected:
         if isPreStart() and not pre_start_executed:
-            print('Initializing pre start phase')
+            logger.info('Initializing pre start phase')
             # hide the server
             sender.callMethod('SetHideServer', 1)
             # set a password for server
@@ -94,7 +96,7 @@ def watcher_function(timeout, new_state, ch, delivery_tag):
                 sender.callMethod('RestartChallenge')
             pre_start_executed = True
         elif not isPreStart() and pre_start_executed:
-            print('Leaving pre start phase')
+            logger.info('Leaving pre start phase')
             # reloading MatchSettings
             sender.callMethod('LoadMatchSettings', 'MatchSettings/active.txt')
             # prepare challenges
@@ -112,7 +114,7 @@ def watcher_function(timeout, new_state, ch, delivery_tag):
             sender.callMethod('NextChallenge')
             pre_start_executed = False
         elif isPostEnd() and not post_end_executed:
-            print('Initializing post end phase')
+            logger.info('Initializing post end phase')
             # hide the server
             sender.callMethod('SetHideServer', 1)
             # set a password for server
@@ -134,4 +136,5 @@ def watcher_function(timeout, new_state, ch, delivery_tag):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     consume_dedicated_state_changes(watcher_function, timeout=1)
