@@ -39,12 +39,13 @@ ENV HOME /app
 WORKDIR $HOME
 
 RUN apt update \
- && apt install -y liblzo2-2 imagemagick
+ && apt install -y liblzo2-2 imagemagick \
+ && rm -rf /var/cache/apt
 
 COPY --from=dedicated /tmdedicated /tmdedicated
-COPY --from=build /root/.local /root/.local
+COPY --from=build /app/.local ./.local/
 COPY cli.py .
-COPY helpers .
-COPY screens .
+COPY helpers ./helpers/
+COPY screens ./screens/
 
 CMD ["/tmdedicated/TrackmaniaServer" "/dedicated_cfg=dedicated_cfg.txt" "/game_settings=MatchSettings/active.txt" "/lan" "/nodaemon"]
