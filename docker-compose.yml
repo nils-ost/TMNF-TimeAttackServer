@@ -1,15 +1,28 @@
 version: '3.6'
 
 services:
-  backend:
+  orchestrator:
     image: nilsost/tas:${TAS_VERSION:-latest}
-    command: main
+    command: orchestrator
     depends_on:
       - mongodb
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:rw
+      - tas_static:/app/static:rw
+
+  backend:
+    image: nilsost/tas:${TAS_VERSION:-latest}
+    command: api
+    depends_on:
+      - mongodb
+      - orchestrator
+    environment:
+      - TAS_CONFIG_FILE=/app/cfg/config.json
+    volumes:
+      - tas_config:/app/cfg:ro
+      - tas_static:/app/static:ro
 
   dedicated-receiver:
     image: nilsost/tas:${TAS_VERSION:-latest}
@@ -17,28 +30,31 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+      - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:ro
 
-  dedicated-worker:
+  dedicated-responder:
     image: nilsost/tas:${TAS_VERSION:-latest}
-    command: dworker
+    command: dresponder
     depends_on:
       - mongodb
       - rabbitmq
+      - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
       - tas_config:/app/cfg:ro
 
-  dedicated-watcher:
+  dedicated-controller:
     image: nilsost/tas:${TAS_VERSION:-latest}
-    command: dwatcher
+    command: dcontroller
     depends_on:
       - mongodb
       - rabbitmq
+      - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
     volumes:
@@ -71,5 +87,6 @@ services:
 
 volumes:
   tas_config:
+  tas_static:
   mongo_data:
   minio_data:

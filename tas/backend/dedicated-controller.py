@@ -1,5 +1,5 @@
 """
-TrachMania Nations Forever - Dedicated Server Watcher
+TrachMania Nations Forever - Dedicated Server Controller
 """
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
@@ -21,7 +21,7 @@ post_end_executed = False
 dedicated_connected = False
 
 
-def watcher_function(timeout, new_state, ch, delivery_tag):
+def controller_function(timeout, new_state, ch, delivery_tag):
     global sender
     global dedicated_connected
     global pre_start_executed
@@ -136,5 +136,5 @@ def watcher_function(timeout, new_state, ch, delivery_tag):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
-    consume_dedicated_state_changes(watcher_function, timeout=1)
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    consume_dedicated_state_changes(controller_function, timeout=1)

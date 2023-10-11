@@ -13,12 +13,15 @@ ADD requirements.txt $HOME/requirements.txt
 RUN pip3 install -r $HOME/requirements.txt
 
 ADD helpers $HOME/helpers
-ADD static $HOME/static
-ADD timeAttackServer.py $HOME/main
+ADD orchestrator.py $HOME/orchestrator
+ADD api.py $HOME/api
 ADD cli.py $HOME/cli
+ADD metrics.py $HOME/metrics
 ADD dedicated-receiver.py $HOME/dreceiver
-ADD dedicated-worker.py $HOME/dworker
-ADD dedicated-watcher.py $HOME/dwatcher
+ADD dedicated-responder.py $HOME/dresponder
+ADD dedicated-controller.py $HOME/dcontroller
+
+EXPOSE 8000/tcp 8001/tcp
 
 ENTRYPOINT ["python3"]
-CMD ["main"]
+CMD ["api"]

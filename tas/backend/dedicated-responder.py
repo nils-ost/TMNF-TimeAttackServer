@@ -1,5 +1,5 @@
 """
-TrachMania Nations Forever - Dedicated Server Worker
+TrachMania Nations Forever - Dedicated Server Responder
 """
 from helpers.config import get_config
 from helpers.GbxRemote import GbxRemote
@@ -18,7 +18,7 @@ config = get_config('tmnf-server')
 sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
 
 
-def worker_function(func, params, ch, delivery_tag):
+def responder_function(func, params, ch, delivery_tag):
     global sender
     logger.info(f'Received: {func} {params}')
 
@@ -147,5 +147,5 @@ def worker_function(func, params, ch, delivery_tag):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
-    consume_dedicated_received_messages(worker_function)
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    consume_dedicated_received_messages(responder_function)

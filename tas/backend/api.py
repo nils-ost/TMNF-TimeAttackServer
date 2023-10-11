@@ -1,24 +1,20 @@
 import cherrypy
 import cherrypy_cors
-import time
 import os
 import json
 import logging
-from multiprocessing import Process
 from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
 from helpers.versioning import run as versioning_run
-from helpers.mongodb import challenge_all, challenge_get, challenge_id_get, player_update
+from helpers.mongodb import challenge_all, challenge_get, player_update
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
-from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, ranking_rebuild, hotseat_player_name_get, hotseat_player_name_set
+from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, hotseat_player_name_get, hotseat_player_name_set
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_wallboard_tables_max, get_tmnfd_name
 from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version, get_hotseat_mode
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
-from helpers.config import get_config
-from helpers.metrics import start_metrics_exporter
 
 
 valid_name_chars = [
@@ -307,29 +303,8 @@ class Thumbnails():
             return file_generator(thumbnail_get(thumbnail_name))
 
 
-def periodic_events_function():
-    while True:
-        time.sleep(5)
-        # rebuild rankings
-        current_challenge = challenge_id_get(current=True)
-        if current_challenge is not None:
-            ranking_rebuild(current_challenge)
-        # check active players for hotseat-mode
-        if get_hotseat_mode():
-            ts = int(datetime.now().timestamp())
-            one_playing = False
-            for p in player_all():
-                if p.get('connected'):
-                    if (ts - p.get('ts', ts)) > 60:
-                        player_update(player_id=p.get('_id'), connected=False, ts=ts)
-                    else:
-                        one_playing = True
-            if not one_playing:
-                hotseat_player_name_set(None)
-
-
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     conf = {
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
@@ -354,12 +329,8 @@ if __name__ == '__main__':
             'tools.staticdir.dir': 'download'
         }
     }
-    config = get_config('server')
     cherrypy_cors.install()
-    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
+    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8000, 'cors.expose.on': True})
 
     versioning_run()
-    periodic_events_process = Process(target=periodic_events_function, daemon=True)
-    periodic_events_process.start()
-    start_metrics_exporter()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)

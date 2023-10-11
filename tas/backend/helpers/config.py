@@ -22,13 +22,6 @@ config = {
         'least_rounds': 6,
         'least_time': 300000
     },
-    'server': {
-        'port': 8000
-    },
-    'metrics': {
-        'enabled': False,
-        'port': 8001
-    },
     's3': {
         'host': 'minio',
         'port': 9000,

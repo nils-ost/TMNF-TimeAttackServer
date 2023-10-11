@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     config = get_config('tmnf-server')
     receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     send_dedicated_received_message('Dedicated.Disconnected')
