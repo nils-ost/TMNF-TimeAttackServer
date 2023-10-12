@@ -31,8 +31,7 @@ def init_config(force=True):
         cfg.set_xmlrpc()
         cfg.set_laddermode()
         cfg.save()
-        ms = MatchSettings(config['active_matchsetting'])
-        ms.save(activate=True)
+        write_active()
         config['init'] = True
         save_config(config)
 
@@ -53,6 +52,15 @@ def write_active():
         ms.replace_challenges(new_c)
         ms.set_timeattack_limit(minutes=60)
         ms.save(activate=True, keep_original=True)
+
+
+def prepare_start():
+    from helpers.config import get_config
+    config = get_config()
+    if config.get('init', False):
+        write_active()
+    else:
+        init_config()
 
 
 def list_challenges():
@@ -281,7 +289,7 @@ elif args.init:
     init_config(False)
 
 elif args.prepare_start:
-    write_active()
+    prepare_start()
 
 elif args.generate_thumbnails:
     generate_thumbnails(False)

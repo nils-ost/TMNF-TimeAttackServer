@@ -4,16 +4,16 @@ import json
 
 loaded = False
 _config = {
-    'config_path': 'dedicated/GameData/Config/dedicated_cfg.txt',
-    'match_settings': 'dedicated/GameData/Tracks/MatchSettings/TAS',
-    'active_path': 'dedicated/GameData/Tracks/MatchSettings/active.txt',
-    'challenges_path': 'dedicated/GameData/Tracks',
+    'config_path': '/cfg/dedicated_cfg.txt',
+    'match_settings': '/cfg/MatchSettings',
+    'active_path': '/cfg/active_ms.txt',
+    'challenges_path': '/cfg/Tracks',
     'active_matchsetting': 'NationsWhite.txt',
-    'replays_path': 'dedicated/GameData/Tracks/Replays',
+    'replays_path': '/tmdedicated/GameData/Tracks/Replays',
     'hot_seat_mode': False,
     'saved_max_players': 32,
     's3': {
-        'host': 'localhost',
+        'host': 'minio',
         'port': 9000,
         'access_key': 'tmnftas',
         'access_secret': 'password',
@@ -31,10 +31,11 @@ def reload_config():
 
 def get_config():
     global loaded
+    cfg_file = os.environ['TMNFD_CONFIG_FILE'] if 'TMNFD_CONFIG_FILE' in os.environ else 'config.json'
     if not loaded:
         loaded = True
-        if os.path.isfile('config.json'):
-            with open('config.json', 'r') as f:
+        if os.path.isfile(cfg_file):
+            with open(cfg_file, 'r') as f:
                 _config.update(json.loads(f.read()))
         else:
             save_config(_config)
@@ -42,6 +43,7 @@ def get_config():
 
 
 def save_config(config):
+    cfg_file = os.environ['TMNFD_CONFIG_FILE'] if 'TMNFD_CONFIG_FILE' in os.environ else 'config.json'
     _config = config
-    with open('config.json', 'w') as f:
+    with open(cfg_file, 'w') as f:
         f.write(json.dumps(_config, indent=4))

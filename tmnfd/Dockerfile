@@ -42,10 +42,12 @@ RUN apt update \
  && apt install -y liblzo2-2 imagemagick \
  && rm -rf /var/cache/apt
 
+COPY start.sh ./start.sh
+RUN chmod +x ./start.sh
 COPY --from=dedicated /tmdedicated /tmdedicated
 COPY --from=build /app/.local ./.local/
-COPY cli.py .
+COPY cli.py ./cli
 COPY helpers ./helpers/
 COPY screens ./screens/
 
-CMD ["/tmdedicated/TrackmaniaServer" "/dedicated_cfg=dedicated_cfg.txt" "/game_settings=MatchSettings/active.txt" "/lan" "/nodaemon"]
+CMD ["./start.sh"]

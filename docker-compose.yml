@@ -60,6 +60,13 @@ services:
     volumes:
       - tas_config:/app/cfg:ro
 
+  tmnfd:
+    image: nilsost/tas-tmnfd:${TAS_VERSION:-latest}
+    environment:
+      - TMNFD_CONFIG_FILE=/cfg/config.json
+    volumes:
+      - tmnfd_config:/cfg:rw
+
   haproxy:
     image: haproxy:lts-alpine
     ports:
@@ -90,3 +97,4 @@ volumes:
   tas_static:
   mongo_data:
   minio_data:
+  tmnfd_config:
