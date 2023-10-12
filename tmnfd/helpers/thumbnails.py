@@ -21,9 +21,9 @@ def extract_thumbnail(challenge_file, thumbnail_file):
                     thumb_size = g.root_parser.read_uint32()
                     g.root_parser.skip(15)
                     thumb = g.root_parser.read(thumb_size)
-                    with open(thumbnail_file, 'wb') as f:
+                    with open('/tmp/tmp.jpg', 'wb') as f:
                         f.write(thumb)
-                    subprocess.call(f'convert {thumbnail_file} -flip {thumbnail_file}', shell=True)
+                    subprocess.check_output(f'nconvert -yflip -D -o {thumbnail_file} /tmp/tmp.jpg', shell=True)
             elif cid == 0x03043005:
                 g.root_parser.read_string()
             else:
