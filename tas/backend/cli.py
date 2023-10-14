@@ -10,8 +10,6 @@ from datetime import datetime
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
-parser.add_argument('--config', dest='config', action='store_true', default=False, help='Returns current configuration')
-parser.add_argument('--enablemetrics', dest='enablemetrics', action='store_true', default=False, help='If set the TAS metrics endpoint is set to enabled')
 parser.add_argument('--state', '-s', dest='state', action='store_true', default=False, help='If set the state of TAS stack is displayed')
 parser.add_argument('--start', dest='start', action='store_true', default=False, help='If set TAS stack is started')
 parser.add_argument('--stop', dest='stop', action='store_true', default=False, help='If set TAS stack is stopped')
@@ -387,9 +385,6 @@ def createBackup():
     })
 
     with zipfile.ZipFile(backup_file, mode='w') as zf:
-        with zf.open('config.json', 'w') as f:
-            f.write(json.dumps(get_config(), indent=2).encode('utf-8'))
-
         for coll in [c['name'] for c in mongoDB().list_collections()]:
             elements = list()
             for element in mongoDB().get_collection(coll).find({}):
@@ -425,7 +420,7 @@ def restoreBackup():
     import zipfile
     from helpers.version import version
     from helpers.versioning import versions_gt
-    from helpers.config import get_config, reload_config
+    from helpers.config import get_config
     from helpers.s3 import botoClient, generic_delete_all
     from helpers.mongodb import mongoDB
     from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_restore_backup
@@ -448,11 +443,6 @@ def restoreBackup():
             print(f"Version of backup ({metadata['version']}) is bigger than the currently installed version ({version})! Can't restore backup!")
             return
 
-        clearDB(force=True)
-        with zf.open('config.json', 'r') as f:
-            with open('config.json', 'wb') as out:
-                out.write(f.read())
-        reload_config()
         clearDB(force=True)
 
         for coll in metadata.get('db', dict()).keys():
@@ -522,19 +512,6 @@ commands = [
     ('Restore Backup', restoreBackup),
     ('Exit', exit)
 ]
-
-if args.config:
-    from helpers.config import get_config
-    print(json.dumps(get_config(), indent=2))
-    sys.exit(0)
-
-if args.enablemetrics:
-    from helpers.config import get_config, set_config
-    config = get_config('metrics')
-    if not config.get('enabled', False):
-        config['enabled'] = True
-        set_config(config, 'metrics')
-    sys.exit(0)
 
 if args.state:
     state()

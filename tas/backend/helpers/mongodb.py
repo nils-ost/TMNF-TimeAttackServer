@@ -1,19 +1,26 @@
 from pymongo import MongoClient, ASCENDING, DESCENDING, errors as mongo_errors
-from helpers.config import get_config
 from datetime import datetime
 import multiprocessing
 import sys
+import os
 import logging
 
 logger = logging.getLogger(__name__)
 _mongoDB = dict()
-config = get_config('mongo')
+
+
+def _config():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    if 'MONGO_HOST' not in os.environ or 'MONGO_PORT' not in os.environ or 'MONGO_DB' not in os.environ:
+        logger.critical('missing environment variables: MONGO_HOST, MONGO_PORT or MONGO_DB ... aborting')
+        sys.exit(1)
+    return {'host': os.environ['MONGO_HOST'], 'port': int(os.environ['MONGO_PORT']), 'database': os.environ['MONGO_DB']}
 
 
 def wait_for_mongodb_server():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     first = True
-    mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=2000)
+    mongoClient = MongoClient(host=_config()['host'], port=_config()['port'], serverSelectionTimeoutMS=2000)
     while True:
         try:
             mongoClient.server_info()
@@ -32,8 +39,8 @@ def start_mongodb_connection():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global _mongoDB
     wait_for_mongodb_server()
-    mongoClient = MongoClient(host=config['host'], port=int(config['port']), serverSelectionTimeoutMS=500)
-    _mongoDB[multiprocessing.current_process().name] = mongoClient.get_database(config['database'])
+    mongoClient = MongoClient(host=_config()['host'], port=int(_config()['port']), serverSelectionTimeoutMS=500)
+    _mongoDB[multiprocessing.current_process().name] = mongoClient.get_database(_config()['database'])
 
 
 def mongoDB():
@@ -48,7 +55,7 @@ def mongoDB():
 def is_connected():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     try:
-        mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=1000)
+        mongoClient = MongoClient(host=_config()['host'], port=_config()['port'], serverSelectionTimeoutMS=1000)
         mongoClient.server_info()
         return True
     except Exception:
@@ -435,7 +442,7 @@ def get_wallboard_players_max():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_players_max'})
     if r is None:
-        wpmd = get_config('util')['wallboard_players_max_default']
+        wpmd = 10
         set_wallboard_players_max(wpmd)
         return wpmd
     else:
@@ -451,7 +458,7 @@ def get_wallboard_challenges_max():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_challenges_max'})
     if r is None:
-        wcmd = get_config('util')['wallboard_challenges_max_default']
+        wcmd = 8
         set_wallboard_challenges_max(wcmd)
         return wcmd
     else:
@@ -467,7 +474,7 @@ def get_wallboard_tables_max():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     r = mongoDB().settings.find_one({'_id': 'wallboard_tables_max'})
     if r is None:
-        wtmd = get_config('util')['wallboard_tables_max_default']
+        wtmd = 3
         set_wallboard_tables_max(wtmd)
         return wtmd
     else:
@@ -685,3 +692,19 @@ def get_total_seen_count():
         return count
     else:
         return r.get('count', 0)
+
+
+"""
+Config
+"""
+
+
+def get_config(key):
+    r = mongoDB().config.find_one({'_id': key})
+    if r is None:
+        return None
+    return r.get('config', None)
+
+
+def set_config(key, config):
+    mongoDB().config.replace_one({'_id': 'key'}, {'_id': 'key', 'config': config}, True)

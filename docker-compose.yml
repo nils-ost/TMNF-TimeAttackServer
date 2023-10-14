@@ -6,22 +6,29 @@ services:
     command: orchestrator
     depends_on:
       - mongodb
+      - minio
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=tm-tas
     volumes:
-      - tas_config:/app/cfg:rw
       - tas_static:/app/static:rw
+      - /var/run/docker.sock:/var/run/docker.sock
 
   backend:
     image: nilsost/tas:${TAS_VERSION:-latest}
     command: api
     depends_on:
       - mongodb
+      - minio
       - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=tm-tas
     volumes:
-      - tas_config:/app/cfg:ro
       - tas_static:/app/static:ro
 
   dedicated-receiver:
@@ -33,8 +40,9 @@ services:
       - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
-    volumes:
-      - tas_config:/app/cfg:ro
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=tm-tas
 
   dedicated-responder:
     image: nilsost/tas:${TAS_VERSION:-latest}
@@ -45,8 +53,9 @@ services:
       - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
-    volumes:
-      - tas_config:/app/cfg:ro
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=tm-tas
 
   dedicated-controller:
     image: nilsost/tas:${TAS_VERSION:-latest}
@@ -57,11 +66,21 @@ services:
       - orchestrator
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
-    volumes:
-      - tas_config:/app/cfg:ro
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=tm-tas
+
+  frontend:
+    image: nilsost/tas-frontend:${TAS_VERSION:-latest}
+    depends_on:
+      - backend
 
   tmnfd:
     image: nilsost/tas-tmnfd:${TAS_VERSION:-latest}
+    depends_on:
+      - minio
+    deploy:
+      replicas: 1
     environment:
       - TMNFD_CONFIG_FILE=/cfg/config.json
     volumes:
@@ -69,6 +88,9 @@ services:
 
   haproxy:
     image: haproxy:lts-alpine
+    depends_on:
+      - backend
+      - frontend
     ports:
       - ${BIND_IP:-0.0.0.0}:80:80
       - ${BIND_IP:-0.0.0.0}:443:443
@@ -97,7 +119,6 @@ services:
       - minio_data:/data:rw
 
 volumes:
-  tas_config:
   tas_static:
   mongo_data:
   minio_data:

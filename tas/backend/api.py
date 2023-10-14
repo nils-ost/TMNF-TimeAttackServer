@@ -306,25 +306,8 @@ class Thumbnails():
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     conf = {
-        '/': {
-            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/en',
-            'tools.staticdir.index': 'index.html'
-        },
-        '/de': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/de',
-            'tools.staticdir.index': 'index.html',
-            'tools.staticdir.abs_index': True
-        },
-        '/en': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/en',
-            'tools.staticdir.index': 'index.html',
-            'tools.staticdir.abs_index': True
-        },
         '/download': {
+            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
             'tools.staticdir.on': True,
             'tools.staticdir.dir': 'download'
         }

@@ -1,5 +1,3 @@
-import os
-import json
 import logging
 import sys
 
@@ -7,15 +5,10 @@ logger = logging.getLogger(__name__)
 
 config = {
     'tmnf-server': {
-        'host': 'localhost',
+        'host': 'tmnfd',
         'port': 5000,
         'user': 'SuperAdmin',
         'password': 'SuperAdmin'
-    },
-    'mongo': {
-        'host': 'mongodb',
-        'port': 27017,
-        'database': 'tmnf-tas'
     },
     'challenges': {
         'rel_time': 'SilverTime',
@@ -36,54 +29,26 @@ config = {
         'port': 5672,
         'queue_dedicated_received_messages': 'ded_rx_msg',
         'queue_dedicated_state_changes': 'ded_st_chg'
-    },
-    'util': {
-        'wallboard_players_max_default': 10,
-        'wallboard_challenges_max_default': 8,
-        'wallboard_tables_max_default': 3
     }
 }
 
 
-def reload_config():
+def get_config(portion):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
-    cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
-    if os.path.isfile(cfg_file):
-        with open(cfg_file, 'r') as f:
-            fconfig = json.load(f)
-        for k in fconfig.keys():
-            config[k].update(fconfig[k])
-    else:
-        try:
-            with open(cfg_file, 'w') as f:
-                f.write(json.dumps(config, indent=4))
-        except Exception:
-            logger.warning(f'Could not write: {cfg_file}')
+    from helpers.mongodb import get_config as mget_config
+    db_config = mget_config(portion)
+    if db_config is None:
+        if portion not in config:
+            return dict()
+        else:
+            from helpers.mongodb import set_config as mset_config
+            db_config = config[portion]
+            mset_config(portion, db_config)
+    return db_config
 
 
-def get_config(portion=None):
+def set_config(nconfig, portion):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    global config
-    if portion is None:
-        return config
-    else:
-        return config.get(portion, None)
-
-
-def set_config(nconfig, portion=None):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    global config
-    cfg_file = os.environ['TAS_CONFIG_FILE'] if 'TAS_CONFIG_FILE' in os.environ else 'config.json'
-    if portion is None:
-        config = nconfig
-    else:
-        config[portion] = nconfig
-    try:
-        with open(cfg_file, 'w') as f:
-            f.write(json.dumps(config, indent=4))
-    except Exception:
-        logger.warning(f'Could not write: {cfg_file}')
-
-
-reload_config()
+    from helpers.mongodb import set_config as mset_config
+    mset_config(portion, nconfig)

@@ -15,6 +15,7 @@ def _get_channel():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global mq_connection
     global mq_channel
+    global rabbit_config
     if mq_connection is None:
         first = True
         while True:
@@ -27,6 +28,7 @@ def _get_channel():
                     first = False
                     logger.warning('RabbitMQ pending ... waiting')
             time.sleep(1)
+            rabbit_config = get_config('rabbit')
     if mq_channel is None:
         mq_channel = mq_connection.channel()
         mq_channel.queue_declare(queue=rabbit_config['queue_dedicated_received_messages'])
