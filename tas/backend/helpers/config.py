@@ -5,10 +5,11 @@ logger = logging.getLogger(__name__)
 
 config = {
     'tmnf-server': {
-        'host': 'tmnfd',
-        'port': 5000,
-        'user': 'SuperAdmin',
-        'password': 'SuperAdmin'
+        'TMNF-TAS': {
+            'connection': 'local-container',
+            'container': 'tmnfd-static',
+            'type': 'tmnf'
+        }
     },
     'challenges': {
         'rel_time': 'SilverTime',
@@ -18,7 +19,7 @@ config = {
     's3': {
         'host': 'minio',
         'port': 9000,
-        'access_key': 'tmnftas',
+        'access_key': 'tmtas',
         'access_secret': 'password',
         'bucket_replays': 'tas-replays',
         'bucket_thumbnails': 'tas-thumbnails',
@@ -27,8 +28,9 @@ config = {
     'rabbit': {
         'host': 'rabbitmq',
         'port': 5672,
-        'queue_dedicated_received_messages': 'ded_rx_msg',
-        'queue_dedicated_state_changes': 'ded_st_chg'
+        'queue_dedicated_received_messages': 'tas_ded_rx_msg',
+        'queue_dedicated_state_changes': 'tas_ded_st_chg',
+        'queue_orchestrator': 'tas_orchestrator'
     }
 }
 

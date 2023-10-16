@@ -6,61 +6,59 @@ from glob import glob
 from datetime import datetime
 import json
 import subprocess
+import logging
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='TMNFD CLI')
 parser.add_argument('--test', dest='test', action='store_true', default=False, help='Used for testing if tmnfd-cli is available')
-parser.add_argument('--init', dest='init', action='store_true', default=False, help='Initialize Configuration')
 parser.add_argument('--prepare-start', dest='prepare_start', action='store_true', help='Prepares everything for tmnfd to be started')
 parser.add_argument('--upload_replay', dest='upload_replay', default=None, help='Uploads specified replay file to S3 storage')
 parser.add_argument('--generate_thumbnails', dest='generate_thumbnails', action='store_true', help='Generates thumbnails and uploads them to S3 storage')
 parser.add_argument('--upload_challenges', dest='upload_challenges', action='store_true', help='Uploads challenges files of active machsetting to S3 storage')
 parser.add_argument('--create_backup', dest='create_backup', action='store_true', help='Creates backup of tmnfd config and stores it to S3')
 parser.add_argument('--restore_backup', dest='restore_backup', action='store_true', help='Restores backup of tmnfd config from S3')
-parser.add_argument('--enable_hsm', dest='enable_hsm', action='store_true', help='Enables TAS-HotSeat-Mode')
-parser.add_argument('--disable_hsm', dest='disable_hsm', action='store_true', help='Disables TAS-HotSeat-Mode')
 args = parser.parse_args()
 
 
-def init_config(force=True):
-    from helpers.config import get_config, save_config
+def prepare_start():
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    from helpers.config import get_config, update_config_from_orchestrator
+    if not bool(os.environ.get('IGNORE_ORCHESTRATOR', False)):
+        update_config_from_orchestrator()
+    else:
+        logger.warning('ignoring orchestrator')
     config = get_config()
-    if force or not config.get('init', False):
-        cfg = DedicatedCfg()
-        cfg.set_name('TMNF-TAS')
-        cfg.set_xmlrpc()
-        cfg.set_laddermode()
-        cfg.save()
-        write_active()
-        config['init'] = True
-        save_config(config)
-
-
-def write_active():
-    from helpers.config import get_config
-    config = get_config()
+    dc = DedicatedCfg()
+    dc.set_laddermode()
+    dc.set_name(config['dedicated']['ingame_name'])
+    dc.set_ports(
+        port=config['dedicated']['game_port'],
+        p2p_port=config['dedicated']['p2p_port'],
+        rpc_port=config['dedicated']['rpc_port'])
+    dc.set_passwords(
+        superadmin=config['dedicated']['superadmin_pw'],
+        admin=config['dedicated']['admin_pw'],
+        user=config['dedicated']['user_pw'])
+    dc.set_callvote(
+        timeout=config['dedicated']['callvote_timeout'],
+        ratio=config['dedicated']['callvote_ratio'])
     if not config['hot_seat_mode']:
+        logger.info('HotSeat-Mode disabled')
+        dc.set_max_players(config['dedicated']['max_players'])
         ms = MatchSettings(config['active_matchsetting'])
         ms.save(activate=True)
     else:
-        dc = DedicatedCfg()
+        logger.info('HotSeat-Mode enabled')
         dc.set_max_players(count=1)
-        dc.save()
         ms = MatchSettings(config['active_matchsetting'])
         new_c = list()
         new_c.append(ms.get_challenges()[0])
         ms.replace_challenges(new_c)
         ms.set_timeattack_limit(minutes=60)
         ms.save(activate=True, keep_original=True)
-
-
-def prepare_start():
-    from helpers.config import get_config
-    config = get_config()
-    if config.get('init', False):
-        write_active()
-    else:
-        init_config()
+    dc.save()
 
 
 def list_challenges():
@@ -240,29 +238,6 @@ def restore_backup(s3=False):
         subprocess.call(f'rm -f {backup_file}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
-def enable_hotseat_mode():
-    from helpers.config import get_config, save_config
-    config = get_config()
-    if not config['hot_seat_mode']:
-        dc = DedicatedCfg()
-        config['saved_max_players'] = dc.get_max_players()
-        config['hot_seat_mode'] = True
-        save_config(config)
-        write_active()
-
-
-def disable_hotseat_mode():
-    from helpers.config import get_config, save_config
-    config = get_config()
-    if config['hot_seat_mode']:
-        dc = DedicatedCfg()
-        dc.set_max_players(count=config['saved_max_players'])
-        dc.save()
-        config['hot_seat_mode'] = False
-        save_config(config)
-        write_active()
-
-
 def open_matchsettings_editor():
     from helpers.matchsettingseditor import run as editor
     print('handing over to interactive MatchSettings Editor')
@@ -271,8 +246,6 @@ def open_matchsettings_editor():
 
 
 commands = [
-    ('Force Config Init', init_config),
-    ('Write Active MatchSettings', write_active),
     ('List Challenges', list_challenges),
     ('Open MatchSettings Editor', open_matchsettings_editor),
     ('Generate Thumbnails', generate_thumbnails),
@@ -284,9 +257,6 @@ commands = [
 
 if args.test:
     sys.exit(0)
-
-elif args.init:
-    init_config(False)
 
 elif args.prepare_start:
     prepare_start()
@@ -305,12 +275,6 @@ elif args.create_backup:
 
 elif args.restore_backup:
     restore_backup(s3=True)
-
-elif args.enable_hsm:
-    enable_hotseat_mode()
-
-elif args.disable_hsm:
-    disable_hotseat_mode()
 
 else:
     while True:

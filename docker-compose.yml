@@ -7,6 +7,7 @@ services:
     depends_on:
       - mongodb
       - minio
+      - rabbitmq
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -38,6 +39,8 @@ services:
       - mongodb
       - rabbitmq
       - orchestrator
+    deploy:
+      replicas: 0
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -51,6 +54,8 @@ services:
       - mongodb
       - rabbitmq
       - orchestrator
+    deploy:
+      replicas: 0
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -64,6 +69,8 @@ services:
       - mongodb
       - rabbitmq
       - orchestrator
+    deploy:
+      replicas: 0
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -80,11 +87,22 @@ services:
     depends_on:
       - minio
     deploy:
-      replicas: 1
+      replicas: 0
+    environment:
+      - RABBIT_HOST=rabbitmq
+    volumes:
+      - tmnfd_tracks:/tracks:rw
+
+  tmnfd-static:
+    image: nilsost/tas-tmnfd:${TAS_VERSION:-latest}
+    depends_on:
+      - minio
     environment:
       - TMNFD_CONFIG_FILE=/cfg/config.json
+      - RABBIT_HOST=rabbitmq
     volumes:
-      - tmnfd_config:/cfg:rw
+      - tmnfd_tracks:/tracks:rw
+      - tmnfd_static_config:/cfg:rw
 
   haproxy:
     image: haproxy:lts-alpine
@@ -111,7 +129,7 @@ services:
   minio:
     image: minio/minio:RELEASE.2022-04-30T22-23-53Z
     environment:
-      - MINIO_ROOT_USER=tmnftas
+      - MINIO_ROOT_USER=tmtas
       - MINIO_ROOT_PASSWORD=password
       - MINIO_PROMETHEUS_AUTH_TYPE=public
     command: server /data
@@ -122,4 +140,5 @@ volumes:
   tas_static:
   mongo_data:
   minio_data:
-  tmnfd_config:
+  tmnfd_tracks:
+  tmnfd_static_config:

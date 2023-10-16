@@ -31,6 +31,7 @@ def _get_channel():
             rabbit_config = get_config('rabbit')
     if mq_channel is None:
         mq_channel = mq_connection.channel()
+        mq_channel.queue_declare(queue=rabbit_config['queue_orchestrator'])
         mq_channel.queue_declare(queue=rabbit_config['queue_dedicated_received_messages'])
         mq_channel.queue_declare(queue=rabbit_config['queue_dedicated_state_changes'])
     return mq_channel

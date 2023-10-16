@@ -22,12 +22,25 @@ class DedicatedCfg():
     def get_max_players(self):
         return int(self.tree.find('server_options').find('max_players').text)
 
-    def set_xmlrpc(self, port=5000, allowremote=True):
-        self.tree.find('system_config').find('xmlrpc_port').text = str(port)
+    def set_ports(self, port=2350, p2p_port=3450, rpc_port=5000, allowremote=True):
+        self.tree.find('system_config').find('server_port').text = str(port)
+        self.tree.find('system_config').find('server_p2p_port').text = str(p2p_port)
+        self.tree.find('system_config').find('xmlrpc_port').text = str(rpc_port)
         self.tree.find('system_config').find('xmlrpc_allowremote').text = str(allowremote)
 
-    def get_xmlrpc(self):
-        return (self.tree.find('system_config').find('xmlrpc_port').text, self.tree.find('system_config').find('xmlrpc_allowremote').text)
+    def set_passwords(self, superadmin='SuperAdmin', admin='Admin', user='User'):
+        for level in self.tree.find('authorization_levels').findall('level'):
+            name = level.find('name').text
+            if name == 'SuperAdmin':
+                level.find('password').text = superadmin
+            elif name == 'Admin':
+                level.find('password').text = admin
+            elif name == 'User':
+                level.find('password').text = user
+
+    def set_callvote(self, timeout=60000, ratio=0.5):
+        self.tree.find('server_options').find('callvote_timeout').text = str(timeout)
+        self.tree.find('server_options').find('callvote_ratio').text = str(ratio)
 
     def set_laddermode(self, mode='inactive'):
         self.tree.find('server_options').find('ladder_mode').text = mode
