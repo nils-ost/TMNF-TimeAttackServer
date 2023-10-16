@@ -86,7 +86,7 @@ def update_config_from_orchestrator():
     config = get_config()
     ask_orchestrator_for_config(
         callback_func=_callback,
-        container_id=os.environ.get('HOSTANME', None),
+        container_id=os.environ.get('HOSTNAME', None),
         dedicated_type='tmnf',
         current_config=config,
         timeout=20)

@@ -4,7 +4,7 @@ import sys
 logger = logging.getLogger(__name__)
 
 config = {
-    'tmnf-server': {
+    'dedicated': {
         'TMNF-TAS': {
             'connection': 'local-container',
             'container': 'tmnfd-static',

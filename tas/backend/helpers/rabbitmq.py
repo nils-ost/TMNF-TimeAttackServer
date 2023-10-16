@@ -11,6 +11,23 @@ mq_connection = None
 mq_channel = None
 
 
+def wait_for_connection():
+    global rabbit_config
+    first = True
+    while True:
+        try:
+            mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_config['host'], port=rabbit_config['port']))
+            logger.info('RabbitMQ started ... continue')
+            mq_connection.close()
+            break
+        except Exception:
+            if first:
+                first = False
+                logger.warning('RabbitMQ pending ... waiting')
+        time.sleep(1)
+        rabbit_config = get_config('rabbit')
+
+
 def _get_channel():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global mq_connection
@@ -72,6 +89,8 @@ def consume_dedicated_state_changes(callback_func, timeout=1):
             else:
                 callback_func(timeout=False, new_state=body.decode(), ch=channel, delivery_tag=method.delivery_tag)
     except Exception:
+        pass
+    finally:
         channel.cancel()
 
 
