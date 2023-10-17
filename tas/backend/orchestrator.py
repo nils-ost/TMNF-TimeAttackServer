@@ -3,7 +3,7 @@ import sys
 import pika
 import subprocess
 from datetime import datetime
-from helpers.config import get_config
+from helpers.config import get_config, set_config
 from helpers.rabbitmq import wait_for_connection as mq_wait_for_connection
 from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode
 import logging
@@ -37,6 +37,9 @@ def consume_orchestrator_messages(callback_func, timeout=1):
 
 
 def identify_dedicated_server(container_id, dtype):
+    """
+    trys to identify the corresponding key in dedicated config for a given containerid and dedicated-type
+    """
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     container_id = container_id.lower()
     dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
@@ -62,6 +65,24 @@ def identify_dedicated_server(container_id, dtype):
     return None
 
 
+def container_running(container_id):
+    """
+    returns if the container with the given container_id is running or not (stopped, exited, ...)
+    """
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    if container_id is None:
+        return False
+    container_id = container_id.lower()
+    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+    try:
+        r = json.loads(subprocess.check_output(f'{dcmd} ps -a -f id={container_id} --format=json', shell=True).decode('utf-8'))
+        if len(r) == 0:
+            return False
+        return not r[0].get('Exited', True)
+    except Exception:
+        return False
+
+
 def periodic_events_function():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     # rebuild rankings
@@ -80,6 +101,43 @@ def periodic_events_function():
                     one_playing = True
         if not one_playing:
             hotseat_player_name_set(None)
+    # do maintenance for all dynamic containers
+    dedicated_run_maintenance()
+
+
+def dedicated_run_maintenance():
+    """
+    checks the dedicated_run config and clears it up
+    """
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    ded_run = get_config('dedicated_run')
+    ded = get_config('dedicated')
+    keys_remove = list()
+    keys_add = list()
+    for k, v in ded_run.items():
+        # check for outdated config objects
+        if k not in ded:
+            # TODO: cancel v.get('ded_container'), c.get('dcontroller_container'), c.get('dresponder_container') and c.get('dreceiver_container')
+            keys_remove.append(k)
+            continue
+        # check for dead containers
+        if not container_running(v.get('ded_container')):
+            # TODO: cancel c.get('dcontroller_container'), c.get('dresponder_container') and c.get('dreceiver_container')
+            keys_remove.append(k)
+            keys_add.append(k)
+            continue
+        # TODO: check if dcontroller_container, dresponder_container and dreceiver_container are running or need to be (re)started
+    # remove outdated or renewable containers
+    for k in keys_remove:
+        ded_run.pop(k, None)
+    # check for configs missing in dedicated_run
+    for k in ded.keys():
+        if k not in ded_run and k not in keys_add:
+            keys_add.append(k)
+    # add all missing configs to dedicated_run
+    for k in keys_add:
+        ded_run[k] = ded[k]
+    set_config(ded_run, 'dedicated_run')
 
 
 def messages_callback(timeout, func, params, ch, props, delivery_tag):
@@ -104,4 +162,5 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    dedicated_run_maintenance()
     consume_orchestrator_messages(messages_callback, timeout=1)
