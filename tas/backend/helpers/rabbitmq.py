@@ -98,3 +98,9 @@ def send_dedicated_state_changes(new_state):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     channel = _get_channel()
     channel.basic_publish(exchange='', routing_key=rabbit_config['queue_dedicated_state_changes'], body=new_state)
+
+
+def send_orchestrator_message(func, params=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    channel = _get_channel()
+    channel.basic_publish(exchange='', routing_key=rabbit_config['queue_orchestrator'], body=json.dumps([func, params]))

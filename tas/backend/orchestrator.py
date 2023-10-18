@@ -1,10 +1,11 @@
+import os
 import json
 import sys
 import pika
 import subprocess
 from datetime import datetime
 from helpers.config import get_config, set_config
-from helpers.rabbitmq import wait_for_connection as mq_wait_for_connection
+from helpers.rabbitmq import wait_for_connection as mq_wait_for_connection, send_orchestrator_message
 from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode
 import logging
 
@@ -104,6 +105,28 @@ def periodic_events_function():
     dedicated_run_maintenance()
 
 
+def issue_container_stop(container_id=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    if container_id is None:
+        return
+    send_orchestrator_message('Container.stop', dict({'container_id': container_id}))
+    logger.info(f'{sys._getframe().f_code.co_name} Issued request to stop container: {container_id}')
+
+
+def issue_container_start(container_type):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    ctype = None
+    if container_type == 'dreceiver_container':
+        ctype = 'dedicated-receiver'
+    elif container_type == 'dresponder_container':
+        ctype = 'dedicated-responder'
+    elif container_type == 'dcontroller_container':
+        ctype = 'dedicated-controller'
+    if ctype is not None:
+        send_orchestrator_message('Container.start', dict({'type': ctype}))
+        logger.info(f'{sys._getframe().f_code.co_name} Issued request to start a container of type: {ctype}')
+
+
 def dedicated_run_maintenance():
     """
     checks the dedicated_run config and clears it up
@@ -116,17 +139,21 @@ def dedicated_run_maintenance():
     for k, v in ded_run.items():
         # check for outdated config objects
         if k not in ded:
-            # TODO: cancel v.get('ded_container'), v.get('dcontroller_container'), v.get('dresponder_container') and v.get('dreceiver_container')
+            for ck in ['ded_container', 'dreceiver_container', 'dresponder_container', 'dcontroller_container']:
+                issue_container_stop(v.get(ck))
             keys_remove.append(k)
             continue
         # check for dead containers
         if not container_running(v.get('ded_container')):
-            # TODO: cancel v.get('dcontroller_container'), v.get('dresponder_container') and v.get('dreceiver_container')
+            for ck in ['dreceiver_container', 'dresponder_container', 'dcontroller_container']:
+                issue_container_stop(v.get(ck))
             keys_remove.append(k)
             keys_add.append(k)
             continue
-        # TODO: check if dcontroller_container, dresponder_container and dreceiver_container are running or need to be (re)started
-    # remove outdated or renewable containers
+        for ck in ['dreceiver_container', 'dresponder_container', 'dcontroller_container']:
+            if not container_running(v.get(ck)):
+                issue_container_start(ck)
+    # remove outdated or renewable configs
     for k in keys_remove:
         ded_run.pop(k, None)
     # check for configs missing in dedicated_run
@@ -245,6 +272,35 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         set_config(ded_run, 'dedicated_run')
         ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(config))
         logger.debug(f'{sys._getframe().f_code.co_name} Transmitted following config to container {ded_run[dedicated_key]["ded_container"]}: {config}')
+    elif func == 'Dcontainer.attach_request':
+        pass  # TODO: implement
+    elif func == 'Container.stop':
+        container_id = params['container_id'].lower()
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        subprocess.check_output(f'{dcmd} stop {container_id}', shell=True)
+        logger.info(f'{sys._getframe().f_code.co_name} Stopped container: {container_id}')
+    elif func == 'Container.start':
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        current_count = 0
+        for container_id in subprocess.check_output(f"{dcmd} ps -a --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
+            container_id = container_id.lower()
+            detail = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))[0]
+            if detail['Config'].get('Labels', dict()).get('com.docker.compose.service') == params['type']:
+                current_count += 1
+                if not detail['State']['Running']:
+                    subprocess.check_output(f'{dcmd} start {container_id}', shell=True)
+                    logger.info(f'{sys._getframe().f_code.co_name} Started container: {container_id} to get another {params["type"]}')
+                    break
+        else:
+            my_id = os.environ.get('HOSTNAME', 'localhost').lower()
+            try:
+                detail = json.loads(subprocess.check_output(f'{dcmd} inspect {my_id}', shell=True).decode('utf-8'))
+                project = detail[0]['Config'].get('Labels', dict()).get('com.docker.compose.project', '')
+                ccmd = f'{dcmd} compose --project-name {project}'
+            except Exception:
+                ccmd = f'{dcmd} compose --project-directory ../..'
+            subprocess.check_output(f'{ccmd} up -d --no-recreate --scale {params["type"]}={current_count + 1}', shell=True)
+            logger.info(f'{sys._getframe().f_code.co_name} Scaled {params["type"]} up by one, to get another container')
     ch.basic_ack(delivery_tag=delivery_tag)
 
 
