@@ -706,5 +706,5 @@ def get_config(key):
     return r.get('config', None)
 
 
-def set_config(key, config):
-    mongoDB().config.replace_one({'_id': 'key'}, {'_id': 'key', 'config': config}, True)
+def set_config(key, cfg):
+    mongoDB().config.replace_one({'_id': key}, {'_id': key, 'config': cfg}, True)

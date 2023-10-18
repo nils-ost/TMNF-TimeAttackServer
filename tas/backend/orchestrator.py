@@ -75,10 +75,9 @@ def container_running(container_id):
     container_id = container_id.lower()
     dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
-        r = json.loads(subprocess.check_output(f'{dcmd} ps -a -f id={container_id} --format=json', shell=True).decode('utf-8'))
-        if len(r) == 0:
-            return False
-        return not r[0].get('Exited', True)
+        o = subprocess.check_output(f"{dcmd} ps -a -f id={container_id} --format='\u007b\u007b.State\u007d\u007d'", shell=True).decode('utf-8').strip()
+        logger.debug(f'{sys._getframe().f_code.co_name} {o}')
+        return o.lower() == 'running'
     except Exception:
         return False
 
@@ -117,12 +116,12 @@ def dedicated_run_maintenance():
     for k, v in ded_run.items():
         # check for outdated config objects
         if k not in ded:
-            # TODO: cancel v.get('ded_container'), c.get('dcontroller_container'), c.get('dresponder_container') and c.get('dreceiver_container')
+            # TODO: cancel v.get('ded_container'), v.get('dcontroller_container'), v.get('dresponder_container') and v.get('dreceiver_container')
             keys_remove.append(k)
             continue
         # check for dead containers
         if not container_running(v.get('ded_container')):
-            # TODO: cancel c.get('dcontroller_container'), c.get('dresponder_container') and c.get('dreceiver_container')
+            # TODO: cancel v.get('dcontroller_container'), v.get('dresponder_container') and v.get('dreceiver_container')
             keys_remove.append(k)
             keys_add.append(k)
             continue
@@ -140,6 +139,80 @@ def dedicated_run_maintenance():
     set_config(ded_run, 'dedicated_run')
 
 
+def get_available_ports(dkey, dtype, preferred_port=None, preferred_p2p=None, preferred_rpc=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    available_ports = list([2350, 2351, 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359])
+    available_p2p = list([3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459])
+    available_rpc = list([5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009])
+
+    for k, v in get_config('dedicated_run').items():
+        if k == dkey or not dtype == v.get('type'):
+            continue
+        if v.get('game_port') is not None:
+            available_ports.remove(v.get('game_port'))
+        if v.get('p2p_port') is not None:
+            available_p2p.remove(v.get('p2p_port'))
+        if v.get('rpc_port') is not None:
+            available_rpc.remove(v.get('rpc_port'))
+
+    if preferred_port is None or int(preferred_port) not in available_ports:
+        preferred_port = sorted(available_ports)[0]
+    if preferred_p2p is None or int(preferred_p2p) not in available_p2p:
+        preferred_p2p = sorted(available_p2p)[0]
+    if preferred_rpc is None or int(preferred_rpc) not in available_rpc:
+        preferred_rpc = sorted(available_rpc)[0]
+
+    return (int(preferred_port), int(preferred_p2p), int(preferred_rpc))
+
+
+def get_password(preferred_pw=None):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    if preferred_pw is None or preferred_pw in ['SuperAdmin', 'Admin', 'User']:
+        import secrets
+        import string
+        alphabet = string.ascii_letters + string.digits
+        return ''.join(secrets.choice(alphabet) for i in range(10))
+    return preferred_pw
+
+
+def build_dedicated_config(dedicated_key, current_config):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    ded_run = get_config('dedicated_run')
+    ded_cfg = ded_run[dedicated_key]
+    config = dict({'dedicated': {}})
+    config['s3'] = get_config('s3')
+    config['hot_seat_mode'] = True if ded_cfg.get('hot_seat_mode') or current_config.get('hot_seat_mode') else False
+
+    port = current_config['dedicated'].get('game_port') if ded_cfg.get('game_port') is None else ded_cfg.get('game_port')
+    p2p = current_config['dedicated'].get('p2p_port') if ded_cfg.get('p2p_port') is None else ded_cfg.get('p2p_port')
+    rpc = current_config['dedicated'].get('rpc_port') if ded_cfg.get('rpc_port') is None else ded_cfg.get('rpc_port')
+    port, p2p, rpc = get_available_ports(dedicated_key, ded_cfg['type'], port, p2p, rpc)
+    config['dedicated']['game_port'] = port
+    config['dedicated']['p2p_port'] = p2p
+    config['dedicated']['rpc_port'] = rpc
+
+    superadmin_pw = get_password(current_config['dedicated'].get('superadmin_pw') if ded_cfg.get('superadmin_pw') is None else ded_cfg.get('superadmin_pw'))
+    admin_pw = get_password(current_config['dedicated'].get('admin_pw') if ded_cfg.get('admin_pw') is None else ded_cfg.get('admin_pw'))
+    user_pw = get_password(current_config['dedicated'].get('user_pw') if ded_cfg.get('user_pw') is None else ded_cfg.get('user_pw'))
+    config['dedicated']['superadmin_pw'] = superadmin_pw
+    config['dedicated']['admin_pw'] = admin_pw
+    config['dedicated']['user_pw'] = user_pw
+
+    max_players = current_config.get('max_players') if ded_cfg.get('max_players') is None else ded_cfg.get('max_players')
+    config['dedicated']['max_players'] = 32 if max_players is None else max_players
+    ingame_name = current_config.get('ingame_name') if ded_cfg.get('ingame_name') is None else ded_cfg.get('ingame_name')
+    config['dedicated']['ingame_name'] = 'TM-TAS' if ingame_name is None else ingame_name
+    callvote_timeout = current_config.get('callvote_timeout') if ded_cfg.get('callvote_timeout') is None else ded_cfg.get('callvote_timeout')
+    config['dedicated']['callvote_timeout'] = 0 if callvote_timeout is None else callvote_timeout
+    callvote_ratio = current_config.get('callvote_ratio') if ded_cfg.get('callvote_ratio') is None else ded_cfg.get('callvote_ratio')
+    config['dedicated']['callvote_ratio'] = -1 if callvote_ratio is None else callvote_ratio
+
+    ded_run[dedicated_key]['hot_seat_mode'] = config['hot_seat_mode']
+    ded_run[dedicated_key].update(config['dedicated'])
+    set_config(ded_run, 'dedicated_run')
+    return config
+
+
 def messages_callback(timeout, func, params, ch, props, delivery_tag):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if timeout:
@@ -148,15 +221,30 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         if periodic_counter == 0:
             periodic_events_function()
         return
-    logger.info(f'{sys._getframe().f_code.co_name} {locals()}')
     if func == 'Dedicated.config_request':
-        dedicated_key = identify_dedicated_server(params['container_id'], params['dedicated_type'])
+        container_id = params['container_id'].lower()
+        dedicated_key = identify_dedicated_server(container_id, params['dedicated_type'])
         if dedicated_key is None:
             logger.warning(f'{sys._getframe().f_code.co_name} dedicated_key not resolvable, ignoring request')
             ch.basic_ack(delivery_tag=delivery_tag)
             return
-        logger.info(f'{sys._getframe().f_code.co_name} Container identified as: {dedicated_key}')
-        ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps({'dedicated': {'ingame_name': 'changed'}}))
+        logger.info(f'{sys._getframe().f_code.co_name} TM-Dedicated container ({container_id}) is requesting config for: {dedicated_key}')
+        ded_run = get_config('dedicated_run')
+        if not ded_run[dedicated_key].get('ded_container') == container_id and container_running(ded_run[dedicated_key].get('ded_container')):
+            logger.warning(f'{sys._getframe().f_code.co_name} dedicated-config ({dedicated_key}) allready attached with running container, ignoring request')
+            ch.basic_ack(delivery_tag=delivery_tag)
+            return
+        # The following three lines ensure the _run config of dedicated-config is clean, also all other dedicated-config are up-to-date
+        ded_run[dedicated_key]['ded_container'] = None
+        set_config(ded_run, 'dedicated_run')
+        dedicated_run_maintenance()
+        config = build_dedicated_config(dedicated_key, params['current_config'])
+        # finally link the requesting container to the dedicated-run config
+        ded_run = get_config('dedicated_run')
+        ded_run[dedicated_key]['ded_container'] = container_id
+        set_config(ded_run, 'dedicated_run')
+        ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(config))
+        logger.debug(f'{sys._getframe().f_code.co_name} Transmitted following config to container {ded_run[dedicated_key]["ded_container"]}: {config}')
     ch.basic_ack(delivery_tag=delivery_tag)
 
 
