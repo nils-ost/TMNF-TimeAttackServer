@@ -7,15 +7,14 @@ from helpers.mongodb import challenge_get, challenge_update, challenge_deactivat
 from helpers.mongodb import set_tmnfd_name, get_provide_replays, get_provide_thumbnails, get_provide_challenges
 from helpers.tmnfd import isPreStart, isPostEnd, prepareChallenges, prepareNextChallenge, kickAllPlayers
 from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
-from helpers.rabbitmq import consume_dedicated_state_changes
+from helpers.rabbitmq import consume_dedicated_state_changes, request_attachement_from_orchestrator
 import time
 import hashlib
 import random
 import logging
 
 logger = logging.getLogger(__name__)
-config = get_config('tmnf-server')
-sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+sender = None
 pre_start_executed = False
 post_end_executed = False
 dedicated_connected = False
@@ -137,4 +136,7 @@ def controller_function(timeout, new_state, ch, delivery_tag):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    attached_config = request_attachement_from_orchestrator('dcontroller')
+    config = get_config('dedicated_run')[attached_config]
+    sender = GbxRemote(config['ded_container'], config['game_port'], 'SuperAdmin', config['superadmin_pw'])
     consume_dedicated_state_changes(controller_function, timeout=1)

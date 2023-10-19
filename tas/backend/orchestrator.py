@@ -273,7 +273,20 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(config))
         logger.debug(f'{sys._getframe().f_code.co_name} Transmitted following config to container {ded_run[dedicated_key]["ded_container"]}: {config}')
     elif func == 'Dcontainer.attach_request':
-        pass  # TODO: implement
+        container_id = params['container_id'].lower()
+        container_type = params['container_type'].lower()
+        ded_run = get_config('dedicated_run')
+        for k, v in ded_run.items():
+            if not container_running(v.get(container_type + '_contianer')):
+                ded_run[k][container_type + '_container'] = container_id
+                set_config(ded_run, 'dedicated_run')
+                ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(dict({'dedicated_config': k})))
+                logger.info(f'{sys._getframe().f_code.co_name} attached container {container_id} of type {container_type} to config {k}')
+                break
+        else:
+            logger.warning(f'{sys._getframe().f_code.co_name} no container of type {container_type} needed, ignoring request from {container_id}')
+            ch.basic_ack(delivery_tag=delivery_tag)
+            return
     elif func == 'Container.stop':
         container_id = params['container_id'].lower()
         dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'

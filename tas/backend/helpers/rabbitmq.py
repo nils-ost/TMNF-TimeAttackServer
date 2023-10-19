@@ -1,4 +1,5 @@
 from helpers.config import get_config
+import os
 import sys
 import pika
 import json
@@ -104,3 +105,29 @@ def send_orchestrator_message(func, params=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     channel = _get_channel()
     channel.basic_publish(exchange='', routing_key=rabbit_config['queue_orchestrator'], body=json.dumps([func, params]))
+
+
+def request_attachement_from_orchestrator(container_type, timeout=20):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+
+    channel = _get_channel()
+    callback_queue = channel.queue_declare(queue='', exclusive=True).method.queue
+    container_id = os.environ.get('HOSTNAME', 'localhost')
+
+    channel.basic_publish(
+        exchange='',
+        routing_key=rabbit_config['queue_orchestrator'],
+        properties=pika.BasicProperties(reply_to=callback_queue, expiration=str(int(timeout) * 900)),
+        body=json.dumps(['Dcontainer.attach_request', {'container_id': container_id, 'container_type': container_type}]))
+
+    try:
+        for method, properties, body in channel.consume(queue=callback_queue, auto_ack=True, exclusive=True, inactivity_timeout=int(timeout)):
+            if method is None and properties is None and body is None:
+                logger.critical(f'{sys._getframe().f_code.co_name} Orchestrator did not respond to attachement request. Exiting...')
+                sys.exit(1)
+            else:
+                return json.loads(body.decode())['dedicated_config']
+    except Exception:
+        pass
+    finally:
+        channel.cancel()

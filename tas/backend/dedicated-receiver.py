@@ -1,18 +1,20 @@
 """
 TrachMania Nations Forever - Dedicated Server Reveicer
 """
-from helpers.config import get_config
-from helpers.GbxRemote import GbxRemote
-from helpers.rabbitmq import send_dedicated_received_message
 import time
 import logging
+from helpers.config import get_config
+from helpers.GbxRemote import GbxRemote
+from helpers.rabbitmq import request_attachement_from_orchestrator, send_dedicated_received_message
 
 logger = logging.getLogger(__name__)
 
+
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
-    config = get_config('tmnf-server')
-    receiver = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+    attached_config = request_attachement_from_orchestrator('dreceiver')
+    config = get_config('dedicated_run')[attached_config]
+    receiver = GbxRemote(config['ded_container'], config['game_port'], 'SuperAdmin', config['superadmin_pw'])
     send_dedicated_received_message('Dedicated.Disconnected')
 
     while True:

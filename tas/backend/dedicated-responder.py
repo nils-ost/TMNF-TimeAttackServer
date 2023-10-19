@@ -8,14 +8,13 @@ from helpers.mongodb import player_update, player_get, ranking_rebuild, clean_pl
 from helpers.mongodb import hotseat_player_name_get, get_hotseat_mode, hotseat_player_ingameid_set
 from helpers.tmnfd import isPreStart, isPostEnd, calcTimeLimit, prepareNextChallenge, sendLaptimeNotice
 from helpers.tmnfdcli import tmnfd_cli_upload_replay
-from helpers.rabbitmq import consume_dedicated_received_messages, send_dedicated_state_changes
+from helpers.rabbitmq import consume_dedicated_received_messages, send_dedicated_state_changes, request_attachement_from_orchestrator
 import time
 import hashlib
 import logging
 
 logger = logging.getLogger(__name__)
-config = get_config('tmnf-server')
-sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
+sender = None
 
 
 def responder_function(func, params, ch, delivery_tag):
@@ -148,4 +147,7 @@ def responder_function(func, params, ch, delivery_tag):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    attached_config = request_attachement_from_orchestrator('dresponder')
+    config = get_config('dedicated_run')[attached_config]
+    sender = GbxRemote(config['ded_container'], config['game_port'], 'SuperAdmin', config['superadmin_pw'])
     consume_dedicated_received_messages(responder_function)
