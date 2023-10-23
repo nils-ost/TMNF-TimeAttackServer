@@ -7,7 +7,7 @@ ENV HOME /app
 
 WORKDIR $HOME
 
-RUN apk --no-cache add git docker-cli
+RUN apk --no-cache add docker-cli docker-cli-compose
 
 ADD requirements.txt $HOME/requirements.txt
 RUN pip3 install -r $HOME/requirements.txt

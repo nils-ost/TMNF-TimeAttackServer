@@ -138,5 +138,5 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     attached_config = request_attachement_from_orchestrator('dcontroller')
     config = get_config('dedicated_run')[attached_config]
-    sender = GbxRemote(config['ded_container'], config['game_port'], 'SuperAdmin', config['superadmin_pw'])
+    sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     consume_dedicated_state_changes(controller_function, timeout=1)

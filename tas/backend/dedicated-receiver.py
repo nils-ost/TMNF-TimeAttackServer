@@ -14,7 +14,7 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     attached_config = request_attachement_from_orchestrator('dreceiver')
     config = get_config('dedicated_run')[attached_config]
-    receiver = GbxRemote(config['ded_container'], config['game_port'], 'SuperAdmin', config['superadmin_pw'])
+    receiver = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     send_dedicated_received_message('Dedicated.Disconnected')
 
     while True:

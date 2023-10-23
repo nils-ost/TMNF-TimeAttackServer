@@ -1,5 +1,5 @@
 boto3
-CherryPy @ git+https://github.com/nils-ost/cherrypy.git@v18.6.1-1
+CherryPy
 cherrypy-cors==1.6
 pika
 pymongo==4.0.1

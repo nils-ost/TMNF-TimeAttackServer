@@ -16,6 +16,7 @@ services:
     volumes:
       - tas_static:/app/static:rw
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker-compose.yml:/app/docker-compose.yml
 
   backend:
     image: nilsost/tas:${TAS_VERSION:-latest}
@@ -41,6 +42,8 @@ services:
       - orchestrator
     deploy:
       replicas: 0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -56,6 +59,8 @@ services:
       - orchestrator
     deploy:
       replicas: 0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -71,6 +76,8 @@ services:
       - orchestrator
     deploy:
       replicas: 0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - TAS_CONFIG_FILE=/app/cfg/config.json
       - MONGO_HOST=mongodb
@@ -89,9 +96,10 @@ services:
     deploy:
       replicas: 0
     environment:
-      - RABBIT_HOST=rabbitmq
+      - RABBIT_HOST=127.0.0.1
     volumes:
       - tmnfd_tracks:/tracks:rw
+    network_mode: "host"
 
   tmnfd-static:
     image: nilsost/tas-tmnfd:${TAS_VERSION:-latest}
@@ -99,10 +107,11 @@ services:
       - minio
     environment:
       - TMNFD_CONFIG_FILE=/cfg/config.json
-      - RABBIT_HOST=rabbitmq
+      - RABBIT_HOST=127.0.0.1
     volumes:
       - tmnfd_tracks:/tracks:rw
       - tmnfd_static_config:/cfg:rw
+    network_mode: "host"
 
   haproxy:
     image: haproxy:lts-alpine
@@ -125,6 +134,8 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.12-alpine
+    ports:
+      - 127.0.0.1:5672:5672
 
   minio:
     image: minio/minio:RELEASE.2022-04-30T22-23-53Z

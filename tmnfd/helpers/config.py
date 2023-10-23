@@ -81,12 +81,15 @@ def update_config_from_orchestrator():
                 new_config[k] = v
         save_config(new_config)
 
-    from helpers.rabbitmq import ask_orchestrator_for_config
+    from helpers.rabbitmq import ask_orchestrator_for_config, ask_orchestrator_whoami
+    logger.info('asking orchestrator whoami')
+    ask_orchestrator_whoami()
     logger.info('asking orchestrator for config')
     config = get_config()
+    container_id = open('/app/containerid', 'r').read().strip()
     ask_orchestrator_for_config(
         callback_func=_callback,
-        container_id=os.environ.get('HOSTNAME', None),
+        container_id=container_id,
         dedicated_type='tmnf',
         current_config=config,
         timeout=20)

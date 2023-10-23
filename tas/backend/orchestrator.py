@@ -127,6 +127,39 @@ def issue_container_start(container_type):
         logger.info(f'{sys._getframe().f_code.co_name} Issued request to start a container of type: {ctype}')
 
 
+def scale_or_start_container(requested_type):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    counts = dict({'tmnfd': 0, 'dedicated-receiver': 0, 'dedicated-responder': 0, 'dedicated-controller': 0})
+    if requested_type not in counts.keys():
+        logger.error(f'{sys._getframe().f_code.co_name} invalid requested_type {requested_type} of container to scale or start')
+        return
+
+    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+    for container_id in subprocess.check_output(f"{dcmd} ps -a --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
+        container_id = container_id.lower()
+        detail = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))[0]
+        container_type = detail['Config'].get('Labels', dict()).get('com.docker.compose.service')
+        if container_type not in counts.keys():
+            continue
+        counts[container_type] += 1
+        if container_type == requested_type and not detail['State']['Running']:
+            subprocess.check_output(f'{dcmd} start {container_id}', shell=True)
+            logger.info(f'{sys._getframe().f_code.co_name} Started container: {container_id} to get another {requested_type}')
+            break
+    else:
+        my_id = os.environ.get('HOSTNAME', 'localhost').lower()
+        try:
+            detail = json.loads(subprocess.check_output(f'{dcmd} inspect {my_id}', shell=True).decode('utf-8'))
+            project = detail[0]['Config'].get('Labels', dict()).get('com.docker.compose.project', '')
+            ccmd = f'{dcmd} compose --project-name {project}'
+        except Exception:
+            ccmd = f'{dcmd} compose --project-directory ../..'
+        counts[requested_type] += 1
+        scales = ' '.join([f'--scale {k}={v}' for k, v in counts.items()])
+        subprocess.check_output(f'{ccmd} up -d --no-recreate {scales}', shell=True)
+        logger.info(f'{sys._getframe().f_code.co_name} Scaled {requested_type} up by one, to get another container')
+
+
 def dedicated_run_maintenance():
     """
     checks the dedicated_run config and clears it up
@@ -240,6 +273,16 @@ def build_dedicated_config(dedicated_key, current_config):
     return config
 
 
+def inject_containerids():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+    for container_id in subprocess.check_output(f"{dcmd} ps --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
+        container_config = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))
+        container_config = container_config[0]
+        if container_config.get('Config', dict()).get('Image', '').startswith('nilsost/tas-tm'):
+            subprocess.check_output(f'{dcmd} exec {container_id} /bin/sh -c "echo \'{container_id}\' > /app/containerid"', shell=True)
+
+
 def messages_callback(timeout, func, params, ch, props, delivery_tag):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if timeout:
@@ -248,6 +291,9 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         if periodic_counter == 0:
             periodic_events_function()
         return
+    if func == 'Dedicated.whoami':
+        inject_containerids()
+        ch.basic_publish(exchange='', routing_key=props.reply_to, body='done')
     if func == 'Dedicated.config_request':
         container_id = params['container_id'].lower()
         dedicated_key = identify_dedicated_server(container_id, params['dedicated_type'])
@@ -293,27 +339,7 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         subprocess.check_output(f'{dcmd} stop {container_id}', shell=True)
         logger.info(f'{sys._getframe().f_code.co_name} Stopped container: {container_id}')
     elif func == 'Container.start':
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        current_count = 0
-        for container_id in subprocess.check_output(f"{dcmd} ps -a --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
-            container_id = container_id.lower()
-            detail = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))[0]
-            if detail['Config'].get('Labels', dict()).get('com.docker.compose.service') == params['type']:
-                current_count += 1
-                if not detail['State']['Running']:
-                    subprocess.check_output(f'{dcmd} start {container_id}', shell=True)
-                    logger.info(f'{sys._getframe().f_code.co_name} Started container: {container_id} to get another {params["type"]}')
-                    break
-        else:
-            my_id = os.environ.get('HOSTNAME', 'localhost').lower()
-            try:
-                detail = json.loads(subprocess.check_output(f'{dcmd} inspect {my_id}', shell=True).decode('utf-8'))
-                project = detail[0]['Config'].get('Labels', dict()).get('com.docker.compose.project', '')
-                ccmd = f'{dcmd} compose --project-name {project}'
-            except Exception:
-                ccmd = f'{dcmd} compose --project-directory ../..'
-            subprocess.check_output(f'{ccmd} up -d --no-recreate --scale {params["type"]}={current_count + 1}', shell=True)
-            logger.info(f'{sys._getframe().f_code.co_name} Scaled {params["type"]} up by one, to get another container')
+        scale_or_start_container(params['type'])
     ch.basic_ack(delivery_tag=delivery_tag)
 
 
