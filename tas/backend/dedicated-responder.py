@@ -8,13 +8,14 @@ from helpers.mongodb import player_update, player_get, ranking_rebuild, clean_pl
 from helpers.mongodb import hotseat_player_name_get, get_hotseat_mode, hotseat_player_ingameid_set
 from helpers.tmnfd import isPreStart, isPostEnd, calcTimeLimit, prepareNextChallenge, sendLaptimeNotice
 from helpers.tmnfdcli import tmnfd_cli_upload_replay
-from helpers.rabbitmq import consume_dedicated_received_messages, send_dedicated_state_changes, request_attachement_from_orchestrator
+from helpers.rabbitmq import RabbitMQ
 import time
 import hashlib
 import logging
 
 logger = logging.getLogger(__name__)
 sender = None
+rabbit = RabbitMQ()
 
 
 def responder_function(func, params, ch, delivery_tag):
@@ -133,12 +134,12 @@ def responder_function(func, params, ch, delivery_tag):
         player_update(player_login, connected=False)
 
     elif func == 'Dedicated.Disconnected':
-        send_dedicated_state_changes('disconnected')
+        rabbit.send_dedicated_state_changes('disconnected')
         challenge_id_set(None, current=True)
         challenge_id_set(None, next=True)
 
     elif func == 'Dedicated.Connected':
-        send_dedicated_state_changes('connected')
+        rabbit.send_dedicated_state_changes('connected')
         while not sender.connect():
             time.sleep(1)
 
@@ -147,7 +148,7 @@ def responder_function(func, params, ch, delivery_tag):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
-    attached_config = request_attachement_from_orchestrator('dresponder')
+    attached_config = rabbit.request_attachement_from_orchestrator('dresponder')
     config = get_config('dedicated_run')[attached_config]
     sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
-    consume_dedicated_received_messages(responder_function)
+    rabbit.consume_dedicated_received_messages(responder_function)

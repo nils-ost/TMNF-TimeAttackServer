@@ -1,15 +1,15 @@
 import os
 import json
 import sys
-import pika
 import subprocess
 from datetime import datetime
 from helpers.config import get_config, set_config
-from helpers.rabbitmq import wait_for_connection as mq_wait_for_connection, send_orchestrator_message
+from helpers.rabbitmq import RabbitMQ
 from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode
 import logging
 
 logger = logging.getLogger(__name__)
+rabbit = RabbitMQ()
 periodic_counter = 0
 
 
@@ -18,23 +18,20 @@ def consume_orchestrator_messages(callback_func, timeout=1):
     callback_func needs to take timeout, func, params, ch, props and delivery_tag as arguments
     """
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    mq_wait_for_connection()
-    rabbit_config = get_config('rabbit')
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_config['host'], port=rabbit_config['port']))
-    channel = connection.channel()
-    channel.queue_declare(queue=rabbit_config['queue_orchestrator'])
-    try:
-        for method, properties, body in channel.consume(
-                queue=rabbit_config['queue_orchestrator'], auto_ack=False, exclusive=True, inactivity_timeout=timeout):
-            if method is None and properties is None and body is None:
-                callback_func(timeout=True, func=None, params=None, ch=channel, props=None, delivery_tag=None)
-            else:
-                func, params = json.loads(body.decode())
-                callback_func(timeout=False, func=func, params=params, ch=channel, props=properties, delivery_tag=method.delivery_tag)
-    except Exception as e:
-        logger.error(f'{sys._getframe().f_code.co_name} {e} {repr(e)}')
-    finally:
-        channel.cancel()
+    while True:
+        channel = rabbit.get_ontime_channel()
+        try:
+            for method, properties, body in channel.consume(
+                    queue=rabbit.config['queue_orchestrator'], auto_ack=False, exclusive=True, inactivity_timeout=timeout):
+                if method is None and properties is None and body is None:
+                    callback_func(timeout=True, func=None, params=None, ch=channel, props=None, delivery_tag=None)
+                else:
+                    func, params = json.loads(body.decode())
+                    callback_func(timeout=False, func=func, params=params, ch=channel, props=properties, delivery_tag=method.delivery_tag)
+        except Exception as e:
+            logger.error(f'{sys._getframe().f_code.co_name} {e} {repr(e)}')
+        finally:
+            channel.cancel()
 
 
 def identify_dedicated_server(container_id, dtype):
@@ -109,7 +106,7 @@ def issue_container_stop(container_id=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if container_id is None:
         return
-    send_orchestrator_message('Container.stop', dict({'container_id': container_id}))
+    rabbit.send_orchestrator_message('Container.stop', dict({'container_id': container_id}))
     logger.info(f'{sys._getframe().f_code.co_name} Issued request to stop container: {container_id}')
 
 
@@ -123,7 +120,7 @@ def issue_container_start(container_type):
     elif container_type == 'dcontroller_container':
         ctype = 'dedicated-controller'
     if ctype is not None:
-        send_orchestrator_message('Container.start', dict({'type': ctype}))
+        rabbit.send_orchestrator_message('Container.start', dict({'type': ctype}))
         logger.info(f'{sys._getframe().f_code.co_name} Issued request to start a container of type: {ctype}')
 
 
@@ -335,9 +332,12 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
             return
     elif func == 'Container.stop':
         container_id = params['container_id'].lower()
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        subprocess.check_output(f'{dcmd} stop {container_id}', shell=True)
-        logger.info(f'{sys._getframe().f_code.co_name} Stopped container: {container_id}')
+        try:
+            dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+            subprocess.check_output(f'{dcmd} stop {container_id}', shell=True)
+            logger.info(f'{sys._getframe().f_code.co_name} Stopped container: {container_id}')
+        except Exception:
+            logger.info(f'{sys._getframe().f_code.co_name} Container {container_id} was allready stopped')
     elif func == 'Container.start':
         scale_or_start_container(params['type'])
     ch.basic_ack(delivery_tag=delivery_tag)
