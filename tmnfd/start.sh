@@ -16,4 +16,4 @@ cp /cfg/dedicated_cfg.txt /tmdedicated/GameData/Config/dedicated_cfg.txt
 cp -r /tracks/Challenges /tmdedicated/GameData/Tracks
 
 cd /tmdedicated
-./TrackmaniaServer /dedicated_cfg=dedicated_cfg.txt /game_settings=MatchSettings/active.txt /lan /nodaemon
+exec ./TrackmaniaServer /dedicated_cfg=dedicated_cfg.txt /game_settings=MatchSettings/active.txt /lan /nodaemon

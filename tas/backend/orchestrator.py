@@ -2,6 +2,7 @@ import os
 import json
 import sys
 import subprocess
+import signal
 from datetime import datetime
 from helpers.config import get_config, set_config
 from helpers.rabbitmq import RabbitMQ
@@ -19,7 +20,7 @@ def consume_orchestrator_messages(callback_func, timeout=1):
     """
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     while True:
-        channel = rabbit.get_ontime_channel()
+        channel = rabbit.get_onetime_channel()
         try:
             for method, properties, body in channel.consume(
                     queue=rabbit.config['queue_orchestrator'], auto_ack=False, exclusive=True, inactivity_timeout=timeout):
@@ -28,8 +29,11 @@ def consume_orchestrator_messages(callback_func, timeout=1):
                 else:
                     func, params = json.loads(body.decode())
                     callback_func(timeout=False, func=func, params=params, ch=channel, props=properties, delivery_tag=method.delivery_tag)
+        except SystemExit:
+            logger.warning(f'{sys._getframe().f_code.co_name} Received signal to exit...')
+            return
         except Exception as e:
-            logger.error(f'{sys._getframe().f_code.co_name} {e} {repr(e)}')
+            logger.warning(f'{sys._getframe().f_code.co_name} Exception {e} {repr(e)} restarting RabbitMQ connection')
         finally:
             channel.cancel()
 
@@ -343,9 +347,15 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
     ch.basic_ack(delivery_tag=delivery_tag)
 
 
+def graceful_exit(signum, frame):
+    raise SystemExit
+
+
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
     logging.getLogger('pika').setLevel(logging.WARNING)
+    signal.signal(signal.SIGINT, graceful_exit)
+    signal.signal(signal.SIGTERM, graceful_exit)
     dedicated_run_maintenance()
     consume_orchestrator_messages(messages_callback, timeout=1)

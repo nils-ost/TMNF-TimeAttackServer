@@ -11,10 +11,10 @@ _mongoDB = dict()
 
 def _config():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    if 'MONGO_HOST' not in os.environ or 'MONGO_PORT' not in os.environ or 'MONGO_DB' not in os.environ:
-        logger.critical('missing environment variables: MONGO_HOST, MONGO_PORT or MONGO_DB ... aborting')
-        sys.exit(1)
-    return {'host': os.environ['MONGO_HOST'], 'port': int(os.environ['MONGO_PORT']), 'database': os.environ['MONGO_DB']}
+    host = os.environ.get('MONGO_HOST', 'mongodb')
+    port = int(os.environ.get('MONGO_PORT', 27017))
+    db = os.environ.get('MONGO_DB', 'tm-tas')
+    return {'host': host, 'port': port, 'database': db}
 
 
 def wait_for_mongodb_server():

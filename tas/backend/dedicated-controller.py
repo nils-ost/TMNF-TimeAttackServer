@@ -8,6 +8,7 @@ from helpers.mongodb import set_tmnfd_name, get_provide_replays, get_provide_thu
 from helpers.tmnfd import isPreStart, isPostEnd, prepareChallenges, prepareNextChallenge, kickAllPlayers
 from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
 from helpers.rabbitmq import RabbitMQ
+import signal
 import os
 import time
 import hashlib
@@ -135,10 +136,16 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             post_end_executed = True
 
 
+def graceful_exit(signum, frame):
+    raise SystemExit
+
+
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
     logging.getLogger('pika').setLevel(logging.WARNING)
+    signal.signal(signal.SIGINT, graceful_exit)
+    signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()
     attached_config = rabbit.request_attachement_from_orchestrator('dcontroller')
     config = get_config('dedicated_run')[attached_config]

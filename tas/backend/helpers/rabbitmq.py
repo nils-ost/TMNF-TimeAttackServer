@@ -53,17 +53,17 @@ class RabbitMQ():
 
     def send_dedicated_received_message(self, func, params=None):
         self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-        channel = self._get_sender_channel()
+        channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_dedicated_received_messages'], body=json.dumps([func, params]))
 
     def send_dedicated_state_changes(self, new_state):
         self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-        channel = self._get_sender_channel()
+        channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_dedicated_state_changes'], body=new_state)
 
     def send_orchestrator_message(self, func, params=None):
         self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-        channel = self._get_sender_channel()
+        channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_orchestrator'], body=json.dumps([func, params]))
 
     def consume_dedicated_received_messages(self, callback_func):
@@ -94,8 +94,11 @@ class RabbitMQ():
                         callback_func(timeout=True, new_state=None, ch=channel, delivery_tag=None)
                     else:
                         callback_func(timeout=False, new_state=body.decode(), ch=channel, delivery_tag=method.delivery_tag)
-            except Exception:
-                pass
+            except SystemExit:
+                self.logger.warning(f'{sys._getframe().f_code.co_name} Received signal to exit...')
+                return
+            except Exception as e:
+                self.logger.warning(f'{sys._getframe().f_code.co_name} Exception {e} {repr(e)} restarting RabbitMQ connection')
             finally:
                 channel.cancel()
 
