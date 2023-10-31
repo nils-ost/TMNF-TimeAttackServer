@@ -344,6 +344,8 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
+    logging.getLogger('pika').setLevel(logging.WARNING)
     dedicated_run_maintenance()
     consume_orchestrator_messages(messages_callback, timeout=1)

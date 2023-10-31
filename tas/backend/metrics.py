@@ -1,3 +1,4 @@
+import os
 import cherrypy
 import logging
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
@@ -28,6 +29,7 @@ tas_challenges_seen_total {get_total_seen_count()}
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
     cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8001})
     cherrypy.quickstart(Metrics(), '/metrics')

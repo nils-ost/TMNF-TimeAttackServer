@@ -1,6 +1,7 @@
 """
 TrachMania Nations Forever - Dedicated Server Reveicer
 """
+import os
 import time
 import logging
 from helpers.config import get_config
@@ -11,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
+    logging.getLogger('pika').setLevel(logging.WARNING)
     rabbit = RabbitMQ()
     attached_config = rabbit.request_attachement_from_orchestrator('dreceiver')
     config = get_config('dedicated_run')[attached_config]

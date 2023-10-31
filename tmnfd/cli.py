@@ -23,7 +23,9 @@ args = parser.parse_args()
 
 
 def prepare_start():
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
+    logging.getLogger('pika').setLevel(logging.WARNING)
     from helpers.config import get_config, update_config_from_orchestrator
     if not bool(os.environ.get('IGNORE_ORCHESTRATOR', False)):
         update_config_from_orchestrator()
