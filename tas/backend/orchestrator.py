@@ -4,7 +4,7 @@ import sys
 import subprocess
 import signal
 from datetime import datetime
-from helpers.config import get_config, set_config
+from elements import Config
 from helpers.rabbitmq import RabbitMQ
 from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode
 import logging
@@ -60,7 +60,7 @@ def identify_dedicated_server(container_id, dtype):
     else:
         # not defined in compose using it's real container-name
         container_name = container_config['Name']
-    for k, v in get_config('dedicated').items():
+    for k, v in Config.get('dedicated')['content'].items():
         if v.get('type') == dtype and v.get('container') == container_name:
             return k
     logger.warning(f"{sys._getframe().f_code.co_name} Couldn't identify container {container_id}. {container_name} - {dtype} combo not present in config")
@@ -166,11 +166,11 @@ def dedicated_run_maintenance():
     checks the dedicated_run config and clears it up
     """
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    ded_run = get_config('dedicated_run')
-    ded = get_config('dedicated')
+    ded_run = Config.get('dedicated_run')
+    ded = Config.get('dedicated')['content']
     keys_remove = list()
     keys_add = list()
-    for k, v in ded_run.items():
+    for k, v in ded_run['content'].items():
         # check for outdated config objects
         if k not in ded:
             for ck in ['ded_container', 'dreceiver_container', 'dresponder_container', 'dcontroller_container']:
@@ -189,15 +189,15 @@ def dedicated_run_maintenance():
                 issue_container_start(ck)
     # remove outdated or renewable configs
     for k in keys_remove:
-        ded_run.pop(k, None)
+        ded_run['content'].pop(k, None)
     # check for configs missing in dedicated_run
     for k in ded.keys():
-        if k not in ded_run and k not in keys_add:
+        if k not in ded_run['content'] and k not in keys_add:
             keys_add.append(k)
     # add all missing configs to dedicated_run
     for k in keys_add:
-        ded_run[k] = ded[k]
-    set_config(ded_run, 'dedicated_run')
+        ded_run['content'][k] = ded[k]
+    ded_run.save()
 
 
 def get_available_ports(dkey, dtype, preferred_port=None, preferred_p2p=None, preferred_rpc=None):
@@ -206,7 +206,7 @@ def get_available_ports(dkey, dtype, preferred_port=None, preferred_p2p=None, pr
     available_p2p = list([3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459])
     available_rpc = list([5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009])
 
-    for k, v in get_config('dedicated_run').items():
+    for k, v in Config.get('dedicated_run')['content'].items():
         if k == dkey or not dtype == v.get('type'):
             continue
         if v.get('game_port') is not None:
@@ -238,10 +238,10 @@ def get_password(preferred_pw=None):
 
 def build_dedicated_config(dedicated_key, current_config):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    ded_run = get_config('dedicated_run')
-    ded_cfg = ded_run[dedicated_key]
+    ded_run = Config.get('dedicated_run')
+    ded_cfg = ded_run['content'][dedicated_key]
     config = dict({'dedicated': {}})
-    config['s3'] = get_config('s3')
+    config['s3'] = Config.get('s3')['content']
     config['hot_seat_mode'] = True if ded_cfg.get('hot_seat_mode') or current_config.get('hot_seat_mode') else False
 
     port = current_config['dedicated'].get('game_port') if ded_cfg.get('game_port') is None else ded_cfg.get('game_port')
@@ -268,9 +268,9 @@ def build_dedicated_config(dedicated_key, current_config):
     callvote_ratio = current_config.get('callvote_ratio') if ded_cfg.get('callvote_ratio') is None else ded_cfg.get('callvote_ratio')
     config['dedicated']['callvote_ratio'] = -1 if callvote_ratio is None else callvote_ratio
 
-    ded_run[dedicated_key]['hot_seat_mode'] = config['hot_seat_mode']
-    ded_run[dedicated_key].update(config['dedicated'])
-    set_config(ded_run, 'dedicated_run')
+    ded_run['content'][dedicated_key]['hot_seat_mode'] = config['hot_seat_mode']
+    ded_run['content'][dedicated_key].update(config['dedicated'])
+    ded_run.save()
     return config
 
 
@@ -303,30 +303,32 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
             ch.basic_ack(delivery_tag=delivery_tag)
             return
         logger.info(f'{sys._getframe().f_code.co_name} TM-Dedicated container ({container_id}) is requesting config for: {dedicated_key}')
-        ded_run = get_config('dedicated_run')
-        if not ded_run[dedicated_key].get('ded_container') == container_id and container_running(ded_run[dedicated_key].get('ded_container')):
+        ded_run = Config.get('dedicated_run')
+        if not ded_run['content'][dedicated_key].get('ded_container') == container_id \
+           and container_running(ded_run['content'][dedicated_key].get('ded_container')):
             logger.warning(f'{sys._getframe().f_code.co_name} dedicated-config ({dedicated_key}) allready attached with running container, ignoring request')
             ch.basic_ack(delivery_tag=delivery_tag)
             return
         # The following three lines ensure the _run config of dedicated-config is clean, also all other dedicated-config are up-to-date
-        ded_run[dedicated_key]['ded_container'] = None
-        set_config(ded_run, 'dedicated_run')
+        ded_run['content'][dedicated_key]['ded_container'] = None
+        ded_run.save()
         dedicated_run_maintenance()
         config = build_dedicated_config(dedicated_key, params['current_config'])
         # finally link the requesting container to the dedicated-run config
-        ded_run = get_config('dedicated_run')
-        ded_run[dedicated_key]['ded_container'] = container_id
-        set_config(ded_run, 'dedicated_run')
+        ded_run.reload()
+        ded_run['content'][dedicated_key]['ded_container'] = container_id
+        ded_run.save()
         ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(config))
-        logger.debug(f'{sys._getframe().f_code.co_name} Transmitted following config to container {ded_run[dedicated_key]["ded_container"]}: {config}')
+        logger.debug(
+            f'{sys._getframe().f_code.co_name} Transmitted following config to container {ded_run["content"][dedicated_key]["ded_container"]}: {config}')
     elif func == 'Dcontainer.attach_request':
         container_id = params['container_id'].lower()
         container_type = params['container_type'].lower()
-        ded_run = get_config('dedicated_run')
-        for k, v in ded_run.items():
+        ded_run = Config.get('dedicated_run')
+        for k, v in ded_run['content'].items():
             if not container_running(v.get(container_type + '_contianer')):
-                ded_run[k][container_type + '_container'] = container_id
-                set_config(ded_run, 'dedicated_run')
+                ded_run['content'][k][container_type + '_container'] = container_id
+                ded_run.save()
                 ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(dict({'dedicated_config': k})))
                 logger.info(f'{sys._getframe().f_code.co_name} attached container {container_id} of type {container_type} to config {k}')
                 break

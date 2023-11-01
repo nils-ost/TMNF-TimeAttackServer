@@ -1,4 +1,4 @@
-from helpers.config import get_config
+from elements import Config
 import os
 import sys
 import pika
@@ -10,7 +10,7 @@ import logging
 class RabbitMQ():
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.config = get_config('rabbit')
+        self.config = Config.get('rabbit')['content']
         self._conn = None
         self._sender = None
         self._consumer = None
@@ -28,7 +28,7 @@ class RabbitMQ():
                         first = False
                         self.logger.warning('RabbitMQ pending ... waiting')
                 time.sleep(1)
-                self.config = get_config('rabbit')
+                self.config = Config.get('rabbit')['content']
         if self._sender is None or self._sender.is_closed:
             self._sender = self._conn.channel()
         if self._consumer is None or self._consumer.is_closed:

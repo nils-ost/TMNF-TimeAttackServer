@@ -28,7 +28,7 @@ class ElementEndpointBase():
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH', 'DELETE'])
                 return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get('TASsession')
         if cookie:
             session = Session.get(cookie.value)
         else:

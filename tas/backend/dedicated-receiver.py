@@ -6,7 +6,7 @@ import os
 import time
 import logging
 import sys
-from helpers.config import get_config
+from elements import Config
 from helpers.GbxRemote import GbxRemote
 from helpers.rabbitmq import RabbitMQ
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()
     attached_config = rabbit.request_attachement_from_orchestrator('dreceiver')
-    config = get_config('dedicated_run')[attached_config]
+    config = Config.get('dedicated_run')['content'][attached_config]
     receiver = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     rabbit.send_dedicated_received_message('Dedicated.Disconnected')
 

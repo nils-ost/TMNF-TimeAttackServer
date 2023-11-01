@@ -1,7 +1,7 @@
 """
 TrachMania Nations Forever - Dedicated Server - Helpers
 """
-from helpers.config import get_config
+from elements import Config
 from helpers.mongodb import challenge_get, challenge_add, challenge_deactivate_all, challenge_id_get, challenge_id_set
 from helpers.mongodb import player_get, ranking_clear, ranking_rebuild, bestlaptime_get, clean_player_id
 from helpers.mongodb import get_start_time, get_end_time
@@ -11,7 +11,7 @@ import logging
 import sys
 
 logger = logging.getLogger(__name__)
-challenge_config = get_config('challenges')
+challenge_config = Config.get('challenges')['content']
 
 
 def isPreStart():

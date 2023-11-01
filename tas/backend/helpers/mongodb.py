@@ -692,19 +692,3 @@ def get_total_seen_count():
         return count
     else:
         return r.get('count', 0)
-
-
-"""
-Config
-"""
-
-
-def get_config(key):
-    r = mongoDB().config.find_one({'_id': key})
-    if r is None:
-        return None
-    return r.get('config', None)
-
-
-def set_config(key, cfg):
-    mongoDB().config.replace_one({'_id': key}, {'_id': key, 'config': cfg}, True)

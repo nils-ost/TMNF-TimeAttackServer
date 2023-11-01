@@ -1,11 +1,11 @@
 from helpers.mongodb import set_tmnfd_cli_method, get_tmnfd_cli_method, set_provide_replays
-from helpers.config import get_config
+from elements import Config
 import subprocess
 import logging
 import sys
 
 logger = logging.getLogger(__name__)
-config = get_config('tmnf-server')
+config = Config.get('tmnf-server')['content']
 
 
 def tmnfd_cli_test_method():

@@ -15,7 +15,7 @@ from helpers.mongodb import get_display_self_url, get_display_admin, get_client_
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
-from elements import User
+from elements import Config, User
 from endpoints import ElementEndpointBase, LoginEndpoint
 
 
@@ -36,7 +36,8 @@ class TimeAttackServer():
         self.thumbnails = Thumbnails()
         self.settings = Settings()
         self.stats = Stats()
-        self.users = UserEndpoint()
+        self.config = ConfigEndpoint()
+        self.user = UserEndpoint()
         self.login = LoginEndpoint()
 
 
@@ -311,8 +312,13 @@ class UserEndpoint(ElementEndpointBase):
     _element = User
 
 
+class ConfigEndpoint(ElementEndpointBase):
+    _element = Config
+
+
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
+    loglevel = os.environ.get('LOGLEVEL', 'INFO')
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
     conf = {
         '/download': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
@@ -329,6 +335,9 @@ if __name__ == '__main__':
         'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})
 
     versioning_run()
+    if Config.count() < 4:
+        for k in Config._defaults.keys():
+            Config.get(k)
     if User.count() == 0:
         u = User({'login': 'admin', 'pw': 'password', 'admin': True})
         u.save()

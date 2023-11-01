@@ -1,7 +1,7 @@
 """
 TrachMania Nations Forever - Dedicated Server Responder
 """
-from helpers.config import get_config
+from elements import Config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import laptime_add, challenge_get, challenge_update, challenge_id_get, challenge_id_set
 from helpers.mongodb import player_update, player_get, ranking_rebuild, clean_player_id, get_provide_replays, replay_add
@@ -159,6 +159,6 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     attached_config = rabbit.request_attachement_from_orchestrator('dresponder')
-    config = get_config('dedicated_run')[attached_config]
+    config = Config.get('dedicated_run')['content'][attached_config]
     sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     rabbit.consume_dedicated_received_messages(responder_function)

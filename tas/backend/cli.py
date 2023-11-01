@@ -7,6 +7,7 @@ from helpers.GbxRemote import GbxRemote
 import subprocess
 import time
 from datetime import datetime
+from elements import Config
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='TMNF-TAS CLI')
@@ -199,8 +200,7 @@ def clearDB(force=False):
 
 
 def nextChallenge():
-    from helpers.config import get_config
-    config = get_config('tmnf-server')
+    config = Config.get('tmnf-server')['content']
     sender = GbxRemote(config['host'], config['port'], config['user'], config['password'])
     sender.connect()
 
@@ -268,9 +268,8 @@ def state():
         if present:
             active = subprocess.call(f'systemctl is-active {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
         if service == 'tmnfd.service':
-            from helpers.config import get_config
             from helpers.GbxRemote import GbxRemote
-            config = get_config('tmnf-server')
+            config = Config.get('tmnf-server')['content']
             tmnfd = GbxRemote(config['host'], config['port'], config['user'], config['password'])
             connected = tmnfd.connect()
         elif service == 'docker.mongodb.service':
@@ -365,7 +364,6 @@ def endTime():
 def createBackup():
     from helpers.mongodb import mongoDB
     from helpers.version import version
-    from helpers.config import get_config
     from helpers.s3 import botoClient, generic_get, generic_delete_all
     from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_create_backup
     import zipfile
@@ -394,7 +392,7 @@ def createBackup():
                 f.write(json.dumps(elements, indent=2).encode('utf-8'))
             metadata['db'][coll] = len(elements)
 
-        config_s3 = get_config('s3')
+        config_s3 = Config.get('s3')['content']
         for bucket in [v for k, v in config_s3.items() if k.startswith('bucket_')]:
             metadata['s3'][bucket] = 0
             objects = botoClient.list_objects(Bucket=bucket)
@@ -420,7 +418,6 @@ def restoreBackup():
     import zipfile
     from helpers.version import version
     from helpers.versioning import versions_gt
-    from helpers.config import get_config
     from helpers.s3 import botoClient, generic_delete_all
     from helpers.mongodb import mongoDB
     from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_restore_backup
@@ -450,7 +447,7 @@ def restoreBackup():
                 for element in json.load(f):
                     mongoDB().get_collection(coll).insert_one(element)
 
-        config_s3 = get_config('s3')
+        config_s3 = Config.get('s3')['content']
         for bucket in [v for k, v in config_s3.items() if k.startswith('bucket_')]:
             for obj in [o for o in zf.namelist() if o.startswith(f's3/{bucket}/')]:
                 with zf.open(obj, 'r') as inp:

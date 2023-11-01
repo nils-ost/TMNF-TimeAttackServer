@@ -1,11 +1,11 @@
 import boto3
 from botocore.exceptions import ConnectionClosedError
-from helpers.config import get_config
+from elements import Config
 import sys
 import logging
 
 logger = logging.getLogger(__name__)
-config = get_config('s3')
+config = Config.get('s3')['content']
 
 botoClient = boto3.client(
     's3',

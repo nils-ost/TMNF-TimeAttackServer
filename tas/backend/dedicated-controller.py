@@ -1,7 +1,7 @@
 """
 TrachMania Nations Forever - Dedicated Server Controller
 """
-from helpers.config import get_config
+from elements import Config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import challenge_get, challenge_update, challenge_deactivate_all, challenge_id_set
 from helpers.mongodb import set_tmnfd_name, get_provide_replays, get_provide_thumbnails, get_provide_challenges
@@ -148,6 +148,6 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()
     attached_config = rabbit.request_attachement_from_orchestrator('dcontroller')
-    config = get_config('dedicated_run')[attached_config]
+    config = Config.get('dedicated_run')['content'][attached_config]
     sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     rabbit.consume_dedicated_state_changes(controller_function, timeout=1)
