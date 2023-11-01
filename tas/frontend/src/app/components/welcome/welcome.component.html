@@ -72,6 +72,7 @@
             <div class="connector" *ngIf="!settings?.hotseat_mode"></div>
             <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+            <div class="connector" *ngIf="settings?.hotseat_mode || !(start_countdown || end_countdown) || !(uri.startsWith('/en/') || uri.startsWith('/de/'))"></div>
         </div>
 
         <div class="card-container flex">
@@ -115,17 +116,35 @@
                     English
                 </div>
             </a>
+            <a class="card" routerLink="/admin" routerLinkActive="active" pRipple *ngIf="settings?.hotseat_mode || !(start_countdown || end_countdown) || !(uri.startsWith('/en/') || uri.startsWith('/de/'))">
+                <div class="icon">
+                    <i class="pi pi-sign-in"></i>
+                </div>
+                <div i18n="Text of link to Admin screen@@AdminScreenLinkText">
+                    Admin
+                </div>
+            </a>
         </div>
 
         <div class="connector-container flex">
             <div class="connector" *ngIf="!settings?.hotseat_mode"></div>
             <div class="connector" *ngIf="start_countdown || end_countdown"></div>
             <div class="connector" *ngIf="uri.startsWith('/en/') || uri.startsWith('/de/')"></div>
+            <div class="connector" *ngIf="settings?.hotseat_mode || !(start_countdown || end_countdown) || !(uri.startsWith('/en/') || uri.startsWith('/de/'))"></div>
         </div>
 
-        <div class="connector-container flex" *ngIf="settings?.hotseat_mode && !(start_countdown || end_countdown) && !(uri.startsWith('/en/') || uri.startsWith('/de/'))">
-            <div class="connector"></div>
-            <div class="connector"></div>
+        <div class="card-container flex" *ngIf="!settings?.hotseat_mode && (start_countdown || end_countdown) && (uri.startsWith('/en/') || uri.startsWith('/de/'))">
+            <a class="card" routerLink="/admin" routerLinkActive="active" pRipple>
+                <div class="icon">
+                    <i class="pi pi-sign-in"></i>
+                </div>
+                <div i18n="Text of link to Admin screen@@AdminScreenLinkText">
+                    Admin
+                </div>
+            </a>
+        </div>
+
+        <div class="connector-container flex" *ngIf="!settings?.hotseat_mode && (start_countdown || end_countdown) && (uri.startsWith('/en/') || uri.startsWith('/de/'))">
             <div class="connector"></div>
         </div>
 

@@ -16,6 +16,7 @@ import { ImageModule } from 'primeng/image';
 import { ListboxModule } from 'primeng/listbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
+import { CardModule } from 'primeng/card';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -40,6 +41,8 @@ import { HotseatNameScreenComponent } from './components/hotseat-name-screen/hot
 import { AutoFocusDirective } from './directives/auto-focus.directive';
 import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-screen/hotseat-wallboard-screen.component';
 import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-challenge/hotseat-ranking-challenge.component';
+import { AdminScreenComponent } from './components/admin-screen/admin-screen.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +68,9 @@ import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-c
     HotseatNameScreenComponent,
     AutoFocusDirective,
     HotseatWallboardScreenComponent,
-    HotseatRankingChallengeComponent
+    HotseatRankingChallengeComponent,
+    AdminScreenComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +89,8 @@ import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-c
     ImageModule,
     ListboxModule,
     TooltipModule,
-    InputTextModule
+    InputTextModule,
+    CardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

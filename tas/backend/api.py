@@ -15,6 +15,8 @@ from helpers.mongodb import get_display_self_url, get_display_admin, get_client_
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
 from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
+from elements import User
+from endpoints import ElementEndpointBase, LoginEndpoint
 
 
 valid_name_chars = [
@@ -34,6 +36,8 @@ class TimeAttackServer():
         self.thumbnails = Thumbnails()
         self.settings = Settings()
         self.stats = Stats()
+        self.users = UserEndpoint()
+        self.login = LoginEndpoint()
 
 
 class Settings():
@@ -303,6 +307,10 @@ class Thumbnails():
             return file_generator(thumbnail_get(thumbnail_name))
 
 
+class UserEndpoint(ElementEndpointBase):
+    _element = User
+
+
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
     conf = {
@@ -313,7 +321,15 @@ if __name__ == '__main__':
         }
     }
     cherrypy_cors.install()
-    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': 8000, 'cors.expose.on': True})
+    cherrypy.config.update({
+        'server.socket_host': '0.0.0.0',
+        'server.socket_port': 8000,
+        'cors.expose.on': True,
+        'tools.response_headers.on': True,
+        'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})
 
     versioning_run()
+    if User.count() == 0:
+        u = User({'login': 'admin', 'pw': 'password', 'admin': True})
+        u.save()
     cherrypy.quickstart(TimeAttackServer(), '/', conf)

@@ -1,4 +1,3 @@
-# Set the base image
 FROM python:3.10-alpine
 
 MAINTAINER Nils Ost
@@ -13,6 +12,8 @@ ADD requirements.txt $HOME/requirements.txt
 RUN pip3 install -r $HOME/requirements.txt
 
 ADD helpers $HOME/helpers
+ADD elements $HOME/elements
+ADD endpoints $HOME/endpoints
 ADD orchestrator.py $HOME/orchestrator
 ADD api.py $HOME/api
 ADD cli.py $HOME/cli
