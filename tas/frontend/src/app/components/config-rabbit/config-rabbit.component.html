@@ -1,0 +1,24 @@
+<p>config-rabbit works!</p>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="rabbithost" pInputText [(ngModel)]="host" autofocus>
+        <label for="rabbithost" i18n="@@elementFieldLabelRabbitHost">Host</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="rabbitport" [(ngModel)]="port" [min]="0" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
+        <label for="rabbitport" i18n="@@elementFieldLabelRabbitPort">Port</label>
+    </span>
+</div>
+
+<div class="field" *ngFor="let key of queues | keyvalue">
+    <span class="p-float-label">
+        <input type="text" id="rabbit{{ key.key }}" pInputText [(ngModel)]="queues[key.key]">
+        <label for="rabbit{{ key.key }}">{{ queueDisplay(key.key) }}</label>
+    </span>
+</div>
+
+<button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>

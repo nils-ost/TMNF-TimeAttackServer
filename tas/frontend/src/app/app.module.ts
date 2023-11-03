@@ -17,6 +17,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -43,6 +44,7 @@ import { HotseatWallboardScreenComponent } from './components/hotseat-wallboard-
 import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-challenge/hotseat-ranking-challenge.component';
 import { AdminScreenComponent } from './components/admin-screen/admin-screen.component';
 import { LoginComponent } from './components/login/login.component';
+import { ConfigRabbitComponent } from './components/config-rabbit/config-rabbit.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +72,8 @@ import { LoginComponent } from './components/login/login.component';
     HotseatWallboardScreenComponent,
     HotseatRankingChallengeComponent,
     AdminScreenComponent,
-    LoginComponent
+    LoginComponent,
+    ConfigRabbitComponent
   ],
   imports: [
     BrowserModule,
@@ -90,7 +93,8 @@ import { LoginComponent } from './components/login/login.component';
     ListboxModule,
     TooltipModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    InputNumberModule
   ],
   providers: [],
   bootstrap: [AppComponent]
