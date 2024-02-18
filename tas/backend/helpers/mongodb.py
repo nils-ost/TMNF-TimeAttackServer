@@ -11,7 +11,7 @@ _mongoDB = dict()
 
 def _config():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    host = os.environ.get('MONGO_HOST', 'mongodb')
+    host = os.environ.get('MONGO_HOST', '127.0.0.1')
     port = int(os.environ.get('MONGO_PORT', 27017))
     db = os.environ.get('MONGO_DB', 'tm-tas')
     return {'host': host, 'port': port, 'database': db}

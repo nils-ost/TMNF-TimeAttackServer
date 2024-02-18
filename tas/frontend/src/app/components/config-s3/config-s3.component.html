@@ -1,0 +1,37 @@
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="s3host" pInputText [(ngModel)]="host" autofocus>
+        <label for="s3host" i18n="@@elementFieldLabelS3Host">Host</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="s3port" [(ngModel)]="port" [min]="0" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
+        <label for="s3port" i18n="@@elementFieldLabelS3Port">Port</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="s3accesskey" pInputText [(ngModel)]="access_key">
+        <label for="s3accesskey" i18n="@@elementFieldLabelS3AccessKey">Access Key</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="s3accesssecret" pInputText [(ngModel)]="access_secret">
+        <label for="s3accesssecret" i18n="@@elementFieldLabelS3AccessSecret">Access Secret</label>
+    </span>
+</div>
+
+<div class="field" *ngFor="let key of buckets | keyvalue">
+    <span class="p-float-label">
+        <input type="text" id="s3{{ key.key }}" pInputText [(ngModel)]="buckets[key.key]">
+        <label for="s3{{ key.key }}">{{ bucketDisplay(key.key) }}</label>
+    </span>
+</div>
+
+<button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
+<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>

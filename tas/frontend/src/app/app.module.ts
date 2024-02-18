@@ -45,6 +45,8 @@ import { HotseatRankingChallengeComponent } from './components/hotseat-ranking-c
 import { AdminScreenComponent } from './components/admin-screen/admin-screen.component';
 import { LoginComponent } from './components/login/login.component';
 import { ConfigRabbitComponent } from './components/config-rabbit/config-rabbit.component';
+import { ConfigS3Component } from './components/config-s3/config-s3.component';
+import { ConfigChallengesComponent } from './components/config-challenges/config-challenges.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,9 @@ import { ConfigRabbitComponent } from './components/config-rabbit/config-rabbit.
     HotseatRankingChallengeComponent,
     AdminScreenComponent,
     LoginComponent,
-    ConfigRabbitComponent
+    ConfigRabbitComponent,
+    ConfigS3Component,
+    ConfigChallengesComponent
   ],
   imports: [
     BrowserModule,

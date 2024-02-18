@@ -1,5 +1,3 @@
-<p>config-rabbit works!</p>
-
 <div class="field">
     <span class="p-float-label">
         <input type="text" id="rabbithost" pInputText [(ngModel)]="host" autofocus>
@@ -22,3 +20,4 @@
 </div>
 
 <button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
+<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>

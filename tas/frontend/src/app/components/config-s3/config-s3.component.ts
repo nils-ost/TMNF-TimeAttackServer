@@ -1,21 +1,23 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnChanges, OnInit } from '@angular/core';
+import { Config } from 'src/app/interfaces/config';
 import { ConfigService } from 'src/app/services/config.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Config } from 'src/app/interfaces/config';
 
 @Component({
-  selector: 'app-config-rabbit',
-  templateUrl: './config-rabbit.component.html',
-  styleUrls: ['./config-rabbit.component.scss']
+  selector: 'app-config-s3',
+  templateUrl: './config-s3.component.html',
+  styleUrls: ['./config-s3.component.scss']
 })
-export class ConfigRabbitComponent implements OnInit, OnChanges {
+export class ConfigS3Component implements OnInit, OnChanges {
   host: string = "";
   port: number = 0;
-  queues: { [key: string]: string } = {
-    'queue_dedicated_received_messages': '',
-    'queue_dedicated_state_changes': '',
-    'queue_orchestrator': ''
+  access_key: string = "";
+  access_secret: string = "";
+  buckets: { [key: string]: string } = {
+    'bucket_replays': '',
+    'bucket_thumbnails': '',
+    'bucket_challenges': ''
   }
 
   constructor(
@@ -33,13 +35,15 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
 
   loadConfig() {
     this.configService
-      .getConfig('rabbit')
+      .getConfig('s3')
       .subscribe({
         next: (config: Config) => {
           this.host = config['content']['host'];
           this.port = config['content']['port'];
+          this.access_key = config['content']['access_key'];
+          this.access_secret = config['content']['access_secret'];
           for (const key in config['content']) {
-            if (key.startsWith('queue_')) this.queues[key] = config['content'][key];
+            if (key.startsWith('bucket_')) this.buckets[key] = config['content'][key];
           }
         },
         error: (err: HttpErrorResponse) => {
@@ -51,13 +55,15 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
   saveConfig() {
     let content: { [key: string]: any } = {
       'host': this.host,
-      'port': this.port
+      'port': this.port,
+      'access_key': this.access_key,
+      'access_secret': this.access_secret
     }
-    for (let q in this.queues) {
-      content[q] = this.queues[q]
+    for (let b in this.buckets) {
+      content[b] = this.buckets[b]
     }
     this.configService
-      .updateConfig('rabbit', content)
+      .updateConfig('s3', content)
       .subscribe({
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -65,8 +71,8 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
       })
   }
 
-  queueDisplay(name: string): string {
-    return name.replace('queue_', '').replace('_', ' ')
+  bucketDisplay(name: string): string {
+    return name.replace('bucket_', '').replace('_', ' ')
   }
 
 }

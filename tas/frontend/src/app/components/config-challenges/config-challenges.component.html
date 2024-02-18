@@ -1,0 +1,23 @@
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="challengesreltime" pInputText [(ngModel)]="rel_time" autofocus>
+        <label for="challengesreltime" i18n="@@elementFieldLabelChallengesRelTime">Relative to</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="challengesleastrounds" [(ngModel)]="least_rounds" [min]="1" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
+        <label for="challengesleastrounds" i18n="@@elementFieldLabelChallengesLeastRounds">Rounds at least</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="challengesleasttime" [(ngModel)]="least_time" [min]="30" [useGrouping]="false" [showButtons]="true" suffix=" seconds" i18n-suffix="@@elementFieldSuffixChallengesLeastTime"></p-inputNumber>
+        <label for="challengesleasttime" i18n="@@elementFieldLabelChallengesLeastTime">Time at least</label>
+    </span>
+</div>
+
+<button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
+<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>

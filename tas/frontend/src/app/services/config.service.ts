@@ -22,4 +22,8 @@ export class ConfigService {
   public getConfigs(): Observable<Config[]> {
     return this.http.get<Config[]>(this.configurl, {withCredentials:true});
   }
+
+  public updateConfig(id: string, content: any): Observable<any> {
+    return this.http.patch<any>(this.configurl + id + '/', {'content': content}, {withCredentials:true})
+  }
 }

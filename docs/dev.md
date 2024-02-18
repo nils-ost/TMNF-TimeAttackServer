@@ -66,3 +66,13 @@ Now you can add `PATH_add tas/frontend/node_modules/@angular/cli/bin` to your .e
 pre-commit install
 sudo apt install makeself
 ```
+
+# v2
+
+## Develop Config-/User-/Login-API
+
+  * in root-dir just `invoke dev-start`
+  * in tas/backend `python api-py` (by default the api connects to mongoDB on 127.0.0.1:27017 which is the dev-container listening on)
+  * finally in tas/frontend do `ng serve -c wst`
+
+A root user `admin` with password `password` is created by api.py as no users are configured on the system
