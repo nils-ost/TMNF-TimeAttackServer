@@ -18,6 +18,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { PanelModule } from 'primeng/panel';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -47,6 +50,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ConfigRabbitComponent } from './components/config-rabbit/config-rabbit.component';
 import { ConfigS3Component } from './components/config-s3/config-s3.component';
 import { ConfigChallengesComponent } from './components/config-challenges/config-challenges.component';
+import { ConfigDedicatedComponent } from './components/config-dedicated/config-dedicated.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +81,8 @@ import { ConfigChallengesComponent } from './components/config-challenges/config
     LoginComponent,
     ConfigRabbitComponent,
     ConfigS3Component,
-    ConfigChallengesComponent
+    ConfigChallengesComponent,
+    ConfigDedicatedComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +103,10 @@ import { ConfigChallengesComponent } from './components/config-challenges/config
     TooltipModule,
     InputTextModule,
     CardModule,
-    InputNumberModule
+    InputNumberModule,
+    DynamicDialogModule,
+    PanelModule,
+    SplitButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

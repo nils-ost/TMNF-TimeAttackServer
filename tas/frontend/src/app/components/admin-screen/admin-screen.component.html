@@ -1,28 +1,13 @@
 <p>admin-screen works!</p>
 
-<p-table [value]="configs">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Content
-            </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-config>
-        <tr>
-            <td>
-                {{ config.name }}
-            </td>
-            <td>
-                {{ config.content }}
-            </td>
-        </tr>
-    </ng-template>
-</p-table>
+<p-panel header="Edit Config">
+    <ul>
+        <li><p-button (click)="showRabbitConfig()" icon="pi pi-search" label="Rabbit"></p-button></li>
+        <li><p-button (click)="showS3Config()" icon="pi pi-search" label="S3"></p-button></li>
+        <li><p-button (click)="showChallengesConfig()" icon="pi pi-search" label="Challenges"></p-button></li>
+    </ul>
+</p-panel>
 
-<app-config-rabbit></app-config-rabbit>
-<app-config-s3></app-config-s3>
-<app-config-challenges></app-config-challenges>
+<p-panel header="Edit Dedicated">
+    <p-splitButton label="New" icon="pi pi-plus" (onClick)="showNewDedicatedConfig()" [model]="dedicatedConfigsSelector"></p-splitButton>
+</p-panel>

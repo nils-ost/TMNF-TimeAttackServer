@@ -9,6 +9,11 @@ def start_development(c):
         print('Starting mongoDB')
         c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 -d mongo:4.4')
 
+    r = c.run('sudo docker ps -f name=dev-rabbit', hide=True)
+    if 'dev-rabbit' not in r.stdout:
+        print('Starting rabbitMQ')
+        c.run('sudo docker run --name dev-rabbit --rm -p 5672:5672 -p 15672:15672 -d rabbitmq:3.12-management-alpine')
+
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
@@ -16,11 +21,6 @@ def start_development(c):
             -v {os.path.join(os.path.abspath(os.path.curdir), "install/haproxy.cfg")}:/usr/local/etc/haproxy/haproxy.cfg:ro \
             --add-host=host.docker.internal:host-gateway \
             --sysctl net.ipv4.ip_unprivileged_port_start=0 -d haproxy:lts-alpine')
-
-    r = c.run('sudo docker ps -f name=dev-rabbit', hide=True)
-    if 'dev-rabbit' not in r.stdout:
-        print('Starting rabbitMQ')
-        c.run('sudo docker run --name dev-rabbit --rm -p 5672:5672 -p 15672:15672 -d rabbitmq:3.12-management-alpine')
 
 
 @task(name='dev-stop')

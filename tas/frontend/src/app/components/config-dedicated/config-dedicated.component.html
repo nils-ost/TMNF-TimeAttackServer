@@ -1,0 +1,30 @@
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedname" pInputText [(ngModel)]="name" autofocus>
+        <label for="dedicatedname" i18n="@@elementFieldLabelDedicatedName">Name</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedconnection" pInputText [(ngModel)]="connection">
+        <label for="dedicatedconnection" i18n="@@elementFieldLabelDedicatedConnection">Connection</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedcontainer" pInputText [(ngModel)]="container">
+        <label for="dedicatedcontainer" i18n="@@elementFieldLabelDedicatedContainer">Container</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedtype" pInputText [(ngModel)]="type">
+        <label for="dedicatedtype" i18n="@@elementFieldLabelDedicatedType">Type</label>
+    </span>
+</div>
+
+<button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
+<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>
