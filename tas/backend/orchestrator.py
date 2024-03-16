@@ -117,7 +117,9 @@ def issue_container_stop(container_id=None):
 def issue_container_start(container_type):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ctype = None
-    if container_type == 'dreceiver_container':
+    if container_type == 'tmnfd':
+        ctype = 'tmnfd'
+    elif container_type == 'dreceiver_container':
         ctype = 'dedicated-receiver'
     elif container_type == 'dresponder_container':
         ctype = 'dedicated-responder'
@@ -179,10 +181,11 @@ def dedicated_run_maintenance():
             continue
         # check for dead containers
         if not container_running(v.get('ded_container')):
-            for ck in ['dreceiver_container', 'dresponder_container', 'dcontroller_container']:
-                issue_container_stop(v.get(ck))
-            keys_remove.append(k)
-            keys_add.append(k)
+            if v.get('ded_container_start') is None or v['ded_container_start'] + 30 < datetime.now().timestamp():
+                for ck in ['dreceiver_container', 'dresponder_container', 'dcontroller_container']:
+                    issue_container_stop(v.get(ck))
+                keys_remove.append(k)
+                keys_add.append(k)
             continue
         for ck in ['dreceiver_container', 'dresponder_container', 'dcontroller_container']:
             if not container_running(v.get(ck)):
@@ -197,6 +200,8 @@ def dedicated_run_maintenance():
     # add all missing configs to dedicated_run
     for k in keys_add:
         ded_run['content'][k] = ded[k]
+        issue_container_start(ded[k].get('container'))
+        ded_run['content'][k]['ded_container_start'] = datetime.now().timestamp()
     ded_run.save()
 
 
@@ -326,7 +331,7 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         container_type = params['container_type'].lower()
         ded_run = Config.get('dedicated_run')
         for k, v in ded_run['content'].items():
-            if not container_running(v.get(container_type + '_contianer')):
+            if not container_running(v.get(container_type + '_container')):
                 ded_run['content'][k][container_type + '_container'] = container_id
                 ded_run.save()
                 ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(dict({'dedicated_config': k})))

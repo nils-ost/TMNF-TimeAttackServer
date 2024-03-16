@@ -148,6 +148,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()
     attached_config = rabbit.request_attachement_from_orchestrator('dcontroller')
+    rabbit.attach_config(attached_config)
     config = Config.get('dedicated_run')['content'][attached_config]
     sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     rabbit.consume_dedicated_state_changes(controller_function, timeout=1)

@@ -15,6 +15,14 @@ class RabbitMQ():
         self._sender = None
         self._consumer = None
 
+    def attach_config(self, attached_config):
+        """
+        used for dedicated-controller, -receiver and -responder to identify the dedicated server configuration object they belong to
+        (the key of config.get('dedicated'))
+        """
+        self.config['queue_dedicated_received_messages'] += f'_{attached_config}'
+        self.config['queue_dedicated_state_changes'] += f'_{attached_config}'
+
     def _start_connection(self):
         if self._conn is None or self._conn.is_closed:
             first = True

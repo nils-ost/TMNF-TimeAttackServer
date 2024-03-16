@@ -21,6 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { PanelModule } from 'primeng/panel';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 import { AppComponent } from './app.component';
 import { RankingGlobalComponent } from './components/ranking-global/ranking-global.component';
@@ -106,7 +107,8 @@ import { ConfigDedicatedComponent } from './components/config-dedicated/config-d
     InputNumberModule,
     DynamicDialogModule,
     PanelModule,
-    SplitButtonModule
+    SplitButtonModule,
+    ToggleButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -29,7 +29,6 @@ export class AdminScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadConfig();
-    this.buildDedicatedConfigsSelector();
   }
 
   loadConfig() {
@@ -38,6 +37,7 @@ export class AdminScreenComponent implements OnInit {
       .subscribe({
         next: (config: Config) => {
           this.dedicated_configs = config['content'];
+          this.buildDedicatedConfigsSelector();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -58,15 +58,18 @@ export class AdminScreenComponent implements OnInit {
   }
 
   showNewDedicatedConfig() {
-    this.dialogRef = this.dialogService.open(ConfigDedicatedComponent, {header: 'Dedicated Config', data: {selected_config: null}, modal: true});
+    this.dialogRef = this.dialogService.open(ConfigDedicatedComponent, {header: 'Dedicated Config', data: {}, modal: true});
+    this.dialogRef.onClose.subscribe(() => {this.loadConfig();});
   }
 
   buildDedicatedConfigsSelector() {
+    this.dedicatedConfigsSelector = [];
     for (let k in this.dedicated_configs) {
       let item = {
         label: k,
         command: () => {
           this.dialogRef = this.dialogService.open(ConfigDedicatedComponent, {header: 'Dedicated Config', data: {selected_config: k}, modal: true});
+          this.dialogRef.onClose.subscribe(() => {this.loadConfig();});
         }
       }
       this.dedicatedConfigsSelector.push(item);

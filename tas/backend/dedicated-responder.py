@@ -159,6 +159,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     attached_config = rabbit.request_attachement_from_orchestrator('dresponder')
+    rabbit.attach_config(attached_config)
     config = Config.get('dedicated_run')['content'][attached_config]
     sender = GbxRemote('host.docker.internal', config['rpc_port'], 'SuperAdmin', config['superadmin_pw'])
     rabbit.consume_dedicated_received_messages(responder_function)

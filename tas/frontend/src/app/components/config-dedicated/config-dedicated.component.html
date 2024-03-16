@@ -1,13 +1,14 @@
 <div class="field">
     <span class="p-float-label">
-        <input type="text" id="dedicatedname" pInputText [(ngModel)]="name" autofocus>
+        <input type="text" id="dedicatedname" pInputText [(ngModel)]="name" (keyup)="validateName()" [ngClass]="{'ng-invalid ng-dirty': name_error}" autofocus>
         <label for="dedicatedname" i18n="@@elementFieldLabelDedicatedName">Name</label>
     </span>
+    <small *ngIf="name_error" class="p-error block">{{ name_error }}</small>
 </div>
 
 <div class="field">
     <span class="p-float-label">
-        <input type="text" id="dedicatedconnection" pInputText [(ngModel)]="connection">
+        <input type="text" id="dedicatedconnection" [disabled]="true" pInputText [(ngModel)]="connection">
         <label for="dedicatedconnection" i18n="@@elementFieldLabelDedicatedConnection">Connection</label>
     </span>
 </div>
@@ -21,10 +22,83 @@
 
 <div class="field">
     <span class="p-float-label">
-        <input type="text" id="dedicatedtype" pInputText [(ngModel)]="type">
+        <input type="text" id="dedicatedtype" [disabled]="true" pInputText [(ngModel)]="type">
         <label for="dedicatedtype" i18n="@@elementFieldLabelDedicatedType">Type</label>
     </span>
 </div>
 
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedgameport" [(ngModel)]="game_port" [disabled]="game_port_auto" [min]="2350" [max]="2359" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
+        <label for="dedicatedgameport" i18n="@@elementFieldLabelDedicatedGamePort">Gameport</label>
+    </span>
+    <p-toggleButton [(ngModel)]="game_port_auto" onLabel="Auto" offLabel="Manual"></p-toggleButton>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedp2pport" [(ngModel)]="p2p_port" [disabled]="p2p_port_auto" [min]="3450" [max]="3459" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
+        <label for="dedicatedp2pport" i18n="@@elementFieldLabelDedicatedP2pPort">P2pport</label>
+    </span>
+    <p-toggleButton [(ngModel)]="p2p_port_auto" onLabel="Auto" offLabel="Manual"></p-toggleButton>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedrpcport" [(ngModel)]="rpc_port" [disabled]="rpc_port_auto" [min]="5000" [max]="5009" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
+        <label for="dedicatedrpcport" i18n="@@elementFieldLabelDedicatedRpcPort">Rpcport</label>
+    </span>
+    <p-toggleButton [(ngModel)]="rpc_port_auto" onLabel="Auto" offLabel="Manual"></p-toggleButton>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedsuperadminpw" pInputText [(ngModel)]="superadmin_pw">
+        <label for="dedicatedsuperadminpw" i18n="@@elementFieldLabelDedicatedSuperadminPw">Superadminpw</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedadminpw" pInputText [(ngModel)]="admin_pw">
+        <label for="dedicatedadminpw" i18n="@@elementFieldLabelDedicatedAdminPw">Adminpw</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicateduserpw" pInputText [(ngModel)]="user_pw">
+        <label for="dedicateduserpw" i18n="@@elementFieldLabelDedicatedUserPw">Userpw</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedmaxplayers" [(ngModel)]="max_players" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
+        <label for="dedicatedmaxplayers" i18n="@@elementFieldLabelDedicatedMaxPlayers">Maxplayers</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="dedicatedingamename" pInputText [(ngModel)]="ingame_name">
+        <label for="dedicatedingamename" i18n="@@elementFieldLabelDedicatedIngameName">Ingamename</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedcallvotetimeout" [(ngModel)]="callvote_timeout" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
+        <label for="dedicatedcallvotetimeout" i18n="@@elementFieldLabelDedicatedCallvoteTimeout">Callvotetimeout</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="dedicatedcallvoteratio" [(ngModel)]="callvote_ratio" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
+        <label for="dedicatedcallvoteratio" i18n="@@elementFieldLabelDedicatedCallvoteRatio">Callvoteratio</label>
+    </span>
+</div>
+
 <button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
-<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>
+<button pButton (click)="dismissConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>
