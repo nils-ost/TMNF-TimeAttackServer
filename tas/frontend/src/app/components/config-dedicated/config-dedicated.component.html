@@ -101,4 +101,5 @@
 </div>
 
 <button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
-<button pButton (click)="dismissConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>
+<button pButton (click)="dismissConfig()" i18n="@@buttonDismiss" class="p-button-warning">Dismiss</button>
+<button *ngIf="selected_config" pButton (click)="deleteConfig()" i18n="@@buttonDismiss" class="p-button-danger">Delete</button>

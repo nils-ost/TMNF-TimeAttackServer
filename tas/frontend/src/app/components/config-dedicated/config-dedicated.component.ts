@@ -104,6 +104,22 @@ export class ConfigDedicatedComponent implements OnInit, OnChanges {
     this.dialogRef.close()
   }
 
+  deleteConfig() {
+    if (this.selected_config) {
+      delete this.dedicated_configs[this.selected_config];
+      this.configService
+      .updateConfig('dedicated', this.dedicated_configs)
+      .subscribe({
+        next: () => {
+          this.dialogRef.close();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+    }
+  }
+
   fillFields() {
     if (this.config.data && this.config.data.selected_config)
       this.selected_config = this.config.data.selected_config
