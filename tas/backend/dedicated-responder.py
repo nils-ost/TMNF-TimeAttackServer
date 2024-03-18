@@ -17,11 +17,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 sender = None
+attached_config = None
 rabbit = RabbitMQ()
 
 
 def responder_function(func, params, ch, delivery_tag):
     global sender
+    global attached_config
     logger.info(f'Received: {func} {params}')
 
     if func == 'TrackMania.PlayerFinish':
@@ -66,15 +68,15 @@ def responder_function(func, params, ch, delivery_tag):
                 challenge_id_set(None, next=True)
                 logger.info(f"Pre Start Challenge begin: {params[0]['Name']}")
         else:
-            challenge_db = challenge_get(params[0]['UId'])
+            challenge_db = challenge_get(params[0]['UId'], attached_config)
             if challenge_db['lap_race'] and challenge_db['nb_laps'] == -1:
                 new_time = calcTimeLimit(challenge_db['rel_time'], True, params[0]['NbLaps'])
-                challenge_update(params[0]['UId'], time_limit=new_time, nb_laps=params[0]['NbLaps'])
+                challenge_update(params[0]['UId'], attached_config, time_limit=new_time, nb_laps=params[0]['NbLaps'])
             else:
-                challenge_update(params[0]['UId'])
+                challenge_update(params[0]['UId'], attached_config)
             challenge_id_set(params[0]['UId'], current=True)
             logger.info(f"Challenge begin: {params[0]['Name']}")
-            prepareNextChallenge(sender)
+            prepareNextChallenge(sender, attached_config)
             if not get_hotseat_mode():
                 for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
                     sendLaptimeNotice(sender, p['Login'])

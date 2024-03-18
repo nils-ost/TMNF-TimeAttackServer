@@ -1,5 +1,6 @@
 export interface Challenge {
   id: string;
+  server: string;
   name: string;
   seen_count: number;
   seen_last: number;

@@ -85,7 +85,8 @@ class Challenges():
         if challenge_id is None:
             result = list()
             for c in challenge_all():
-                result.append({'id': c['_id'], 'name': c['name'], 'seen_count': c['seen_count'], 'seen_last': c['seen_last'], 'time_limit': c['time_limit']})
+                result.append({'id': c['challenge_id'], 'server': c['dedicated_server'], 'name': c['name'],
+                               'seen_count': c['seen_count'], 'seen_last': c['seen_last'], 'time_limit': c['time_limit']})
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=90'
             cherrypy.response.headers['Content-Type'] = 'application/json'
             return json.dumps(result).encode('utf-8')
@@ -291,8 +292,11 @@ class Thumbnails():
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
             cherrypy.response.headers['Content-Type'] = 'application/json'
             result = list()
+            result_ids = list()
             for c in challenge_all():
-                result.append({'challenge_id': c['_id'], 'name': c['name'], 'thumbnail': c['_id'] + '.jpg'})
+                if c['challenge_id'] not in result_ids:
+                    result.append({'challenge_id': c['challenge_id'], 'name': c['name'], 'thumbnail': c['challenge_id'] + '.jpg'})
+                    result_ids.append(c['challenge_id'])
             return json.dumps(result).encode('utf-8')
         if not thumbnail_exists(thumbnail_name):
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'

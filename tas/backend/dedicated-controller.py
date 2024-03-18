@@ -3,7 +3,7 @@ TrachMania Nations Forever - Dedicated Server Controller
 """
 from elements import Config
 from helpers.GbxRemote import GbxRemote
-from helpers.mongodb import challenge_get, challenge_update, challenge_deactivate_all, challenge_id_set
+from helpers.mongodb import challenge_get, challenge_update, challenge_id_set
 from helpers.mongodb import set_tmnfd_name, get_provide_replays, get_provide_thumbnails, get_provide_challenges
 from helpers.tmnfd import isPreStart, isPostEnd, prepareChallenges, prepareNextChallenge, kickAllPlayers
 from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
@@ -17,6 +17,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 sender = None
+attached_config = None
 pre_start_executed = False
 post_end_executed = False
 dedicated_connected = False
@@ -24,6 +25,7 @@ dedicated_connected = False
 
 def controller_function(timeout, new_state, ch, delivery_tag):
     global sender
+    global attached_config
     global dedicated_connected
     global pre_start_executed
     global post_end_executed
@@ -36,7 +38,7 @@ def controller_function(timeout, new_state, ch, delivery_tag):
                 time.sleep(1)
             logger.info('Connected to: TMNF - Dedicated Server')
             dedicated_connected = True
-            prepareChallenges(sender)
+            prepareChallenges(sender, server=attached_config)
 
             if get_provide_replays() or get_provide_thumbnails() or get_provide_challenges():
                 tmnfd_cli_test()
@@ -50,10 +52,10 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             logger.info(f'TMNF - Dedicated Server Name: {server_name}')
             if not isPreStart() and not isPostEnd():
                 current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
-                challenge_update(current_challenge['UId'], force_inc=False)
+                challenge_update(current_challenge['UId'], attached_config, force_inc=False)
                 logger.info(f"Challenge current: {current_challenge['Name']}")
                 challenge_id_set(current_challenge['UId'], current=True)
-                prepareNextChallenge(sender)
+                prepareNextChallenge(sender, attached_config)
         ch.basic_ack(delivery_tag=delivery_tag)
 
     elif dedicated_connected:
@@ -69,8 +71,6 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             sender.callMethod('SetRefereePassword', rndpassword)
             # kick all players
             kickAllPlayers(sender, 'Tournament not yet started!')
-            # deaktivate all challenges
-            challenge_deactivate_all()
             # clear current and next challenge
             challenge_id_set(None, current=True)
             challenge_id_set(None, next=True)
@@ -101,7 +101,7 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             # reloading MatchSettings
             sender.callMethod('LoadMatchSettings', 'MatchSettings/active.txt')
             # prepare challenges
-            prepareChallenges(sender)
+            prepareChallenges(sender, server=attached_config)
             # show server
             sender.callMethod('SetHideServer', 0)
             # remove password
@@ -110,7 +110,7 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             sender.callMethod('SetRefereePassword', '')
             # start first challenge
             challenge = sender.callMethod('GetNextChallengeInfo')[0]
-            time_limit = challenge_get(challenge['UId'])['time_limit']
+            time_limit = challenge_get(challenge['UId'], attached_config)['time_limit']
             sender.callMethod('SetTimeAttackLimit', time_limit)
             sender.callMethod('NextChallenge')
             pre_start_executed = False

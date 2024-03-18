@@ -6,7 +6,7 @@ import signal
 from datetime import datetime
 from elements import Config
 from helpers.rabbitmq import RabbitMQ
-from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode
+from helpers.mongodb import challenge_id_get, player_update, player_all, ranking_rebuild, hotseat_player_name_set, get_hotseat_mode, challenge_deactivate_all
 import logging
 
 logger = logging.getLogger(__name__)
@@ -365,4 +365,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     dedicated_run_maintenance()
+    for k, v in Config.get('dedicated_run')['content'].items():
+        if v.get('dcontroller_container') is not None:
+            break
+    else:
+        # it seems, that the stack just started, therefore deactivate all challenges as a maintenance procedure
+        challenge_deactivate_all()
     consume_orchestrator_messages(messages_callback, timeout=1)

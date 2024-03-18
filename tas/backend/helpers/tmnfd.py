@@ -45,9 +45,9 @@ def calcTimeLimit(rel_time, lap_race, nb_laps):
     return int(max(new_time, challenge_config['least_time']))
 
 
-def prepareChallenges(sender):
+def prepareChallenges(sender, server):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    challenge_deactivate_all()
+    challenge_deactivate_all(for_server=server)
     starting_index = 0
     infos_returned = 10
     fetched_count = 0
@@ -59,7 +59,7 @@ def prepareChallenges(sender):
                 time_limit = 60 * 60 * 1000
             else:
                 time_limit = calcTimeLimit(rel_time, challenge['LapRace'], challenge['NbLaps'])
-            challenge_add(challenge['UId'], challenge['Name'], time_limit, rel_time, challenge['LapRace'])
+            challenge_add(challenge['UId'], server, challenge['Name'], time_limit, rel_time, challenge['LapRace'])
             fetched_count += 1
         if fetched_count % infos_returned == 0:
             starting_index += infos_returned
@@ -69,10 +69,10 @@ def prepareChallenges(sender):
     ranking_rebuild()
 
 
-def prepareNextChallenge(sender):
+def prepareNextChallenge(sender, server):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
-    time_limit = challenge_get(challenge['UId'])['time_limit']
+    time_limit = challenge_get(challenge['UId'], server)['time_limit']
     sender.callMethod('SetTimeAttackLimit', time_limit)
     challenge_id_set(challenge['UId'], next=True)
     logger.info(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")

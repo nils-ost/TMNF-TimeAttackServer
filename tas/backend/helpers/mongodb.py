@@ -226,12 +226,13 @@ def player_merge(survivor, merged):
     ranking_rebuild()
 
 
-def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
+def challenge_add(challenge_id, on_server, name, time_limit, rel_time, lap_race):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    challenge = mongoDB().challenges.find_one({'_id': challenge_id})
+    challenge = mongoDB().challenges.find_one({'challenge_id': challenge_id, 'dedicated_server': on_server})
     if challenge is None:
         mongoDB().challenges.insert_one({
-            '_id': challenge_id,
+            'challenge_id': challenge_id,
+            'dedicated_server': on_server,
             'name': name,
             'seen_count': 0,
             'seen_last': None,
@@ -243,12 +244,12 @@ def challenge_add(challenge_id, name, time_limit, rel_time, lap_race):
         })
     else:
         mongoDB().challenges.update_one(
-            {'_id': challenge_id},
+            {'challenge_id': challenge_id, 'dedicated_server': on_server},
             {'$set': {'name': name, 'time_limit': time_limit, 'rel_time': rel_time, 'lap_race': lap_race, 'nb_laps': -1, 'active': True}}
         )
 
 
-def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None):
+def challenge_update(challenge_id, on_server, force_inc=True, time_limit=None, nb_laps=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     updates = dict({'$set': dict()})
     if time_limit is not None:
@@ -258,30 +259,39 @@ def challenge_update(challenge_id, force_inc=True, time_limit=None, nb_laps=None
     if force_inc:
         updates['$set']['seen_last'] = int(datetime.now().timestamp())
         updates['$inc'] = {'seen_count': 1}
-        mongoDB().challenges.update_one({'_id': challenge_id}, updates)
+        mongoDB().challenges.update_one({'challenge_id': challenge_id, 'dedicated_server': on_server}, updates)
     else:
         updates['$set']['seen_last'] = {'$cond': [{'$eq': ['$seen_last', None]}, int(datetime.now().timestamp()), '$seen_last']}
         updates['$set']['seen_count'] = {'$cond': [{'$eq': ['$seen_count', 0]}, 1, '$seen_count']}
-        mongoDB().challenges.update_one({'_id': challenge_id}, [updates])
+        mongoDB().challenges.update_one({'challenge_id': challenge_id, 'dedicated_server': on_server}, [updates])
 
 
-def challenge_all():
+def challenge_all(on_server=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    return mongoDB().challenges.find({'active': True})
+    filter = {'active': True}
+    if on_server is not None:
+        filter['dedicated_server'] = on_server
+    return mongoDB().challenges.find(filter)
 
 
-def challenge_get(challenge_id=None, current=False, next=False):
+def challenge_get(challenge_id=None, on_server=None, current=False, next=False):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if current:
         challenge_id = challenge_id_get(current=True)
     if next:
         challenge_id = challenge_id_get(next=True)
-    return mongoDB().challenges.find_one({'_id': challenge_id})
+    filter = {'challenge_id': challenge_id}
+    if on_server is not None:
+        filter['dedicated_server'] = on_server
+    return mongoDB().challenges.find_one(filter)
 
 
-def challenge_deactivate_all():
+def challenge_deactivate_all(for_server=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-    mongoDB().challenges.update_many({}, {'$set': {'active': False}})
+    filter = {}
+    if for_server is not None:
+        filter['dedicated_server'] = for_server
+    mongoDB().challenges.update_many(filter, {'$set': {'active': False}})
 
 
 def challenge_id_get(current=False, next=False):
@@ -376,8 +386,11 @@ def ranking_rebuild(challenge_id=None):
             rc['challenge_id'] = challenge_id
             mongoDB().rankings.replace_one({'challenge_id': challenge_id, 'player_id': p}, rc, True)
     else:
+        done_ids = list()
         for challenge in challenge_all():
-            ranking_rebuild(challenge['_id'])
+            if challenge['challenge_id'] not in done_ids:
+                ranking_rebuild(challenge['challenge_id'])
+                done_ids.append(challenge['challenge_id'])
 
 
 def ranking_clear():

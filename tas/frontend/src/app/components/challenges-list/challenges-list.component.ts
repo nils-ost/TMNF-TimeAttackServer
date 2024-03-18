@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 
 interface SortableChallenge {
   id: string;
+  server: string;
   name: string;
   seen_count: number;
   seen_last: number;
@@ -58,6 +59,7 @@ export class ChallengesListComponent implements OnInit, OnChanges {
           up_at += Math.floor(c.time_limit / 1000);
           let sc: SortableChallenge = {
             id: c.id,
+            server: c.server,
             name: c.name,
             seen_count: c.seen_count,
             seen_last: c.seen_last,
@@ -79,6 +81,7 @@ export class ChallengesListComponent implements OnInit, OnChanges {
         up_at += Math.floor(c.time_limit / 1000);
         let sc: SortableChallenge = {
           id: c.id,
+          server: c.server,
           name: c.name,
           seen_count: c.seen_count,
           seen_last: c.seen_last,
