@@ -74,11 +74,11 @@ def prepareNextChallenge(sender, server):
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     time_limit = challenge_get(challenge['UId'], server)['time_limit']
     sender.callMethod('SetTimeAttackLimit', time_limit)
-    challenge_id_set(challenge['UId'], next=True)
+    challenge_id_set(challenge['UId'], on_server=server, next=True)
     logger.info(f"Challenge next: {challenge['Name']} - AttackLimit: {int(time_limit / 1000)}s")
 
 
-def sendLaptimeNotice(sender, player_login, player_time=None):
+def sendLaptimeNotice(sender, server, player_login, player_time=None):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
 
     def timetos(time):
@@ -94,7 +94,7 @@ def sendLaptimeNotice(sender, player_login, player_time=None):
     player = player_get(player_id=player_id)
     if player is None:
         return
-    best = bestlaptime_get(player_id=player_id, challenge_id=challenge_id_get(current=True))
+    best = bestlaptime_get(player_id=player_id, challenge_id=challenge_id_get(for_server=server, current=True))
     msg = None
     if best is None:
         if get_hotseat_mode():

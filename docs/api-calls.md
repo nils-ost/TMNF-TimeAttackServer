@@ -14,6 +14,7 @@ Returns a list of all, as active marked, Challenges elements.
 #### Element-Attributes
 
   * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `server` *(string)* Dedicated server this Challenge is related to. Configured dedicated key (name) is returned.
   * `name` *(string)* Name of Challenge given by author
   * `seen_count` *(integer)* How many times the Challenge was the current Challenge
   * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
@@ -30,7 +31,29 @@ Returns a Challenge.Gbx as file-download with given id or 404 if the requested C
 
 ### GET /challenges/current/
 
-Returns information about current Challenge or `Null` if there is no current Challenge (e.g. if the dedicated server is switching Challenges)
+List of current Challenges for all dedicated servers. `id` of a Challenge is `None` if there is no current Challenge for this server (e.g. if the dedicated server is switching Challenges)
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=9`
+
+#### Element-Attributes
+
+  * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `server` *(string)* Dedicated server this Challenge is related to. Configured dedicated key (name) is returned.
+  * `name` *(string)* Name of Challenge given by author
+  * `seen_count` *(integer)* How many times the Challenge was the current Challenge
+  * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
+  * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
+  * `rel_time` *(integer)* The value of relevant time, used for time_limit calculation, in milliseconds
+  * `lap_race` *(boolean)* Challenge is a multilap Challenge or not
+  * `nb_laps` *(integer)* Number of laps, in multilap Challenges, the rel_time is based on
+  * `active` *(boolean)* If Challenge is contained in currently used MatchSettings (should allways be True)
+
+### GET /challenges/current/{server}/
+
+Returns information about current Challenge or `Null` if there is no current Challenge (e.g. if the dedicated server is switching Challenges), for a specific server. 
 
 #### Cache-Control
 
@@ -40,6 +63,7 @@ Returns information about current Challenge or `Null` if there is no current Cha
 #### Attributes
 
   * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `server` *(string)* Dedicated server this Challenge is related to. Configured dedicated key (name) is returned.
   * `name` *(string)* Name of Challenge given by author
   * `seen_count` *(integer)* How many times the Challenge was the current Challenge
   * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
@@ -51,7 +75,29 @@ Returns information about current Challenge or `Null` if there is no current Cha
 
 ### GET /challenges/next/
 
-Returns information about next Challenge or `Null` if there is no next Challenge (e.g. if TAS lost connection to dedicated server)
+List of next Challenges for all dedicated servers. `id` of a Challenge is `None` if there is no next Challenge for this server (e.g. if the dedicated server is switching Challenges)
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=9`
+
+#### Element-Attributes
+
+  * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `server` *(string)* Dedicated server this Challenge is related to. Configured dedicated key (name) is returned.
+  * `name` *(string)* Name of Challenge given by author
+  * `seen_count` *(integer)* How many times the Challenge was the current Challenge
+  * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
+  * `time_limit` *(integer)* How long the Challenge stays the current Challenge, in milliseconds
+  * `rel_time` *(integer)* The value of relevant time, used for time_limit calculation, in milliseconds
+  * `lap_race` *(boolean)* Challenge is a multilap Challenge or not
+  * `nb_laps` *(integer)* Number of laps, in multilap Challenges, the rel_time is based on
+  * `active` *(boolean)* If Challenge is contained in currently used MatchSettings (should allways be True)
+
+### GET /challenges/next/{server}/
+
+Returns information about next Challenge or `Null` if there is no next Challenge (e.g. if the dedicated server is switching Challenges), for a specific server. 
 
 #### Cache-Control
 
@@ -61,6 +107,7 @@ Returns information about next Challenge or `Null` if there is no next Challenge
 #### Attributes
 
   * `id` *(string)* Challenges unique ID as used in MatchSettings
+  * `server` *(string)* Dedicated server this Challenge is related to. Configured dedicated key (name) is returned.
   * `name` *(string)* Name of Challenge given by author
   * `seen_count` *(integer)* How many times the Challenge was the current Challenge
   * `seen_last` *(integer)* Last time the Challenge was set as current Challenge, as UNIX-Timestamp
@@ -363,5 +410,20 @@ Returns current stats of stuff happening on server
   * `laptimes_count` *(integer)* the summed up count of all laptimes by all players on all challenges
   * `laptimes_sum` *(integer)* the summed up time of all laptimes by all players on all challenges in milliseconds
   * `challenges_total_seen_count` *(integer)* summed up see_count of all challenges
+
+### GET /servers/
+
+Returns a list of all active dedicated Servers
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=29`
+
+#### Element-Attributes
+  
+  * `id` *(string)* Reference name of this Server
+  * `name` *(string)* Ingame name of this Server
+  * `running` *(boolean)* Status of the Server
 
 ## Private

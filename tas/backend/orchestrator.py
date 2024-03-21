@@ -87,9 +87,9 @@ def container_running(container_id):
 def periodic_events_function():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     # rebuild rankings
-    current_challenge = challenge_id_get(current=True)
-    if current_challenge is not None:
-        ranking_rebuild(current_challenge)
+    for _, challenge in challenge_id_get(current=True).items():
+        if challenge is not None:
+            ranking_rebuild(challenge_id=challenge)
     # check active players for hotseat-mode
     if get_hotseat_mode():
         ts = int(datetime.now().timestamp())

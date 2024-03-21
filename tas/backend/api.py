@@ -7,7 +7,7 @@ from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
 from helpers.versioning import run as versioning_run
-from helpers.mongodb import challenge_all, challenge_get, player_update
+from helpers.mongodb import challenge_all, challenge_get, player_update, challenge_id_get
 from helpers.mongodb import player_all, player_get, player_update_ip, laptime_filter, laptime_get
 from helpers.mongodb import ranking_global, ranking_challenge, ranking_player, hotseat_player_name_get, hotseat_player_name_set
 from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_max, get_wallboard_tables_max, get_tmnfd_name
@@ -36,6 +36,7 @@ class TimeAttackServer():
         self.thumbnails = Thumbnails()
         self.settings = Settings()
         self.stats = Stats()
+        self.servers = Servers()
         self.config = ConfigEndpoint()
         self.user = UserEndpoint()
         self.login = LoginEndpoint()
@@ -78,6 +79,21 @@ class Stats():
         return result
 
 
+class Servers():
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
+    def index(self):
+        result = list()
+        for name, config in Config.get('dedicated_run')['content']:
+            s = dict()
+            s['id'] = name
+            s['name'] = config.get('ingame_name', '')
+            s['running'] = config.get('ded_container') is not None
+            result.append(s)
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
+        return result
+
+
 @cherrypy.popargs('challenge_id')
 class Challenges():
     @cherrypy.expose()
@@ -105,25 +121,57 @@ class Challenges():
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def current(self):
-        c = challenge_get(current=True)
-        if c is None:
-            return None
-        c['id'] = c['_id']
-        c.pop('_id', None)
+    def current(self, server=None):
+        result = list()
+        if server is None:
+            for s, challenge in challenge_id_get(current=True).items():
+                c = challenge_get(challenge_id=challenge, on_server=s)
+                if c is not None:
+                    c['id'] = c['challenge_id']
+                    c.pop('_id', None)
+                    c.pop('challenge_id', None)
+                else:
+                    c = dict({
+                        'id': None,
+                        'server': s
+                    })
+                result.append(c)
+        else:
+            c = challenge_get(on_server=server, current=True)
+            if c is not None:
+                c['id'] = c['challenge_id']
+                c.pop('_id', None)
+                c.pop('challenge_id', None)
+            return c
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
-        return c
+        return result
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def next(self):
-        c = challenge_get(next=True)
-        if c is None:
-            return None
-        c['id'] = c['_id']
-        c.pop('_id', None)
+    def next(self, server=None):
+        result = list()
+        if server is None:
+            for s, challenge in challenge_id_get(next=True).items():
+                c = challenge_get(challenge_id=challenge, on_server=s)
+                if c is not None:
+                    c['id'] = c['challenge_id']
+                    c.pop('_id', None)
+                    c.pop('challenge_id', None)
+                else:
+                    c = dict({
+                        'id': None,
+                        'server': s
+                    })
+                result.append(c)
+        else:
+            c = challenge_get(on_server=server, next=True)
+            if c is not None:
+                c['id'] = c['challenge_id']
+                c.pop('_id', None)
+                c.pop('challenge_id', None)
+            return c
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=9'
-        return c
+        return result
 
 
 @cherrypy.popargs('player_id', 'details', 'challenge_id')

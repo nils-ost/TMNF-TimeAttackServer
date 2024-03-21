@@ -54,7 +54,7 @@ def controller_function(timeout, new_state, ch, delivery_tag):
                 current_challenge = sender.callMethod('GetCurrentChallengeInfo')[0]
                 challenge_update(current_challenge['UId'], attached_config, force_inc=False)
                 logger.info(f"Challenge current: {current_challenge['Name']}")
-                challenge_id_set(current_challenge['UId'], current=True)
+                challenge_id_set(current_challenge['UId'], on_server=attached_config, current=True)
                 prepareNextChallenge(sender, attached_config)
         ch.basic_ack(delivery_tag=delivery_tag)
 
@@ -72,8 +72,8 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             # kick all players
             kickAllPlayers(sender, 'Tournament not yet started!')
             # clear current and next challenge
-            challenge_id_set(None, current=True)
-            challenge_id_set(None, next=True)
+            challenge_id_set(None, on_server=attached_config, current=True)
+            challenge_id_set(None, on_server=attached_config, next=True)
             # remove all challenges from playlist except the first
             starting_index = 0
             infos_returned = 10

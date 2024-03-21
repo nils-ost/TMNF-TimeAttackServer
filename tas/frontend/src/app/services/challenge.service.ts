@@ -16,7 +16,7 @@ export class ChallengeService {
   constructor(private http: HttpClient) { }
 
   private cleanChallengeName(challenge: Challenge | null) {
-    if (challenge) challenge.name = cleanName(challenge.name);
+    if (challenge && challenge.name) challenge.name = cleanName(challenge.name);
     return challenge;
   }
 
@@ -33,10 +33,28 @@ export class ChallengeService {
   }
 
   getChallengeCurrent(): Observable<Challenge | null> {
+    console.warn('Usage of obsolete service getChallengeCurrent');
     return this.http.get<Challenge>(this.challengeUrl + "current").pipe(catchError(handleError), map((challenge) => this.cleanChallengeName(challenge)));
   }
 
   getChallengeNext(): Observable<Challenge | null> {
+    console.warn('Usage of obsolete service getChallengeNext');
     return this.http.get<Challenge>(this.challengeUrl + "next").pipe(catchError(handleError), map((challenge) => this.cleanChallengeName(challenge)));
+  }
+
+  getCurrentChallenges(): Observable<Challenge[]> {
+    return this.http.get<Challenge[]>(this.challengeUrl + "current/").pipe(catchError(handleError), map((challenges) => this.cleanChallengesNames(challenges)));
+  }
+
+  getCurrentChallenge(for_server: string): Observable<Challenge | null> {
+    return this.http.get<Challenge>(this.challengeUrl + "current/" + for_server).pipe(catchError(handleError), map((challenge) => this.cleanChallengeName(challenge)));
+  }
+
+  getNextChallenges(): Observable<Challenge[]> {
+    return this.http.get<Challenge[]>(this.challengeUrl + "next/").pipe(catchError(handleError), map((challenges) => this.cleanChallengesNames(challenges)));
+  }
+
+  getNextChallenge(for_server: string): Observable<Challenge | null> {
+    return this.http.get<Challenge>(this.challengeUrl + "next/" + for_server).pipe(catchError(handleError), map((challenge) => this.cleanChallengeName(challenge)));
   }
 }

@@ -276,10 +276,12 @@ def challenge_all(on_server=None):
 
 def challenge_get(challenge_id=None, on_server=None, current=False, next=False):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    if (current or next) and on_server is None:
+        return None
     if current:
-        challenge_id = challenge_id_get(current=True)
+        challenge_id = challenge_id_get(for_server=on_server, current=True)
     if next:
-        challenge_id = challenge_id_get(next=True)
+        challenge_id = challenge_id_get(for_server=on_server, next=True)
     filter = {'challenge_id': challenge_id}
     if on_server is not None:
         filter['dedicated_server'] = on_server
@@ -294,24 +296,33 @@ def challenge_deactivate_all(for_server=None):
     mongoDB().challenges.update_many(filter, {'$set': {'active': False}})
 
 
-def challenge_id_get(current=False, next=False):
+def challenge_id_get(for_server=None, current=False, next=False):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     cid = None
     if current:
-        cid = mongoDB().utils.find_one({'_id': 'current_challenge_id'})
+        cid = mongoDB().utils.find_one({'_id': 'current_challenge_ids'})
     else:
-        cid = mongoDB().utils.find_one({'_id': 'next_challenge_id'})
+        cid = mongoDB().utils.find_one({'_id': 'next_challenge_ids'})
     if cid is None:
+        if for_server is None:
+            return dict()
         return 'unknown'
-    return cid['value']
+    if for_server is None:
+        return cid['value']
+    r = cid['value'].get(for_server)
+    if r is None:
+        return 'unknown'
+    return r
 
 
-def challenge_id_set(challenge_id, current=False, next=False):
+def challenge_id_set(challenge_id, on_server, current=False, next=False):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    value = challenge_id_get(current=current, next=next)
+    value[on_server] = challenge_id
     if current:
-        mongoDB().utils.replace_one({'_id': 'current_challenge_id'}, {'_id': 'current_challenge_id', 'value': challenge_id}, True)
+        mongoDB().utils.replace_one({'_id': 'current_challenge_ids'}, {'_id': 'current_challenge_ids', 'value': value}, True)
     else:
-        mongoDB().utils.replace_one({'_id': 'next_challenge_id'}, {'_id': 'next_challenge_id', 'value': challenge_id}, True)
+        mongoDB().utils.replace_one({'_id': 'next_challenge_ids'}, {'_id': 'next_challenge_ids', 'value': value}, True)
 
 
 def ranking_player(player_id):

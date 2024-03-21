@@ -10,6 +10,8 @@ import { PlayerChallengeLaptime } from '../../interfaces/laptime';
 import { Player } from '../../interfaces/player';
 import { MenuItem } from 'primeng/api';
 import { Router } from "@angular/router";
+import { Server } from 'src/app/interfaces/server';
+import { ServerService } from 'src/app/services/server.service';
 
 @Component({
   selector: 'app-challenges',
@@ -17,8 +19,9 @@ import { Router } from "@angular/router";
   styleUrls: ['./challenges.component.scss']
 })
 export class ChallengesComponent implements OnInit {
+  servers: Server[] = [];
   challenges: Challenge[] = [];
-  currentChallenge?: Challenge;
+  currentChallenges: Challenge[] = [];
   selectedChallenge?: Challenge;
   selectedChallengeRanking?: ChallengeRanking;
   settings?: Settings;
@@ -33,11 +36,13 @@ export class ChallengesComponent implements OnInit {
     private rankingService: RankingService,
     private playerService: PlayerService,
     private settingsService: SettingsService,
+    private serverService: ServerService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.refreshSettings();
+    this.refreshServers();
     this.refreshChallenges();
     this.refreshPlayers();
 
@@ -120,11 +125,10 @@ export class ChallengesComponent implements OnInit {
         }
       );
     this.challengeService
-      .getChallengeCurrent()
+      .getCurrentChallenges()
       .subscribe(
-        (c: Challenge | null) => {
-          if (c) this.currentChallenge = c;
-          else this.currentChallenge = undefined;
+        (c: Challenge[]) => {
+          this.currentChallenges = c;
         }
       );
   }
@@ -175,7 +179,18 @@ export class ChallengesComponent implements OnInit {
       );
   }
 
+  refreshServers() {
+    this.serverService
+      .getServers()
+      .subscribe(
+        (servers: Server[]) => {
+          this.servers = servers;
+        }
+      );
+  }
+
   refreshAll() {
+    this.refreshServers();
     this.refreshChallenges();
     this.refreshPlayers();
     this.refreshChallengeRankings();

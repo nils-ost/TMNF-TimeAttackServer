@@ -27,7 +27,7 @@ def responder_function(func, params, ch, delivery_tag):
     logger.info(f'Received: {func} {params}')
 
     if func == 'TrackMania.PlayerFinish':
-        current_challenge = challenge_id_get(current=True)
+        current_challenge = challenge_id_get(for_server=attached_config, current=True)
         if current_challenge is not None:
             player_id, player_login, player_time = params
             if get_hotseat_mode():
@@ -37,12 +37,12 @@ def responder_function(func, params, ch, delivery_tag):
                     return
                 player_db = player_get(clean_player_id(player_login))
                 if player_db is not None and not player_db['connect_msg_send']:
-                    sendLaptimeNotice(sender, player_login)
+                    sendLaptimeNotice(sender, server=attached_config, player_login=player_login)
                     player_update(player_login, connect_msg_send=True)
             ts, new_best = laptime_add(player_login, current_challenge, player_time)
             if player_time > 0:
                 logger.info(f'{player_login} drove: {player_time / 1000}')
-            sendLaptimeNotice(sender, player_login, player_time)
+            sendLaptimeNotice(sender, server=attached_config, player_login=player_login, player_time=player_time)
             player_update(player_login)  # keep track of last update, even if player never reaches finish
             if new_best and get_provide_replays():
                 player_hash = hashlib.md5(player_login.encode('utf-8')).hexdigest()
@@ -59,13 +59,13 @@ def responder_function(func, params, ch, delivery_tag):
     elif func == 'TrackMania.BeginRace':
         if isPreStart() or isPostEnd():
             if isPostEnd():
-                challenge_id_set(params[0]['UId'], current=True)
+                challenge_id_set(params[0]['UId'], on_server=attached_config, current=True)
                 next_challenge = sender.callMethod('GetNextChallengeInfo')[0]
-                challenge_id_set(next_challenge['UId'], next=True)
+                challenge_id_set(next_challenge['UId'], on_server=attached_config, next=True)
                 logger.info(f"Post End Challenge begin: {params[0]['Name']}")
             else:
-                challenge_id_set(None, current=True)
-                challenge_id_set(None, next=True)
+                challenge_id_set(None, on_server=attached_config, current=True)
+                challenge_id_set(None, on_server=attached_config, next=True)
                 logger.info(f"Pre Start Challenge begin: {params[0]['Name']}")
         else:
             challenge_db = challenge_get(params[0]['UId'], attached_config)
@@ -74,17 +74,17 @@ def responder_function(func, params, ch, delivery_tag):
                 challenge_update(params[0]['UId'], attached_config, time_limit=new_time, nb_laps=params[0]['NbLaps'])
             else:
                 challenge_update(params[0]['UId'], attached_config)
-            challenge_id_set(params[0]['UId'], current=True)
+            challenge_id_set(params[0]['UId'], on_server=attached_config, current=True)
             logger.info(f"Challenge begin: {params[0]['Name']}")
             prepareNextChallenge(sender, attached_config)
             if not get_hotseat_mode():
                 for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
-                    sendLaptimeNotice(sender, p['Login'])
+                    sendLaptimeNotice(sender, server=attached_config, player_login=p['Login'])
 
     elif func == 'TrackMania.EndRace':
         if not isPreStart() and not isPostEnd():
-            old_challenge = challenge_id_get(current=True)
-            challenge_id_set(None, current=True)
+            old_challenge = challenge_id_get(for_server=attached_config, current=True)
+            challenge_id_set(None, on_server=attached_config, current=True)
             if old_challenge is not None:
                 ranking_rebuild(old_challenge)
             logger.info(f"Challenge end: {params[1]['Name']}")
@@ -95,7 +95,7 @@ def responder_function(func, params, ch, delivery_tag):
             if player_login is not None:
                 player_db = player_get(clean_player_id(player_login))
                 if player_db is not None and not player_db['connect_msg_send']:
-                    sendLaptimeNotice(sender, player_login)
+                    sendLaptimeNotice(sender, server=attached_config, player_login=player_login)
                     player_update(player_login, connect_msg_send=True)
                 else:
                     player_update(player_login)  # keep track of last update, even if player never reaches finish
@@ -114,7 +114,7 @@ def responder_function(func, params, ch, delivery_tag):
         player_update(player['Login'], player['NickName'], player['PlayerId'])
         player_db = player_get(clean_player_id(player['Login']))
         if player_db is not None and not player_db['connect_msg_send']:
-            sendLaptimeNotice(sender, player['Login'])
+            sendLaptimeNotice(sender, server=attached_config, player_login=player['Login'])
             player_update(player['Login'], connect_msg_send=True)
 
     elif func == 'TrackMania.PlayerConnect':
@@ -139,8 +139,8 @@ def responder_function(func, params, ch, delivery_tag):
 
     elif func == 'Dedicated.Disconnected':
         rabbit.send_dedicated_state_changes('disconnected')
-        challenge_id_set(None, current=True)
-        challenge_id_set(None, next=True)
+        challenge_id_set(None, on_server=attached_config, current=True)
+        challenge_id_set(None, on_server=attached_config, next=True)
 
     elif func == 'Dedicated.Connected':
         rabbit.send_dedicated_state_changes('connected')
