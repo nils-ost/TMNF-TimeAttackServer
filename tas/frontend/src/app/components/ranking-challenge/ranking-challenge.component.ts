@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ChallengeRanking } from '../../interfaces/ranking';
 import { Player } from '../../interfaces/player';
 import { Challenge } from '../../interfaces/challenge';
@@ -8,15 +8,21 @@ import { Challenge } from '../../interfaces/challenge';
   templateUrl: './ranking-challenge.component.html',
   styleUrls: ['./ranking-challenge.component.scss']
 })
-export class RankingChallengeComponent implements OnInit {
+export class RankingChallengeComponent implements OnInit, OnChanges {
   @Input() challengeRankings!: ChallengeRanking[];
   @Input() players!: Player[];
-  @Input() currentChallenge?: Challenge;
-  @Input() nextChallenge?: Challenge;
+  @Input() currentChallenge!: Challenge;
+  @Input() nextChallenge!: Challenge;
+  challengeName: string = "";
 
   constructor() { }
 
   ngOnInit(): void {
+    if (this.currentChallenge.id) this.challengeName = this.currentChallenge.name;
+  }
+
+  ngOnChanges(): void {
+    if (this.currentChallenge.id) this.challengeName = this.currentChallenge.name;
   }
 
   playerName(player_id: string): string {

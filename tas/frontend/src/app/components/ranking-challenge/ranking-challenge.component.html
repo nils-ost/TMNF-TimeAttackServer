@@ -1,4 +1,9 @@
-<p-table [value]="challengeRankings" styleClass="ranking-table{{ !currentChallenge && nextChallenge ? '-done' : '' }}">
+<p-table [value]="challengeRankings" styleClass="ranking-table{{ !currentChallenge.id && nextChallenge.id ? '-done' : '' }}">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center">
+            {{ currentChallenge.server }} - {{ challengeName }}
+        </div>
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th i18n="Header for column rank in tables@@tableHeaderRank">rank</th>

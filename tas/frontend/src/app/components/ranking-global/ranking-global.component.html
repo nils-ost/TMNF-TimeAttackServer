@@ -1,4 +1,9 @@
 <p-table [value]="globalRankings" styleClass="ranking-table">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center">
+            <span i18n="Title of the global rankings table@@tableGlobalRankingTitle">Global Ranking</span>
+        </div>
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th i18n="Header for column rank in tables@@tableHeaderRank">rank</th>

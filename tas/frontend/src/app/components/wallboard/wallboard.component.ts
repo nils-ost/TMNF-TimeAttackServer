@@ -10,6 +10,8 @@ import { SettingsService } from '../../services/settings.service';
 import { Subscription, timer, Subject } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 import { Router } from "@angular/router";
+import { Server } from 'src/app/interfaces/server';
+import { ServerService } from 'src/app/services/server.service';
 
 @Component({
   selector: 'app-wallboard',
@@ -25,17 +27,19 @@ export class WallboardComponent implements OnInit, OnDestroy {
   refreshSettingsTimerSubscription: Subscription | undefined;
   switchAutoRefreshSubscription: Subscription | undefined;
 
+  servers: Server[] = [];
   players: Player[] = [];
   settings?: Settings;
   globalRankings: GlobalRanking[] = [];
-  challengeRankings: ChallengeRanking[] = [];
+  challengeRankings: { [key: string]: ChallengeRanking[] } = {};
   challenges: Challenge[] = [];
-  c_current?: Challenge;
-  c_next?: Challenge;
+  currentChallenges: { [key: string]: Challenge } = {};
+  nextChallenges: { [key: string]: Challenge } = {};
   switchAutoRefreshSubject: Subject<boolean> = new Subject<boolean>();
   unpredictedUpIn: boolean = true;
   displayPageFoundAtURL: boolean = true;
   time_left: number = 9999;
+  lostConnection: boolean = true;
 
   speeddail_menu: MenuItem[] = [];
   enable_menu_item: MenuItem = {
@@ -60,6 +64,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    private serverService: ServerService,
     private playerService: PlayerService,
     private rankingService: RankingService,
     private challengeService: ChallengeService,
@@ -168,14 +173,17 @@ export class WallboardComponent implements OnInit, OnDestroy {
   }
 
   refreshRankings() {
-    if (this.c_current) {
-      this.rankingService
-        .getChallengeRankings(this.c_current.id)
-        .subscribe(
-          (rankings: ChallengeRanking[]) => {
-            this.challengeRankings = this.alignChallengeRankings(rankings);
-          }
-        );
+    for (const server of this.servers) {
+      let c_current_id: string | null = this.currentChallenges[server.id].id
+      if (c_current_id) {
+        this.rankingService
+          .getChallengeRankings(c_current_id)
+          .subscribe(
+            (rankings: ChallengeRanking[]) => {
+              this.challengeRankings[server.id] = this.alignChallengeRankings(rankings);
+            }
+          )
+      }
     }
     this.rankingService
       .getGlobalRankings()
@@ -186,22 +194,38 @@ export class WallboardComponent implements OnInit, OnDestroy {
       );
   }
 
+  refreshLostConnection() {
+    for (const s of this.servers) {
+      if (!s.running) {
+        this.lostConnection = true;
+        return;
+      }
+      if (s.id in this.currentChallenges && s.id in this.nextChallenges && !this.currentChallenges[s.id].id && !this.nextChallenges[s.id].id) {
+        this.lostConnection = true;
+        return;
+      }
+    }
+    this.lostConnection = false;
+  }
+
   refreshChallenges() {
     this.challengeService
-      .getChallengeCurrent()
+      .getCurrentChallenges()
       .subscribe(
-        (c: Challenge | null) => {
-          if (c) this.c_current = c;
-          else this.c_current = undefined;
+        (challenges: Challenge[]) => {
+          let cc: { [key: string]: Challenge } = {};
+          for (const c of challenges) cc[c.server] = c;
+          this.currentChallenges = cc;
           this.refreshRankings();
         }
       );
     this.challengeService
-      .getChallengeNext()
+      .getNextChallenges()
       .subscribe(
-        (c: Challenge | null) => {
-          if (c) this.c_next = c;
-          else this.c_next = undefined;
+        (challenges: Challenge[]) => {
+          let nc: { [key: string]: Challenge } = {};
+          for (const c of challenges) nc[c.server] = c;
+          this.nextChallenges = nc;
         }
       );
     this.challengeService
@@ -217,6 +241,13 @@ export class WallboardComponent implements OnInit, OnDestroy {
   }
 
   refreshSettings() {
+    this.serverService
+      .getServers()
+      .subscribe(
+        (servers: Server[]) => {
+          this.servers = servers;
+        }
+      );
     this.settingsService
       .getSettings()
       .subscribe(

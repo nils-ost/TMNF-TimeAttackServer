@@ -1,4 +1,4 @@
-<app-challenges-ticker [challenges]="challenges" [settings]="settings" [current_challenge]="c_current" [next_challenge]="c_next" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()" (onEnableRefresh)="switchAutoRefreshSubject.next(true)" (onDisableRefresh)="switchAutoRefreshSubject.next(false)"></app-challenges-ticker>
+<app-challenges-ticker [challenges]="challenges" [settings]="settings" [currentChallenges]="currentChallenges" [nextChallenges]="nextChallenges" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()" (onEnableRefresh)="switchAutoRefreshSubject.next(true)" (onDisableRefresh)="switchAutoRefreshSubject.next(false)"></app-challenges-ticker>
 
 <div class="title-bar">
     <div class="title">
@@ -21,9 +21,9 @@
 </div>
 
 <div class="rankings-container">
-    <div class="ranking-challenge">
+    <div class="ranking-challenge" *ngFor="let server of servers">
         <div class="challenge-connector"></div>
-        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings" [currentChallenge]="c_current" [nextChallenge]="c_next"></app-ranking-challenge>
+        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings[server.id]" [currentChallenge]="currentChallenges[server.id]" [nextChallenge]="nextChallenges[server.id]"></app-ranking-challenge>
     </div>
 
     <div class="ranking-global">
@@ -35,9 +35,9 @@
 <p-speedDial [model]="speeddail_menu" direction="left" buttonClassName="p-button-outlined"></p-speedDial>
 
 <div class="msg-container">
-    <p-messages severity="error" styleClass="msg-box" *ngIf="!c_current && !c_next">
+    <p-messages severity="error" styleClass="msg-box" *ngIf="lostConnection">
         <ng-template pTemplate>
-            <span class="custom-message"><ng-container i18n="Info box content for error, that the connection to tmnfd got lost@@infoBoxLostConnection">Lost connection to dedicated gameserver! Please contact</ng-container>: {{ settings ? settings.display_admin : 'Admin' }}</span>
+            <span class="custom-message"><ng-container i18n="Info box content for error, that the connection to at least one dedicated server got lost@@infoBoxLostConnection">Lost connection to dedicated gameserver! Please contact</ng-container>: {{ settings ? settings.display_admin : 'Admin' }}</span>
         </ng-template>
     </p-messages>
 
