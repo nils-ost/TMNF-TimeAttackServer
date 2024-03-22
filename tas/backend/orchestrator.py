@@ -331,7 +331,7 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
         container_type = params['container_type'].lower()
         ded_run = Config.get('dedicated_run')
         for k, v in ded_run['content'].items():
-            if not container_running(v.get(container_type + '_container')):
+            if not container_running(v.get(container_type + '_container')) or v.get(container_type + '_container') == container_id:
                 ded_run['content'][k][container_type + '_container'] = container_id
                 ded_run.save()
                 ch.basic_publish(exchange='', routing_key=props.reply_to, body=json.dumps(dict({'dedicated_config': k})))

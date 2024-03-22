@@ -151,7 +151,7 @@
         <div class="info-container">
             <div class="info-row">
                 <div class="settings">
-                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+                    <p *ngIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
                     <p><ng-container i18n="Label prefixing Server Admin@@LabelServerAdmin">Server Admin</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
                 </div>
             </div>
@@ -160,12 +160,12 @@
                 <div class="stats">
                     <p><ng-container i18n="Label prefixing Laptimes Count@@LabelLaptimesCount">Laptimes Count</ng-container>: {{ stats?.laptimes_count }}</p>
                     <p><ng-container i18n="Label prefixing Laptimes Sum@@LabelLaptimesSum">Laptimes Sum</ng-container>: {{ laptimes_sum_h }}h {{ laptimes_sum_m }}m {{ laptimes_sum_s }}s</p>
-                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Challenges Total Seen Count@@LabelChallengesTotalSeenCount">Challenges Total Seen</ng-container>: {{ stats?.challenges_total_seen_count }}</p>
+                    <p *ngIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Challenges Total Seen Count@@LabelChallengesTotalSeenCount">Challenges Total Seen</ng-container>: {{ stats?.challenges_total_seen_count }}</p>
                 </div>
 
                 <div class="stats">
                     <p><ng-container i18n="Label prefixing Total Players@@LabelTotalPlayers">Total Players</ng-container>: {{ stats?.total_players }}</p>
-                    <p *nfIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Active Players@@LabelActivePlayers">Active Players</ng-container>: {{ stats?.active_players }}</p>
+                    <p *ngIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Active Players@@LabelActivePlayers">Active Players</ng-container>: {{ stats?.active_players }}</p>
                 </div>
             </div>
 

@@ -216,6 +216,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
           let cc: { [key: string]: Challenge } = {};
           for (const c of challenges) cc[c.server] = c;
           this.currentChallenges = cc;
+          this.refreshLostConnection();
           this.refreshRankings();
         }
       );
@@ -226,6 +227,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
           let nc: { [key: string]: Challenge } = {};
           for (const c of challenges) nc[c.server] = c;
           this.nextChallenges = nc;
+          this.refreshLostConnection();
         }
       );
     this.challengeService
@@ -246,6 +248,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (servers: Server[]) => {
           this.servers = servers;
+          this.refreshLostConnection();
         }
       );
     this.settingsService

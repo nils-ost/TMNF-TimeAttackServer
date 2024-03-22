@@ -59,7 +59,7 @@ export class ChallengesListComponent implements OnInit, OnChanges {
       }
     }
     for (const c of this.currentChallenges) {
-      if (c.id) {
+      if (c.id && c.server in run_var) {
         run_var[c.server]['current_c'] = c;
       }
     }
@@ -67,7 +67,7 @@ export class ChallengesListComponent implements OnInit, OnChanges {
     
     for (let i = 0; i < this.challenges.length; i++) {
       const c: Challenge = this.challenges[i];
-      if (run_var[c.server]['current_c']) {
+      if (c.server in run_var && run_var[c.server]['current_c']) {
         if (run_var[c.server]['c_index'] > -1) {
           run_var[c.server]['up_in'] += Math.floor(c.time_limit / 1000);
           run_var[c.server]['up_at'] += Math.floor(c.time_limit / 1000);
@@ -90,9 +90,9 @@ export class ChallengesListComponent implements OnInit, OnChanges {
         }
       }
     }
-    for (let i = 0; i <= this.challenges.length; i++) {
+    for (let i = 0; i < this.challenges.length; i++) {
       const c: Challenge = this.challenges[i];
-      if (run_var[c.server]['current_c'] && i <= run_var[c.server]['c_index']) {
+      if (c.server in run_var  && run_var[c.server]['current_c'] && i <= run_var[c.server]['c_index']) {
         run_var[c.server]['up_in'] += Math.floor(c.time_limit / 1000);
         run_var[c.server]['up_at'] += Math.floor(c.time_limit / 1000);
         let sc: SortableChallenge = {

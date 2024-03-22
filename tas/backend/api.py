@@ -84,7 +84,7 @@ class Servers():
     @cherrypy.tools.json_out()
     def index(self):
         result = list()
-        for name, config in Config.get('dedicated_run')['content']:
+        for name, config in Config.get('dedicated_run')['content'].items():
             s = dict()
             s['id'] = name
             s['name'] = config.get('ingame_name', '')
@@ -128,6 +128,8 @@ class Challenges():
                 c = challenge_get(challenge_id=challenge, on_server=s)
                 if c is not None:
                     c['id'] = c['challenge_id']
+                    c['server'] = c['dedicated_server']
+                    c.pop('dedicated_server', None)
                     c.pop('_id', None)
                     c.pop('challenge_id', None)
                 else:
@@ -140,6 +142,8 @@ class Challenges():
             c = challenge_get(on_server=server, current=True)
             if c is not None:
                 c['id'] = c['challenge_id']
+                c['server'] = c['dedicated_server']
+                c.pop('dedicated_server', None)
                 c.pop('_id', None)
                 c.pop('challenge_id', None)
             return c
@@ -155,6 +159,8 @@ class Challenges():
                 c = challenge_get(challenge_id=challenge, on_server=s)
                 if c is not None:
                     c['id'] = c['challenge_id']
+                    c['server'] = c['dedicated_server']
+                    c.pop('dedicated_server', None)
                     c.pop('_id', None)
                     c.pop('challenge_id', None)
                 else:
@@ -167,6 +173,8 @@ class Challenges():
             c = challenge_get(on_server=server, next=True)
             if c is not None:
                 c['id'] = c['challenge_id']
+                c['server'] = c['dedicated_server']
+                c.pop('dedicated_server', None)
                 c.pop('_id', None)
                 c.pop('challenge_id', None)
             return c

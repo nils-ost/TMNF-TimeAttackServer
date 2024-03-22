@@ -3,7 +3,7 @@
         <tr>
             <th *ngIf="settings && settings.provide_challenges" class="col-download"></th>
             <th pSortableColumn="name" class="col-name"><ng-container i18n="Header for column challenge name in tables@@tableHeaderChallengeName">challenge</ng-container> <p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="name" class="col-name"><ng-container i18n="Header for column challenge server in tables@@tableHeaderChallengeServer">server</ng-container> <p-sortIcon field="server"></p-sortIcon></th>
+            <th pSortableColumn="server" class="col-server"><ng-container i18n="Header for column challenge server in tables@@tableHeaderChallengeServer">server</ng-container> <p-sortIcon field="server"></p-sortIcon></th>
             <th><ng-container i18n="Header for column time limit in tables@@tableHeaderTimeLimit">time limit</ng-container></th>
             <th pSortableColumn="seen_last" class="col-time"><ng-container i18n="Header for column seen in tables@@tableHeaderSeen">seen</ng-container> <p-sortIcon field="seen_last"></p-sortIcon></th>
             <th pSortableColumn="up_in" class="col-time"><ng-container i18n="Header for column up in tables@@tableHeaderUp">up</ng-container> <p-sortIcon field="up_in"></p-sortIcon></th>
