@@ -11,6 +11,7 @@ from helpers.mongodb import challenge_id_get, player_update, player_all, ranking
 import logging
 
 logger = logging.getLogger(__name__)
+dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
 rabbit = RabbitMQ()
 periodic_counter = 0
 
@@ -43,7 +44,6 @@ def identify_dedicated_server(container_id, dtype):
     trys to identify the corresponding key in dedicated config for a given containerid and dedicated-type
     """
     container_id = container_id.lower()
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
         container_config = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))
     except Exception:
@@ -73,7 +73,6 @@ def container_running(container_id):
     if container_id is None:
         return False
     container_id = container_id.lower()
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
         o = subprocess.check_output(f"{dcmd} ps -a -f id={container_id} --format='\u007b\u007b.State\u007d\u007d'", shell=True).decode('utf-8').strip()
         return o.lower() == 'running'
@@ -130,7 +129,6 @@ def scale_or_start_container(requested_type):
         logger.error(f'{sys._getframe().f_code.co_name} invalid requested_type {requested_type} of container to scale or start')
         return
 
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     for container_id in subprocess.check_output(f"{dcmd} ps -a --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
         container_id = container_id.lower()
         detail = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))[0]
@@ -271,7 +269,6 @@ def build_dedicated_config(dedicated_key, current_config):
 
 
 def inject_containerids():
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     for container_id in subprocess.check_output(f"{dcmd} ps --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
         container_config = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))
         container_config = container_config[0]
@@ -333,13 +330,27 @@ def messages_callback(timeout, func, params, ch, props, delivery_tag):
     elif func == 'Container.stop':
         container_id = params['container_id'].lower()
         try:
-            dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
             subprocess.check_output(f'{dcmd} stop {container_id}', shell=True)
             logger.info(f'{sys._getframe().f_code.co_name} Stopped container: {container_id}')
         except Exception:
             logger.info(f'{sys._getframe().f_code.co_name} Container {container_id} was allready stopped')
     elif func == 'Container.start':
         scale_or_start_container(params['type'])
+    elif func == 'replay_upload':
+        ded_run = Config.get('dedicated_run')['content']
+        if params['dedicated_key'] in ded_run:
+            if ded_run.get(params['dedicated_key'], dict()).get('ded_container') is not None:
+                container_id = ded_run.get(params['dedicated_key'], dict()).get('ded_container')
+                replay = params['replay_name']
+                try:
+                    subprocess.call(f'{dcmd} exec {container_id} /bin/sh -c "python3 cli --upload_replay {replay}"', shell=True)
+                    logger.info(f'Uploaded replay "{replay}" from "{params["dedicated_key"]}"')
+                except Exception as e:
+                    logger.error(f'Error on replay upload of "{replay}" from "{params["dedicated_key"]}": {e}')
+            else:
+                logger.error(f'Cloud not fulfill replay upload request! Dedicated config "{params["dedicated_key"]}" has no dedicated container attached.')
+        else:
+            logger.error(f'Cloud not fulfill replay upload request! Dedicated config "{params["dedicated_key"]}" is unknown.')
     ch.basic_ack(delivery_tag=delivery_tag)
 
 

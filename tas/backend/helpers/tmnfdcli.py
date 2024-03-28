@@ -1,4 +1,5 @@
 from helpers.mongodb import set_tmnfd_cli_method, get_tmnfd_cli_method, set_provide_replays
+from warnings import deprecated
 from elements import Config
 import subprocess
 import logging
@@ -28,6 +29,7 @@ def tmnfd_cli_test():
     return method
 
 
+@deprecated('ist done via rabbit message now')
 def tmnfd_cli_upload_replay(name):
     global config
     cli_method = get_tmnfd_cli_method()

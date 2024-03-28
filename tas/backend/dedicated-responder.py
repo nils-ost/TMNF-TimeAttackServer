@@ -8,7 +8,6 @@ from helpers.mongodb import laptime_add, challenge_get, challenge_update, challe
 from helpers.mongodb import player_update, player_get, ranking_rebuild, clean_player_id, get_provide_replays, replay_add
 from helpers.mongodb import hotseat_player_name_get, get_hotseat_mode, hotseat_player_ingameid_set
 from helpers.tmnfd import isPreStart, isPostEnd, calcTimeLimit, prepareNextChallenge, sendLaptimeNotice
-from helpers.tmnfdcli import tmnfd_cli_upload_replay
 from helpers.rabbitmq import RabbitMQ
 import signal
 import os
@@ -49,11 +48,9 @@ def responder_function(func, params, ch, delivery_tag):
                 player_hash = hashlib.md5(player_login.encode('utf-8')).hexdigest()
                 replay_name = f'{player_hash}_{ts}'
                 if sender.callMethod('SaveBestGhostsReplay', player_login, replay_name)[0]:
-                    if tmnfd_cli_upload_replay(replay_name):
-                        replay_add(player_login, current_challenge, ts, replay_name)
-                        logger.info(f'Providing Replay: {replay_name}')
-                    else:
-                        logger.warning('Replay could not be provided!')
+                    rabbit.send_replay_upload_request(replay_name)
+                    replay_add(player_login, current_challenge, ts, replay_name)
+                    logger.info(f'Providing Replay: {replay_name}')
                 else:
                     logger.warning('Replay could not be provided!')
 

@@ -11,6 +11,7 @@ class RabbitMQ():
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.config = Config.get('rabbit')['content']
+        self._attached_config = None
         self._conn = None
         self._sender = None
         self._consumer = None
@@ -20,6 +21,7 @@ class RabbitMQ():
         used for dedicated-controller, -receiver and -responder to identify the dedicated server configuration object they belong to
         (the key of config.get('dedicated'))
         """
+        self._attached_config = attached_config
         self.config['queue_dedicated_received_messages'] += f'_{attached_config}'
         self.config['queue_dedicated_state_changes'] += f'_{attached_config}'
 
@@ -70,6 +72,9 @@ class RabbitMQ():
     def send_orchestrator_message(self, func, params=None):
         channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_orchestrator'], body=json.dumps([func, params]))
+
+    def send_replay_upload_request(self, replay_name):
+        self.send_orchestrator_message('replay_upload', dict({'replay_name': replay_name, 'dedicated_key': self._attached_config}))
 
     def consume_dedicated_received_messages(self, callback_func):
         """
