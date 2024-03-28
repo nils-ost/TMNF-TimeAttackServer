@@ -78,3 +78,10 @@ def create_bundle(c):
     c.run('cp install/bundle-installer.sh /tmp/tmnf-tas/installer.sh; chmod +x /tmp/tmnf-tas/installer.sh')
     c.run(f'makeself /tmp/tmnf-tas ./tmnf-tas-installer_v{version}.run "Installer for TMNF-TimeAttackServer" ./installer.sh')
     c.run('rm -rf /tmp/tmnf-tas')
+
+
+@task(name='build-container-images')
+def build_container_images(c):
+    c.run('cd tas/backend; invoke build-container-image')
+    c.run('cd tas/frontend; invoke build-container-image')
+    c.run('cd tmnfd; invoke build-container-image')

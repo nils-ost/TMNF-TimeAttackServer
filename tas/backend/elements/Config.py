@@ -22,6 +22,7 @@ class Config(ElementBase):
         },
         's3': {
             'host': 'minio',
+            'host_ded': '127.0.0.1',
             'port': 9000,
             'access_key': 'tmtas',
             'access_secret': 'password',

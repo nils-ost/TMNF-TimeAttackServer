@@ -126,7 +126,7 @@ def responder_function(func, params, ch, delivery_tag):
                 ch.basic_ack(delivery_tag=delivery_tag)
                 return
         logger.info(f'{player_login} connected')
-        player_update(player_login, connected=True, connect_msg_send=False)
+        player_update(player_login, connected=True, connect_msg_send=False, server=attached_config)
 
     elif func == 'TrackMania.PlayerDisconnect':
         player_login = params[0]

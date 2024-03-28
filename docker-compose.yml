@@ -125,6 +125,8 @@ services:
       - MINIO_ROOT_PASSWORD=password
       - MINIO_PROMETHEUS_AUTH_TYPE=public
     command: server /data
+    ports:
+      - 127.0.0.1:9000:9000
     volumes:
       - minio_data:/data:rw
 

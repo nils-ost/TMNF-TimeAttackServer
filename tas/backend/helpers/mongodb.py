@@ -118,7 +118,7 @@ def bestlaptime_get(player_id, challenge_id):
     return mongoDB().bestlaptimes.find_one({'player_id': player_id, 'challenge_id': challenge_id})
 
 
-def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None, ts=None):
+def player_update(player_id, nickname=None, current_uid=None, connected=None, connect_msg_send=None, ts=None, server=None):
     if ts is None:
         ts = int(datetime.now().timestamp())
     player_id = clean_player_id(player_id)
@@ -144,7 +144,8 @@ def player_update(player_id, nickname=None, current_uid=None, connected=None, co
             'last_update': ts,
             'ip': player_ip,
             'connected': connected,
-            'connect_msg_send': connect_msg_send
+            'connect_msg_send': connect_msg_send,
+            'on_server': None
         })
     else:
         payload = dict({'last_update': ts})
@@ -152,10 +153,13 @@ def player_update(player_id, nickname=None, current_uid=None, connected=None, co
             payload['nickname'] = nickname
         if current_uid is not None:
             payload['current_uid'] = current_uid
+        if server is not None:
+            payload['on_server'] = server
         if connected is not None:
             payload['connected'] = connected
             if not connected:
                 payload['connect_msg_send'] = False
+                payload['on_server'] = None
         if connect_msg_send is not None:
             payload['connect_msg_send'] = connect_msg_send
         mongoDB().players.update_one({'_id': player_id}, {'$set': payload})

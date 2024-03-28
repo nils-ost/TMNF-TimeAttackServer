@@ -117,6 +117,10 @@ class Challenges():
             cherrypy.response.headers['Content-Type'] = 'application/json'
             return json.dumps(result).encode('utf-8')
 
+        if not get_provide_challenges():
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10'
+            cherrypy.response.status = 403
+            return  # providing challenges not currently enabled
         challenge = challenge_get(challenge_id=challenge_id)
         if challenge is None or not challenge_exists_s3(challenge_id):
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
@@ -201,7 +205,7 @@ class Players():
         if not player_id:
             result = list()
             for p in player_all():
-                result.append({'id': p['_id'], 'name': p['nickname'], 'last_update': p['last_update'], 'ip': p.get('ip', None)})
+                result.append({'id': p['_id'], 'name': p['nickname'], 'on_server': p['on_server'], 'last_update': p['last_update'], 'ip': p.get('ip', None)})
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
             return result
         elif player_id == 'me':
@@ -327,6 +331,10 @@ class Replays():
                 result.append(laptime)
             return json.dumps(result).encode('utf-8')
 
+        if not get_provide_replays():
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10'
+            cherrypy.response.status = 403
+            return  # providing replays not currently enabled
         laptime = laptime_get(replay=replay_name)
         if laptime is None or not replay_exists(replay_name):
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
@@ -364,6 +372,10 @@ class Thumbnails():
                     result.append({'challenge_id': c['challenge_id'], 'name': c['name'], 'thumbnail': c['challenge_id'] + '.jpg'})
                     result_ids.append(c['challenge_id'])
             return json.dumps(result).encode('utf-8')
+        if not get_provide_thumbnails():
+            cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=10'
+            cherrypy.response.status = 403
+            return  # providing thumbnails not currently enabled
         if not thumbnail_exists(thumbnail_name):
             cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=30'
             cherrypy.response.status = 404

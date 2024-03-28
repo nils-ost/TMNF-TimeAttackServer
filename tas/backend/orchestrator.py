@@ -236,6 +236,7 @@ def build_dedicated_config(dedicated_key, current_config):
     ded_cfg = ded_run['content'][dedicated_key]
     config = dict({'dedicated': {}})
     config['s3'] = Config.get('s3')['content']
+    config['s3']['host'] = config['s3'].get('host_ded') if config['s3'].get('host_ded') else '127.0.0.1'
     config['hot_seat_mode'] = True if ded_cfg.get('hot_seat_mode') or current_config.get('hot_seat_mode') else False
     config['active_matchsetting'] = ded_cfg.get('active_matchsetting') if ded_cfg.get('active_matchsetting') else 'NationsWhite.txt'
 

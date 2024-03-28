@@ -127,9 +127,10 @@ Returns a list of all Player elements present on server
   * `s-maxage=29`
 
 #### Element-Attributes
-  
+
   * `id` *(string)* Internally used unique ID of Player
   * `name` *(string)* Ingame nickname of Player
+  * `on_server` *(string|null)* The Dedicated server this Player is currently connected to
   * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
   * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
 
@@ -146,6 +147,7 @@ Returns details for single Player, or `Null` if given player_id can't be found o
 
   * `id` *(string)* Internally used unique ID of Player
   * `name` *(string)* Ingame nickname of Player
+  * `on_server` *(string|null)* The Dedicated server this Player is currently connected to
   * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
   * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
   * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
@@ -162,6 +164,7 @@ Returns player with the same IP as the request is made from (or `Null` if no cor
 
   * `id` *(string)* Internally used unique ID of Player
   * `name` *(string)* Ingame nickname of Player
+  * `on_server` *(string|null)* The Dedicated server this Player is currently connected to
   * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
   * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
   * `ip` *(string)* IP of Players computer (or `Null` if not recognized or set)
@@ -206,6 +209,7 @@ Returns the current TAS-HotSeat-Mode Player (or `Null` if HotSeat-Mode is not en
 
   * `id` *(string)* Internally used unique ID of Player
   * `name` *(string)* Ingame nickname of Player
+  * `on_server` *(string|null)* The Dedicated server this Player is currently connected to
   * `last_update` *(integer)* At which time TAS recognized the last activity of Player, as UNIX-Timestamp
   * `current_uid` *(integer)* UID TMNF-Dedicated server has currently assigned to Player
   * `ip` *(string)* IP of Players computer (should allways be `Null` in this case)

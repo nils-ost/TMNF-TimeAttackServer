@@ -12,6 +12,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 })
 export class ConfigS3Component implements OnInit, OnChanges {
   host: string = "";
+  host_ded: string = "";
   port: number = 0;
   access_key: string = "";
   access_secret: string = "";
@@ -42,6 +43,7 @@ export class ConfigS3Component implements OnInit, OnChanges {
       .subscribe({
         next: (config: Config) => {
           this.host = config['content']['host'];
+          this.host_ded = config['content']['host_ded'];
           this.port = config['content']['port'];
           this.access_key = config['content']['access_key'];
           this.access_secret = config['content']['access_secret'];
@@ -58,6 +60,7 @@ export class ConfigS3Component implements OnInit, OnChanges {
   saveConfig() {
     let content: { [key: string]: any } = {
       'host': this.host,
+      'host_ded': this.host_ded,
       'port': this.port,
       'access_key': this.access_key,
       'access_secret': this.access_secret

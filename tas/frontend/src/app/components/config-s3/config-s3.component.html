@@ -7,6 +7,13 @@
 
 <div class="field">
     <span class="p-float-label">
+        <input type="text" id="s3hostded" pInputText [(ngModel)]="host_ded" autofocus>
+        <label for="s3hostded" i18n="@@elementFieldLabelS3HostDed">Host for Dedicated</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
         <p-inputNumber inputId="s3port" [(ngModel)]="port" [min]="0" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
         <label for="s3port" i18n="@@elementFieldLabelS3Port">Port</label>
     </span>
