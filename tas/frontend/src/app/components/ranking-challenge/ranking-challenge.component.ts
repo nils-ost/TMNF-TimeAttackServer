@@ -33,8 +33,9 @@ export class RankingChallengeComponent implements OnInit, OnChanges {
 
   playerActive(player_id: string): boolean {
     let p = this.players.find(p => p.id === player_id);
-    if (p) return (((Date.now() / 1000) - p.last_update) <= 60);
-    else return false;
+    if (p && p.on_server && p.on_server == this.currentChallenge.server)
+      return (((Date.now() / 1000) - p.last_update) <= 60);
+    return false;
   }
 
 }

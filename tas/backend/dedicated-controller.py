@@ -5,9 +5,8 @@ from helpers.logging import setup_logging
 from elements import Config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import challenge_get, challenge_update, challenge_id_set
-from helpers.mongodb import set_tmnfd_name, get_provide_replays, get_provide_thumbnails, get_provide_challenges
+from helpers.mongodb import set_tmnfd_name
 from helpers.tmnfd import isPreStart, isPostEnd, prepareChallenges, prepareNextChallenge, kickAllPlayers
-from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails, tmnfd_cli_upload_challenges
 from helpers.rabbitmq import RabbitMQ
 import signal
 import os
@@ -40,13 +39,6 @@ def controller_function(timeout, new_state, ch, delivery_tag):
             logger.info('Connected to: TMNF - Dedicated Server')
             dedicated_connected = True
             prepareChallenges(sender, server=attached_config)
-
-            if get_provide_replays() or get_provide_thumbnails() or get_provide_challenges():
-                tmnfd_cli_test()
-                if get_provide_thumbnails() and tmnfd_cli_generate_thumbnails():
-                    logger.info('Generated Thumbnails')
-                if get_provide_challenges() and tmnfd_cli_upload_challenges():
-                    logger.info('Uploaded Challenges')
 
             server_name = sender.callMethod('GetServerName')[0]
             set_tmnfd_name(server_name)

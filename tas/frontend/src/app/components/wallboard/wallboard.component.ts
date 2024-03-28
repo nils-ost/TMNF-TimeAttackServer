@@ -180,7 +180,7 @@ export class WallboardComponent implements OnInit, OnDestroy {
           .getChallengeRankings(c_current_id)
           .subscribe(
             (rankings: ChallengeRanking[]) => {
-              this.challengeRankings[server.id] = this.alignChallengeRankings(rankings);
+              this.challengeRankings[server.id] = this.alignChallengeRankings(rankings, server.id);
             }
           )
       }
@@ -262,20 +262,20 @@ export class WallboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  alignChallengeRankings(rankings: ChallengeRanking[]): ChallengeRanking[] {
+  alignChallengeRankings(rankings: ChallengeRanking[], for_server: string): ChallengeRanking[] {
     let result: ChallengeRanking[] = [];
     if (this.settings) {
       rankings.sort((a, b) => a.rank - b.rank);
       let i = 0;
       while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-        if (this.playerActive(rankings[i]['player_id'])) {
+        if (this.playerActive(rankings[i]['player_id'], for_server)) {
           result.push(rankings[i]);
         }
         i++;
       }
       i = 0;
       while (i < rankings.length && result.length < Math.min(this.settings['wallboard_players_max'], rankings.length)) {
-        if (!this.playerActive(rankings[i]['player_id'])) {
+        if (!this.playerActive(rankings[i]['player_id'], for_server)) {
           result.push(rankings[i]);
         }
         i++;
@@ -308,10 +308,13 @@ export class WallboardComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  playerActive(player_id: string): boolean {
+  playerActive(player_id: string, for_server: string | null = null): boolean {
     let p = this.players.find(p => p.id === player_id);
-    if (p) return (((Date.now() / 1000) - p.last_update) <= 60);
-    else return false;
+    if (p) {
+      if ((for_server && p.on_server && p.on_server == for_server) || !for_server)
+        return (((Date.now() / 1000) - p.last_update) <= 60);
+    }
+    return false;
   }
 
 }
