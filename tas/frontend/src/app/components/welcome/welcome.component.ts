@@ -5,6 +5,8 @@ import { Stats } from '../../interfaces/stats';
 import { SettingsService } from '../../services/settings.service';
 import { StatsService } from '../../services/stats.service';
 import { environment } from '../../../environments/environment';
+import { Server } from 'src/app/interfaces/server';
+import { ServerService } from 'src/app/services/server.service';
 
 @Component({
   selector: 'app-welcome',
@@ -18,6 +20,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
   decrementCountdownTimerSubscription: Subscription | undefined;
   uri: String = window.location.pathname;
   settings?: Settings;
+  servers: Server[] = [];
   stats?: Stats;
   laptimes_sum_h: number = 0;
   laptimes_sum_m: number = 0;
@@ -32,12 +35,14 @@ export class WelcomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private settingsService: SettingsService,
-    private statsService: StatsService
+    private statsService: StatsService,
+    private serverService: ServerService
   ) { }
 
   ngOnInit(): void {
     this.refreshSettings();
     this.refreshStats();
+    this.refreshServers();
     this.refreshSettingsTimerSubscription = this.refreshSettingsTimer.subscribe(() => this.refreshSettings());
     this.decrementCountdownTimerSubscription = this.decrementCountdownTimer.subscribe(() => this.decrementCountdown());
   }
@@ -95,6 +100,14 @@ export class WelcomeComponent implements OnInit, OnDestroy {
           this.laptimes_sum_s = lts % 60;
         }
       );
+  }
+
+  refreshServers() {
+    this.serverService
+      .getServers()
+      .subscribe((servers: Server[]) => {
+        this.servers = servers;
+      });
   }
 
   decrementCountdown() {

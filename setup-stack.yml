@@ -1,0 +1,68 @@
+version: '3.6'
+
+services:
+  backend:
+    image: nilsost/tas:${TAS_VERSION:-latest}
+    command: api
+    depends_on:
+      - mongodb
+      - minio
+    environment:
+      - MONGO_HOST=mongodb
+    volumes:
+      - tas_static:/app/static:rw
+
+  frontend:
+    image: nilsost/tas-frontend:${TAS_VERSION:-latest}
+    depends_on:
+      - backend
+
+  haproxy:
+    image: haproxy:lts-alpine
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - ${BIND_IP:-0.0.0.0}:80:80
+      - ${BIND_IP:-0.0.0.0}:443:443
+      - ${MONITORING_IP:-0.0.0.0}:8404:8404
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    volumes:
+      - ./install/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+  mongodb:
+    image: mongo:4.4
+    volumes:
+      - mongo_data:/data/db:rw
+
+  minio:
+    image: minio/minio:RELEASE.2022-04-30T22-23-53Z
+    environment:
+      - MINIO_ROOT_USER=tmtas
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_PROMETHEUS_AUTH_TYPE=public
+    command: server /data
+    ports:
+      - 127.0.0.1:9000:9000
+    volumes:
+      - minio_data:/data:rw
+
+  loki:
+    image: grafana/loki:2.8.3
+    volumes:
+      - ./install/loki.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./install/grafana.ini:/etc/grafana/grafana.ini:ro
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  tas_static:
+  mongo_data:
+  minio_data:
+  loki_data:
+  grafana_data:

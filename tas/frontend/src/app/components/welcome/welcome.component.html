@@ -151,7 +151,9 @@
         <div class="info-container">
             <div class="info-row">
                 <div class="settings">
-                    <p *ngIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Ingame Server Name@@LabelIngameServerName">Ingame Server Name</ng-container>: <span class="highlight">{{ settings?.tmnfd_name }}</span></p>
+                    <p *ngIf="!settings?.hotseat_mode"><ng-container i18n="Label prefixing Ingame Server Names@@LabelIngameServerNames">Ingame Server Name(s)</ng-container>:
+                        <ng-container *ngFor="let server of servers"><br /> - <span class="highlight">{{ server.name }}</span></ng-container>
+                    </p>
                     <p><ng-container i18n="Label prefixing Server Admin@@LabelServerAdmin">Server Admin</ng-container>: <span class="highlight">{{ settings?.display_admin }}</span></p>
                 </div>
             </div>

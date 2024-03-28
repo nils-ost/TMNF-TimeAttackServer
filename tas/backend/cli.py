@@ -117,12 +117,6 @@ def provideReplays():
     selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
     if selection == 'y':
         set_provide_replays(not provide)
-        if not provide:
-            from helpers.tmnfdcli import tmnfd_cli_test
-            print('Testing connection to tmnfd-cli...')
-            result = tmnfd_cli_test()
-            if result is not None:
-                print(f'...connection method is: {result}')
 
 
 def provideThumbnails():
@@ -132,16 +126,6 @@ def provideThumbnails():
     selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
     if selection == 'y':
         set_provide_thumbnails(not provide)
-        if not provide:
-            from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_generate_thumbnails
-            print('Testing connection to tmnfd-cli...')
-            result = tmnfd_cli_test()
-            if result is not None:
-                print(f'...connection method is: {result}')
-                tmnfd_cli_generate_thumbnails()
-                print('Generated Thumbnails')
-            else:
-                print('You need to trigger Thumbnail generation on TMNFD manually!')
 
 
 def provideChallenges():
@@ -151,16 +135,6 @@ def provideChallenges():
     selection = input(f"{'disable' if provide else 'enable'} it? (y/N): ").strip()
     if selection == 'y':
         set_provide_challenges(not provide)
-        if not provide:
-            from helpers.tmnfdcli import tmnfd_cli_test, tmnfd_cli_upload_challenges
-            print('Testing connection to tmnfd-cli...')
-            result = tmnfd_cli_test()
-            if result is not None:
-                print(f'...connection method is: {result}')
-                tmnfd_cli_upload_challenges()
-                print('Uploaded Challenges')
-            else:
-                print('You need to trigger Challenges upload on TMNFD manually!')
 
 
 def clearDB(force=False):
@@ -479,18 +453,32 @@ def hotSeatMode():
         print(f"TAS-HotSeat-Mode is now {'disabled' if hsm else 'enabled'}")
 
 
+def changeAdmin():
+    from elements import User
+    login = input('Enter user name, to select user: ').strip()
+    u = User.get_by_login(login)
+    if u is not None:
+        login = input(f'Enter new user name ({login}): ').strip()
+        if not login == '':
+            u['login'] = login
+        pw = input('Enter new password: ').strip()
+        if not pw == '':
+            u['pw'] = pw
+        u.save()
+
+
 def exit():
     sys.exit(0)
 
 
 commands = [
-    ('Stack State', state),
-    ('Start Stack', start_stack),
-    ('Stop Stack', stop_stack),
-    ('Restart Stack', restart_stack),
+    # ('Stack State', state),
+    # ('Start Stack', start_stack),
+    # ('Stop Stack', stop_stack),
+    # ('Restart Stack', restart_stack),
     ('Set Wallboard Players Max', wallboardPalyersMax),
     ('Set Wallboard Challenges Max', wallboardChallengesMax),
-    ('Set Wallboard Tables Max', wallboardTablesMax),
+    # ('Set Wallboard Tables Max', wallboardTablesMax),
     ('Set Display Admin', displayAdmin),
     ('Set Display Self URL', displaySelfUrl),
     ('Set Client Download URL', clientDownloadURL),
@@ -500,16 +488,18 @@ commands = [
     ('Set Start Time', startTime),
     ('Set End Time', endTime),
     ('Download/Provide TMNF Client', downloadClient),
-    ('Next Challenge', nextChallenge),
+    # ('Next Challenge', nextChallenge),
     ("Clear Player's IP", clearPlayerIP),
     ('Merge Players', mergePlayers),
-    ('Set TAS-HotSeat-Mode', hotSeatMode),
+    # ('Set TAS-HotSeat-Mode', hotSeatMode),
     ('Clear DB', clearDB),
-    ('Create Backup', createBackup),
-    ('Restore Backup', restoreBackup),
+    ('Edit Admin Account', changeAdmin),
+    # ('Create Backup', createBackup),
+    # ('Restore Backup', restoreBackup),
     ('Exit', exit)
 ]
 
+"""
 if args.state:
     state()
     sys.exit(0)
@@ -525,6 +515,7 @@ if args.stop:
 if args.restart:
     restart_stack()
     sys.exit(0)
+"""
 
 if args.version:
     print(version())
