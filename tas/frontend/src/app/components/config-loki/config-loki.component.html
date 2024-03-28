@@ -1,0 +1,34 @@
+<div class="field">
+    <p-toggleButton [(ngModel)]="enable" onLabel="Enabled" offLabel="Disabled"></p-toggleButton>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="lokihost" pInputText [(ngModel)]="host" autofocus>
+        <label for="lokihost" i18n="@@elementFieldLabelLokiHost">Host</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="lokiport" [(ngModel)]="port" [min]="0" [useGrouping]="false" [showButtons]="false"></p-inputNumber>
+        <label for="lokiport" i18n="@@elementFieldLabelLokiPort">Port</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="lokiprotocol" pInputText [(ngModel)]="protocol">
+        <label for="lokiprotocol" i18n="@@elementFieldLabelLokiProtocol">Protocol</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="lokistreamprefix" pInputText [(ngModel)]="stream_prefix">
+        <label for="lokistreamprefix" i18n="@@elementFieldLabelLokiStreamPrefix">Stream Prefix</label>
+    </span>
+</div>
+
+<button pButton (click)="saveConfig()" i18n="@@buttonSave">Save</button>
+<button pButton (click)="loadConfig()" i18n="@@buttonDismiss" class="p-button-danger">Dismiss</button>

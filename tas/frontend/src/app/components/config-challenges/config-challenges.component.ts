@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnChanges, OnInit } from '@angular/core';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Config } from 'src/app/interfaces/config';
 import { ConfigService } from 'src/app/services/config.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -16,7 +17,8 @@ export class ConfigChallengesComponent implements OnInit, OnChanges {
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    public dialogRef: DynamicDialogRef
   ) { }
 
   ngOnChanges(): void {
@@ -51,6 +53,9 @@ export class ConfigChallengesComponent implements OnInit, OnChanges {
     this.configService
       .updateConfig('challenges', content)
       .subscribe({
+        next: () => {
+          this.dialogRef.close();
+        },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
         }

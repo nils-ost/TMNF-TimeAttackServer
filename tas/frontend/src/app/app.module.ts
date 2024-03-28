@@ -52,6 +52,7 @@ import { ConfigRabbitComponent } from './components/config-rabbit/config-rabbit.
 import { ConfigS3Component } from './components/config-s3/config-s3.component';
 import { ConfigChallengesComponent } from './components/config-challenges/config-challenges.component';
 import { ConfigDedicatedComponent } from './components/config-dedicated/config-dedicated.component';
+import { ConfigLokiComponent } from './components/config-loki/config-loki.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { ConfigDedicatedComponent } from './components/config-dedicated/config-d
     ConfigRabbitComponent,
     ConfigS3Component,
     ConfigChallengesComponent,
-    ConfigDedicatedComponent
+    ConfigDedicatedComponent,
+    ConfigLokiComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ import { ConfigRabbitComponent } from '../config-rabbit/config-rabbit.component'
 import { ConfigS3Component } from '../config-s3/config-s3.component';
 import { ConfigChallengesComponent } from '../config-challenges/config-challenges.component';
 import { ConfigDedicatedComponent } from '../config-dedicated/config-dedicated.component';
+import { ConfigLokiComponent } from '../config-loki/config-loki.component';
 
 @Component({
   selector: 'app-admin-screen',
@@ -55,6 +56,10 @@ export class AdminScreenComponent implements OnInit {
 
   showChallengesConfig() {
     this.dialogRef = this.dialogService.open(ConfigChallengesComponent, {header: 'Challenges Config', modal: true});
+  }
+
+  showLokiConfig() {
+    this.dialogRef = this.dialogService.open(ConfigLokiComponent, {header: 'Loki Config', modal: true});
   }
 
   showNewDedicatedConfig() {

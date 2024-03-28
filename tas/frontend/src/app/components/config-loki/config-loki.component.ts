@@ -1,23 +1,21 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Config } from 'src/app/interfaces/config';
 import { ConfigService } from 'src/app/services/config.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Config } from 'src/app/interfaces/config';
 
 @Component({
-  selector: 'app-config-rabbit',
-  templateUrl: './config-rabbit.component.html',
-  styleUrls: ['./config-rabbit.component.scss']
+  selector: 'app-config-loki',
+  templateUrl: './config-loki.component.html',
+  styleUrls: ['./config-loki.component.scss']
 })
-export class ConfigRabbitComponent implements OnInit, OnChanges {
+export class ConfigLokiComponent implements OnInit {
+  enable: boolean = true;
   host: string = "";
-  port: number = 0;
-  queues: { [key: string]: string } = {
-    'queue_dedicated_received_messages': '',
-    'queue_dedicated_state_changes': '',
-    'queue_orchestrator': ''
-  }
+  port: number = 3100;
+  protocol: string = "http";
+  stream_prefix: string = "TAS - ";
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -35,14 +33,14 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
 
   loadConfig() {
     this.configService
-      .getConfig('rabbit')
+      .getConfig('loki')
       .subscribe({
         next: (config: Config) => {
+          this.enable = config['content']['enable'];
           this.host = config['content']['host'];
           this.port = config['content']['port'];
-          for (const key in config['content']) {
-            if (key.startsWith('queue_')) this.queues[key] = config['content'][key];
-          }
+          this.protocol = config['content']['protocol'];
+          this.stream_prefix = config['content']['stream_prefix'];
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -52,14 +50,14 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
 
   saveConfig() {
     let content: { [key: string]: any } = {
+      'enable': this.enable,
       'host': this.host,
-      'port': this.port
-    }
-    for (let q in this.queues) {
-      content[q] = this.queues[q]
+      'port': this.port,
+      'protocol': this.protocol,
+      'stream_prefix': this.stream_prefix
     }
     this.configService
-      .updateConfig('rabbit', content)
+      .updateConfig('loki', content)
       .subscribe({
         next: () => {
           this.dialogRef.close();
@@ -68,10 +66,6 @@ export class ConfigRabbitComponent implements OnInit, OnChanges {
           this.errorHandler.handleError(err);
         }
       })
-  }
-
-  queueDisplay(name: string): string {
-    return name.replace('queue_', '').replace('_', ' ')
   }
 
 }
