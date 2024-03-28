@@ -1,6 +1,7 @@
 """
 TrachMania Nations Forever - Dedicated Server Controller
 """
+from helpers.logging import setup_logging
 from elements import Config
 from helpers.GbxRemote import GbxRemote
 from helpers.mongodb import challenge_get, challenge_update, challenge_id_set
@@ -142,8 +143,7 @@ def graceful_exit(signum, frame):
 
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
-    logging.getLogger('pika').setLevel(logging.WARNING)
+    setup_logging('Dedicated - Controller', loglevel)
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()

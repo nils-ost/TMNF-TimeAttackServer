@@ -8,14 +8,12 @@ from helpers.mongodb import get_start_time, get_end_time
 from helpers.mongodb import get_hotseat_mode, hotseat_player_ingameid_get
 import time
 import logging
-import sys
 
 logger = logging.getLogger(__name__)
 challenge_config = Config.get('challenges')['content']
 
 
 def isPreStart():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     startts = get_start_time()
     if startts is None:
         return False
@@ -25,7 +23,6 @@ def isPreStart():
 
 
 def isPostEnd():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     endts = get_end_time()
     if endts is None:
         return False
@@ -35,7 +32,6 @@ def isPostEnd():
 
 
 def calcTimeLimit(rel_time, lap_race, nb_laps):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if lap_race and nb_laps < 1:
         new_time = challenge_config['least_time']
     elif lap_race and nb_laps > 1:
@@ -46,7 +42,6 @@ def calcTimeLimit(rel_time, lap_race, nb_laps):
 
 
 def prepareChallenges(sender, server):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     challenge_deactivate_all(for_server=server)
     starting_index = 0
     infos_returned = 10
@@ -70,7 +65,6 @@ def prepareChallenges(sender, server):
 
 
 def prepareNextChallenge(sender, server):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     challenge = sender.callMethod('GetNextChallengeInfo')[0]
     time_limit = challenge_get(challenge['UId'], server)['time_limit']
     sender.callMethod('SetTimeAttackLimit', time_limit)
@@ -79,8 +73,6 @@ def prepareNextChallenge(sender, server):
 
 
 def sendLaptimeNotice(sender, server, player_login, player_time=None):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-
     def timetos(time):
         if time is None:
             return '---'
@@ -120,6 +112,5 @@ def sendLaptimeNotice(sender, server, player_login, player_time=None):
 
 
 def kickAllPlayers(sender, msg):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     for p in sender.callMethod('GetPlayerList', 0, 0)[0]:
         sender.callMethod('Kick', p['Login'], msg)

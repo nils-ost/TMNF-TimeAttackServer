@@ -4,6 +4,7 @@ TrachMania Nations Forever - Dedicated Server Reveicer
 import signal
 import os
 import time
+from helpers.logging import setup_logging
 import logging
 import sys
 from elements import Config
@@ -19,8 +20,7 @@ def graceful_exit(signum, frame):
 
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
-    logging.getLogger('pika').setLevel(logging.WARNING)
+    setup_logging('Dedicated - Receiver', loglevel)
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     rabbit = RabbitMQ()

@@ -1,7 +1,6 @@
 import boto3
 from botocore.exceptions import ConnectionClosedError
 from elements import Config
-import sys
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,7 +15,6 @@ botoClient = boto3.client(
 
 
 def is_connected():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
     origCT = botoClient.meta.config.connect_timeout
     botoClient.meta.config.connect_timeout = 1
@@ -38,7 +36,6 @@ def is_connected():
 
 
 def setup_storage():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
     buckets = [bucket['Name'] for bucket in botoClient.list_buckets()['Buckets']]
     for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:
@@ -47,12 +44,10 @@ def setup_storage():
 
 
 if is_connected():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     setup_storage()
 
 
 def generic_list(bucket):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
     result = list()
     for c in botoClient.list_objects(Bucket=bucket).get('Contents', list()):
@@ -62,14 +57,12 @@ def generic_list(bucket):
 
 
 def generic_get(bucket, name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
     result = botoClient.get_object(Bucket=bucket, Key=name)
     return result['Body']
 
 
 def generic_exists(bucket, name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
     try:
         objects = botoClient.list_objects(Bucket=bucket, Prefix=name)
@@ -83,7 +76,6 @@ def generic_exists(bucket, name):
 
 
 def generic_delete_all(bucket):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     botoResource = boto3.resource(
         's3',
         endpoint_url=f"http://{config['host']}:{config['port']}",
@@ -94,7 +86,6 @@ def generic_delete_all(bucket):
 
 
 def replay_get(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.Replay.Gbx'):
         name = name + '.Replay.Gbx'
@@ -102,7 +93,6 @@ def replay_get(name):
 
 
 def replay_exists(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.Replay.Gbx'):
         name = name + '.Replay.Gbx'
@@ -110,13 +100,11 @@ def replay_exists(name):
 
 
 def replay_delete_all():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     generic_delete_all(config['bucket_replays'])
 
 
 def thumbnail_get(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.jpg'):
         name = name + '.jpg'
@@ -124,7 +112,6 @@ def thumbnail_get(name):
 
 
 def thumbnail_exists(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.jpg'):
         name = name + '.jpg'
@@ -132,13 +119,11 @@ def thumbnail_exists(name):
 
 
 def thumbnail_delete_all():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     generic_delete_all(config['bucket_thumbnails'])
 
 
 def challenge_get(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.Challenge.Gbx'):
         name = name + '.Challenge.Gbx'
@@ -146,7 +131,6 @@ def challenge_get(name):
 
 
 def challenge_exists(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.Challenge.Gbx'):
         name = name + '.Challenge.Gbx'
@@ -154,19 +138,16 @@ def challenge_exists(name):
 
 
 def challenge_delete_all():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     generic_delete_all(config['bucket_challenges'])
 
 
 def matchsetting_list():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     return generic_list(config['bucket_matchsettings'])
 
 
 def matchsetting_get(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.txt'):
         name = name + '.txt'
@@ -174,7 +155,6 @@ def matchsetting_get(name):
 
 
 def matchsetting_exists(name):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     if not name.endswith('.txt'):
         name = name + '.txt'
@@ -182,7 +162,6 @@ def matchsetting_exists(name):
 
 
 def buckets_delete_all():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     for bucket in [v for k, v in config.items() if k.startswith('bucket_')]:
         generic_delete_all(bucket)

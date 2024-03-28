@@ -3,6 +3,7 @@ import json
 import sys
 import subprocess
 import signal
+from helpers.logging import setup_logging
 from datetime import datetime
 from elements import Config
 from helpers.rabbitmq import RabbitMQ
@@ -18,7 +19,6 @@ def consume_orchestrator_messages(callback_func, timeout=1):
     """
     callback_func needs to take timeout, func, params, ch, props and delivery_tag as arguments
     """
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     while True:
         channel = rabbit.get_onetime_channel()
         try:
@@ -42,7 +42,6 @@ def identify_dedicated_server(container_id, dtype):
     """
     trys to identify the corresponding key in dedicated config for a given containerid and dedicated-type
     """
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     container_id = container_id.lower()
     dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
@@ -71,21 +70,18 @@ def container_running(container_id):
     """
     returns if the container with the given container_id is running or not (stopped, exited, ...)
     """
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if container_id is None:
         return False
     container_id = container_id.lower()
     dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
         o = subprocess.check_output(f"{dcmd} ps -a -f id={container_id} --format='\u007b\u007b.State\u007d\u007d'", shell=True).decode('utf-8').strip()
-        logger.debug(f'{sys._getframe().f_code.co_name} {o}')
         return o.lower() == 'running'
     except Exception:
         return False
 
 
 def periodic_events_function():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     # rebuild rankings
     for _, challenge in challenge_id_get(current=True).items():
         if challenge is not None:
@@ -107,7 +103,6 @@ def periodic_events_function():
 
 
 def issue_container_stop(container_id=None):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if container_id is None:
         return
     rabbit.send_orchestrator_message('Container.stop', dict({'container_id': container_id}))
@@ -115,7 +110,6 @@ def issue_container_stop(container_id=None):
 
 
 def issue_container_start(container_type):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ctype = None
     if container_type == 'tmnfd':
         ctype = 'tmnfd'
@@ -131,7 +125,6 @@ def issue_container_start(container_type):
 
 
 def scale_or_start_container(requested_type):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     counts = dict({'tmnfd': 0, 'dedicated-receiver': 0, 'dedicated-responder': 0, 'dedicated-controller': 0})
     if requested_type not in counts.keys():
         logger.error(f'{sys._getframe().f_code.co_name} invalid requested_type {requested_type} of container to scale or start')
@@ -167,7 +160,6 @@ def dedicated_run_maintenance():
     """
     checks the dedicated_run config and clears it up
     """
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ded_run = Config.get('dedicated_run')
     ded = Config.get('dedicated')['content']
     keys_remove = list()
@@ -206,7 +198,6 @@ def dedicated_run_maintenance():
 
 
 def get_available_ports(dkey, dtype, preferred_port=None, preferred_p2p=None, preferred_rpc=None):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     available_ports = list([2350, 2351, 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359])
     available_p2p = list([3450, 3451, 3452, 3453, 3454, 3455, 3456, 3457, 3458, 3459])
     available_rpc = list([5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009])
@@ -232,7 +223,6 @@ def get_available_ports(dkey, dtype, preferred_port=None, preferred_p2p=None, pr
 
 
 def get_password(preferred_pw=None):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if preferred_pw is None or preferred_pw in ['SuperAdmin', 'Admin', 'User']:
         import secrets
         import string
@@ -242,7 +232,6 @@ def get_password(preferred_pw=None):
 
 
 def build_dedicated_config(dedicated_key, current_config):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     ded_run = Config.get('dedicated_run')
     ded_cfg = ded_run['content'][dedicated_key]
     config = dict({'dedicated': {}})
@@ -281,7 +270,6 @@ def build_dedicated_config(dedicated_key, current_config):
 
 
 def inject_containerids():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     for container_id in subprocess.check_output(f"{dcmd} ps --format='\u007b\u007b.ID\u007d\u007d'", shell=True).decode('utf-8').strip().split('\n'):
         container_config = json.loads(subprocess.check_output(f'{dcmd} inspect {container_id}', shell=True).decode('utf-8'))
@@ -291,7 +279,6 @@ def inject_containerids():
 
 
 def messages_callback(timeout, func, params, ch, props, delivery_tag):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if timeout:
         global periodic_counter
         periodic_counter = (periodic_counter + 1) % 5
@@ -361,8 +348,7 @@ def graceful_exit(signum, frame):
 
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
-    logging.getLogger('pika').setLevel(logging.WARNING)
+    setup_logging('Orchestrator', loglevel)
     signal.signal(signal.SIGINT, graceful_exit)
     signal.signal(signal.SIGTERM, graceful_exit)
     dedicated_run_maintenance()

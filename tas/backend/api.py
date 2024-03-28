@@ -2,7 +2,7 @@ import cherrypy
 import cherrypy_cors
 import os
 import json
-import logging
+from helpers.logging import setup_logging
 from urllib.parse import unquote
 from cherrypy.lib import file_generator
 from datetime import datetime
@@ -388,7 +388,7 @@ class ConfigEndpoint(ElementEndpointBase):
 
 if __name__ == '__main__':
     loglevel = os.environ.get('LOGLEVEL', 'INFO')
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level=loglevel)
+    setup_logging('API', loglevel)
     conf = {
         '/download': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),

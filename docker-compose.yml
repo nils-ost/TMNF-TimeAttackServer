@@ -128,9 +128,23 @@ services:
     volumes:
       - minio_data:/data:rw
 
+  loki:
+    image: grafana/loki:2.8.3
+    volumes:
+      - ./install/loki.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./install/grafana.ini:/etc/grafana/grafana.ini:ro
+      - grafana_data:/var/lib/grafana
+
 volumes:
   tas_static:
   mongo_data:
   minio_data:
   tmnfd_tracks:
   tmnfd_static_config:
+  loki_data:
+  grafana_data:

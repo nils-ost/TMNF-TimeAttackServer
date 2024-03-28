@@ -60,17 +60,14 @@ class RabbitMQ():
         return self._conn.channel()
 
     def send_dedicated_received_message(self, func, params=None):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_dedicated_received_messages'], body=json.dumps([func, params]))
 
     def send_dedicated_state_changes(self, new_state):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_dedicated_state_changes'], body=new_state)
 
     def send_orchestrator_message(self, func, params=None):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         channel = self.get_sender_channel()
         channel.basic_publish(exchange='', routing_key=self.config['queue_orchestrator'], body=json.dumps([func, params]))
 
@@ -78,8 +75,6 @@ class RabbitMQ():
         """
         callback_func needs to take func, params, ch and delivery_tag as arguments
         """
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-
         def _callback_func(ch, method, properties, body):
             func, params = json.loads(body.decode())
             callback_func(func=func, params=params, ch=ch, delivery_tag=method.delivery_tag)
@@ -92,7 +87,6 @@ class RabbitMQ():
         """
         callback_func needs to take timeout, new_state, ch and delivery_tag as arguments
         """
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         while True:
             channel = self.get_onetime_channel()
             try:
@@ -111,8 +105,6 @@ class RabbitMQ():
                 channel.cancel()
 
     def request_attachement_from_orchestrator(self, container_type, timeout=20):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
-
         channel = self.get_onetime_channel()
         callback_queue = channel.queue_declare(queue='', exclusive=True).method.queue
         container_id = os.environ.get('HOSTNAME', 'localhost')

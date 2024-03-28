@@ -2,7 +2,6 @@ import socket
 from xmlrpc.client import loads as xmlloads
 from xmlrpc.client import dumps as xmldumps
 from xmlrpc.client import Fault as xmlFault
-import sys
 import logging
 
 
@@ -13,7 +12,6 @@ class GbxRemote():
         self.connection_info = (host, port, user, pw)
 
     def connect(self):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         try:
             host, port, user, pw = self.connection_info
             self.handler = 0x80000000
@@ -36,13 +34,11 @@ class GbxRemote():
             return False
 
     def _incHandler(self):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         self.handler += 1
         if self.handler > 0xFFFFFFFF:
             self.handler = 0x80000000
 
     def callMethod(self, method, *argv):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         handlerBytes = bytes([
             self.handler & 0xFF,
             (self.handler >> 8) & 0xFF,
@@ -85,7 +81,6 @@ class GbxRemote():
             return (func, params)
 
     def receiveCallback(self):
-        self.logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
         if not self.callback_enabled:
             self.callMethod('EnableCallbacks', True)
             self.callback_enabled = True

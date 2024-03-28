@@ -36,6 +36,46 @@ class Config(ElementBase):
             'queue_dedicated_received_messages': 'tas_ded_rx_msg',
             'queue_dedicated_state_changes': 'tas_ded_st_chg',
             'queue_orchestrator': 'tas_orchestrator'
+        },
+        'loki': {
+            'enable': True,
+            'host': 'loki',
+            'port': 3100,
+            'protocol': 'http',
+            'stream_prefix': 'TAS - '
+        },
+        'logging': {
+            'version': 1,
+            'disable_existing_loggers': False,
+            'formatters': {
+                'simple': {
+                    'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+                    'datefmt': '%Y-%m-%dT%H:%M:%S%z'
+                },
+                'plain': {
+                    'format': '%(message)s'
+                }
+            },
+            'handlers': {
+                'stdout': {
+                    'class': 'logging.StreamHandler',
+                    'level': 'INFO',
+                    'formatter': 'simple',
+                    'stream': 'ext://sys.stdout'
+                },
+                'loki': {
+                    'class': 'helpers.logging.LokiHandler',
+                    'level': 'INFO',
+                    'formatter': 'plain',
+                    'stream': 'api'
+                }
+            },
+            'loggers': {
+                'root': {
+                    'level': 'INFO',
+                    'handlers': ['stdout', 'loki']
+                }
+            }
         }
     }
 

@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 def versions_eq(left, right):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -33,7 +32,6 @@ def versions_eq(left, right):
 
 
 def versions_lt(left, right):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -63,7 +61,6 @@ def versions_lt(left, right):
 
 
 def versions_gt(left, right):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     left_l = list()
     for e in left.strip().split('.'):
         try:
@@ -93,7 +90,6 @@ def versions_gt(left, right):
 
 
 def versions_lte(left, right):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if versions_eq(left, right):
         return True
     if versions_lt(left, right):
@@ -102,7 +98,6 @@ def versions_lte(left, right):
 
 
 def versions_gte(left, right):
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     if versions_eq(left, right):
         return True
     if versions_gt(left, right):
@@ -137,7 +132,6 @@ def test_compares():
 
 
 def run():
-    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     db_version = get_version()
     if db_version is None:
         # new install nothing todo

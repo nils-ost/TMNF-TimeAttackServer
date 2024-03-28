@@ -23,6 +23,13 @@ def start_development(c):
             -e MINIO_PROMETHEUS_AUTH_TYPE=public \
             -d minio/minio:RELEASE.2022-04-30T22-23-53Z server /data')
 
+    r = c.run('sudo docker ps -f name=dev-loki', hide=True)
+    if 'dev-loki' not in r.stdout:
+        print('Starting Loki')
+        c.run(f'sudo docker run --name dev-loki --rm -p 3100:3100 \
+            -v {os.path.join(os.path.abspath(os.path.curdir), "install/loki.yaml")}:/etc/loki/local-config.yaml:ro \
+            -d grafana/loki:2.8.3')
+
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
@@ -34,7 +41,7 @@ def start_development(c):
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-rabbit', 'dev-mongo', 'dev-minio', 'dev-haproxy']:
+    for name in ['dev-rabbit', 'dev-mongo', 'dev-minio', 'dev-haproxy', 'dev-loki']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')
