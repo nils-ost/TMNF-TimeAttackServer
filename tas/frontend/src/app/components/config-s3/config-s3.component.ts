@@ -17,7 +17,8 @@ export class ConfigS3Component implements OnInit, OnChanges {
   buckets: { [key: string]: string } = {
     'bucket_replays': '',
     'bucket_thumbnails': '',
-    'bucket_challenges': ''
+    'bucket_challenges': '',
+    'bucket_matchsettings': ''
   }
 
   constructor(

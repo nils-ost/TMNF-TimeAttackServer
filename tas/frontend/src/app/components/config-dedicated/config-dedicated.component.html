@@ -29,6 +29,13 @@
 
 <div class="field">
     <span class="p-float-label">
+        <p-dropdown id="dedicatedactivematchsetting" [options]="matchsettings" [(ngModel)]="active_matchsetting"></p-dropdown>
+        <label for="dedicatedactivematchsetting" i18n="@@elementFieldLabelDedicatedActiveMatchsetting">Matchsetting</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
         <p-inputNumber inputId="dedicatedgameport" [(ngModel)]="game_port" [disabled]="game_port_auto" [min]="2350" [max]="2359" [useGrouping]="false" [showButtons]="true"></p-inputNumber>
         <label for="dedicatedgameport" i18n="@@elementFieldLabelDedicatedGamePort">Gameport</label>
     </span>

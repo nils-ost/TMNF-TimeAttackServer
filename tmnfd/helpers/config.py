@@ -32,7 +32,8 @@ _config = {
         'access_secret': 'password',
         'bucket_replays': 'tas-replays',
         'bucket_thumbnails': 'tas-thumbnails',
-        'bucket_challenges': 'tas-challenges'
+        'bucket_challenges': 'tas-challenges',
+        'bucket_matchsettings': 'tas-matchsettings'
     }
 }
 

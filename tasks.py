@@ -14,6 +14,15 @@ def start_development(c):
         print('Starting rabbitMQ')
         c.run('sudo docker run --name dev-rabbit --rm -p 5672:5672 -p 15672:15672 -d rabbitmq:3.12-management-alpine')
 
+    r = c.run('sudo docker ps -f name=dev-minio', hide=True)
+    if 'dev-minio' not in r.stdout:
+        print('Starting minIO')
+        c.run('sudo docker run --name dev-minio --rm -p 9000:9000 \
+            -e MINIO_ROOT_USER=tmtas \
+            -e MINIO_ROOT_PASSWORD=password \
+            -e MINIO_PROMETHEUS_AUTH_TYPE=public \
+            -d minio/minio:RELEASE.2022-04-30T22-23-53Z server /data')
+
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
@@ -25,7 +34,7 @@ def start_development(c):
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-rabbit', 'dev-mongo', 'dev-haproxy']:
+    for name in ['dev-rabbit', 'dev-mongo', 'dev-minio', 'dev-haproxy']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')

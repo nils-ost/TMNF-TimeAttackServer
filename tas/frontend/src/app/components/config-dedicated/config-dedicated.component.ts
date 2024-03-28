@@ -4,6 +4,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Config } from 'src/app/interfaces/config';
 import { ConfigService } from 'src/app/services/config.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { MatchsettingService } from 'src/app/services/matchsetting.service';
 
 @Component({
   selector: 'app-config-dedicated',
@@ -12,6 +13,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 })
 export class ConfigDedicatedComponent implements OnInit, OnChanges {
   @Input() selected_config?: string;
+  matchsettings: string[] = [];
   dedicated_configs: { [key: string]: any } = {};
   name_valid_characters: string = "abcdefghijklmnopqrstuvwxyz1234567890-_";
   // fields
@@ -19,6 +21,7 @@ export class ConfigDedicatedComponent implements OnInit, OnChanges {
   connection: string = "local-container";
   container: string = "tmnfd";
   type: string = "tmnf";
+  active_matchsetting: string = 'NationsWhite.txt';
   game_port_auto: boolean = true;
   game_port: number = 0;
   p2p_port_auto: boolean = true;
@@ -38,16 +41,32 @@ export class ConfigDedicatedComponent implements OnInit, OnChanges {
   constructor(
     private errorHandler: ErrorHandlerService,
     private configService: ConfigService,
+    private matchsettingsService: MatchsettingService,
     public dialogRef: DynamicDialogRef,
     public config: DynamicDialogConfig
   ) { }
 
   ngOnInit(): void {
+    this.loadMatchsettings();
     this.loadConfig();
   }
 
   ngOnChanges(): void {
+    this.loadMatchsettings();
     this.loadConfig();
+  }
+
+  loadMatchsettings() {
+    this.matchsettingsService
+      .getMatchsettings()
+      .subscribe({
+        next: (matchsettings: string[]) => {
+          this.matchsettings = matchsettings;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
   }
 
   loadConfig() {
@@ -83,6 +102,7 @@ export class ConfigDedicatedComponent implements OnInit, OnChanges {
       item['ingame_name'] = this.ingame_name
       item['callvote_timeout'] = this.callvote_timeout
       item['callvote_ratio'] = this.callvote_ratio
+      item['active_matchsetting'] = this.active_matchsetting
       if (this.selected_config && this.selected_config != this.name) {
         delete this.dedicated_configs[this.selected_config];
       }
@@ -176,6 +196,8 @@ export class ConfigDedicatedComponent implements OnInit, OnChanges {
         this.callvote_timeout = this.dedicated_configs[this.selected_config]['callvote_timeout']
       if ('callvote_ratio' in this.dedicated_configs[this.selected_config])
         this.callvote_ratio = this.dedicated_configs[this.selected_config]['callvote_ratio']
+      if ('active_matchsetting' in this.dedicated_configs[this.selected_config])
+        this.active_matchsetting = this.dedicated_configs[this.selected_config]['active_matchsetting']
     }
   }
 

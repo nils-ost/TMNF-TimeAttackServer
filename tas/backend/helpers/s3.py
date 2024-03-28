@@ -51,6 +51,16 @@ if is_connected():
     setup_storage()
 
 
+def generic_list(bucket):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    global botoClient
+    result = list()
+    for c in botoClient.list_objects(Bucket=bucket).get('Contents', list()):
+        if c.get('Key'):
+            result.append(c.get('Key'))
+    return result
+
+
 def generic_get(bucket, name):
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global botoClient
@@ -147,6 +157,28 @@ def challenge_delete_all():
     logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
     global config
     generic_delete_all(config['bucket_challenges'])
+
+
+def matchsetting_list():
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    global config
+    return generic_list(config['bucket_matchsettings'])
+
+
+def matchsetting_get(name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    global config
+    if not name.endswith('.txt'):
+        name = name + '.txt'
+    return generic_get(config['bucket_matchsettings'], name)
+
+
+def matchsetting_exists(name):
+    logger.debug(f'{sys._getframe().f_code.co_name} {locals()}')
+    global config
+    if not name.endswith('.txt'):
+        name = name + '.txt'
+    return generic_exists(config['bucket_matchsettings'], name)
 
 
 def buckets_delete_all():

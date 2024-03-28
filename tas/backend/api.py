@@ -14,7 +14,8 @@ from helpers.mongodb import get_wallboard_players_max, get_wallboard_challenges_
 from helpers.mongodb import get_display_self_url, get_display_admin, get_client_download_url, get_version, get_hotseat_mode
 from helpers.mongodb import get_provide_replays, get_provide_thumbnails, get_provide_challenges, get_start_time, get_end_time
 from helpers.mongodb import get_players_count, get_active_players_count, get_laptimes_count, get_laptimes_sum, get_total_seen_count
-from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
+from helpers.s3 import replay_get, replay_exists, thumbnail_get, thumbnail_exists, matchsetting_list
+from helpers.s3 import challenge_exists as challenge_exists_s3, challenge_get as challenge_get_s3
 from elements import Config, User
 from endpoints import ElementEndpointBase, LoginEndpoint
 
@@ -37,6 +38,7 @@ class TimeAttackServer():
         self.settings = Settings()
         self.stats = Stats()
         self.servers = Servers()
+        self.matchsettings = Matchsettings()
         self.config = ConfigEndpoint()
         self.user = UserEndpoint()
         self.login = LoginEndpoint()
@@ -92,6 +94,14 @@ class Servers():
             result.append(s)
         cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=29'
         return result
+
+
+class Matchsettings():
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
+    def index(self):
+        cherrypy.response.headers['Cache-Control'] = 'public,s-maxage=59'
+        return matchsetting_list()
 
 
 @cherrypy.popargs('challenge_id')

@@ -17,6 +17,7 @@ parser.add_argument('--prepare-start', dest='prepare_start', action='store_true'
 parser.add_argument('--upload_replay', dest='upload_replay', default=None, help='Uploads specified replay file to S3 storage')
 parser.add_argument('--generate_thumbnails', dest='generate_thumbnails', action='store_true', help='Generates thumbnails and uploads them to S3 storage')
 parser.add_argument('--upload_challenges', dest='upload_challenges', action='store_true', help='Uploads challenges files of active machsetting to S3 storage')
+parser.add_argument('--upload_matchsettings', dest='upload_matchsettings', action='store_true', help='Uploads all available matchsettings files to S3 storage')
 parser.add_argument('--create_backup', dest='create_backup', action='store_true', help='Creates backup of tmnfd config and stores it to S3')
 parser.add_argument('--restore_backup', dest='restore_backup', action='store_true', help='Restores backup of tmnfd config from S3')
 args = parser.parse_args()
@@ -61,6 +62,9 @@ def prepare_start():
         ms.set_timeattack_limit(minutes=60)
         ms.save(activate=True, keep_original=True)
     dc.save()
+    upload_challenges(False)
+    generate_thumbnails(False)
+    upload_matchsettings(False)
 
 
 def list_challenges():
@@ -108,6 +112,16 @@ def upload_challenges(interactive=True):
                 print(f'Uploaded: {cpath}')
         elif interactive:
             print(f'Allready exists: {cpath}')
+
+
+def upload_matchsettings(interactive=True):
+    from helpers.config import get_config
+    from helpers.s3 import upload_matchsetting
+    config = get_config()
+    for f in glob(os.path.join(config['match_settings'], '*.txt')):
+        upload_matchsetting(f, os.path.basename(f))
+        if interactive:
+            print(f'Uploaded or renewed: {f}')
 
 
 def exit():
@@ -245,6 +259,8 @@ def open_matchsettings_editor():
     print('handing over to interactive MatchSettings Editor')
     editor()
     print('interactive MatchSettings Editor exited')
+    print('uploading matchsettings to S3 storage...')
+    upload_matchsettings()
 
 
 commands = [
@@ -252,6 +268,7 @@ commands = [
     ('Open MatchSettings Editor', open_matchsettings_editor),
     ('Generate Thumbnails', generate_thumbnails),
     ('Upload Challenges', upload_challenges),
+    ('Upload Matchsettings', upload_matchsettings),
     ('Create Backup', create_backup),
     ('Restore Backup', restore_backup),
     ('Exit', exit)
@@ -271,6 +288,9 @@ elif args.upload_replay:
 
 elif args.upload_challenges:
     upload_challenges(False)
+
+elif args.upload_matchsettings:
+    upload_matchsettings(False)
 
 elif args.create_backup:
     create_backup(s3=True)

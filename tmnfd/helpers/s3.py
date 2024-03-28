@@ -64,6 +64,13 @@ def upload_challenge(path, name):
     return upload_generic(config['bucket_challenges'], path, name)
 
 
+def upload_matchsetting(path, name):
+    global config
+    if not name.endswith('.txt'):
+        name = name + '.txt'
+    return upload_generic(config['bucket_matchsettings'], path, name)
+
+
 def exists_generic(bucket, name):
     global botoClient
     try:
@@ -89,3 +96,10 @@ def exists_challenge(name):
     if not name.endswith('.Challenge.Gbx'):
         name = name + '.Challenge.Gbx'
     return exists_generic(config['bucket_challenges'], name)
+
+
+def exists_matchsetting(name):
+    global config
+    if not name.endswith('.txt'):
+        name = name + '.txt'
+    return exists_generic(config['bucket_matchsettings'], name)

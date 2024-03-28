@@ -248,6 +248,7 @@ def build_dedicated_config(dedicated_key, current_config):
     config = dict({'dedicated': {}})
     config['s3'] = Config.get('s3')['content']
     config['hot_seat_mode'] = True if ded_cfg.get('hot_seat_mode') or current_config.get('hot_seat_mode') else False
+    config['active_matchsetting'] = ded_cfg.get('active_matchsetting') if ded_cfg.get('active_matchsetting') else 'NationsWhite.txt'
 
     port = current_config['dedicated'].get('game_port') if ded_cfg.get('game_port') is None else ded_cfg.get('game_port')
     p2p = current_config['dedicated'].get('p2p_port') if ded_cfg.get('p2p_port') is None else ded_cfg.get('p2p_port')

@@ -426,4 +426,13 @@ Returns a list of all active dedicated Servers
   * `name` *(string)* Ingame name of this Server
   * `running` *(boolean)* Status of the Server
 
+### GET /matchsettings/
+
+Returns a list of all available Matchsettings-Names
+
+#### Cache-Control
+
+  * `public`
+  * `s-maxage=59`
+
 ## Private
