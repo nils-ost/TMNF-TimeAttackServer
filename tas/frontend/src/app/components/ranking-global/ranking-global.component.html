@@ -1,7 +1,7 @@
 <p-table [value]="globalRankings" styleClass="ranking-table">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center">
-            <span i18n="Title of the global rankings table@@tableGlobalRankingTitle">Global Ranking</span>
+            <ng-container i18n="Label prefixing Ranking Name on Ranking Table@@LabelScheduleFor">Ranking</ng-container>:&nbsp;<span class="highlight">Global</span>
         </div>
     </ng-template>
     <ng-template pTemplate="header">

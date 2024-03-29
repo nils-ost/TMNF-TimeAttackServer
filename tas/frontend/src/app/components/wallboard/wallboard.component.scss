@@ -6,18 +6,7 @@
     background-color: var(--surface-card);
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-
-    .title {
-        font-family: var(--font-family);
-        color: var(--primary-color);
-        font-size: 1.5rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-
-        i {
-            font-size: 1.2rem;
-        }
-    }
+    height: 1rem;
 }
 
 :host ::ng-deep .rankings-container {
@@ -66,6 +55,11 @@
     margin-right: 0.5rem;
     border-radius: 0.5rem;
     background-color: var(--surface-card);
+
+        .p-datatable-header {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
     
         tr, tr th {
             background-color: rgba(255, 255, 255, 0);

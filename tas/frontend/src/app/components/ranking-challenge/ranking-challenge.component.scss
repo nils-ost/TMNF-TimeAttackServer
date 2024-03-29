@@ -3,3 +3,7 @@
         color: var(--primary-color) !important;
     }
 }
+
+:host ::ng-deep .highlight {
+    color: var(--primary-color) !important;
+}

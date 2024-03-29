@@ -317,4 +317,11 @@ export class WallboardComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  serverName(server_id: string): string {
+    for (let server of this.servers) {
+      if (server.id == server_id) return server.name;
+    }
+    return "";
+  }
+
 }

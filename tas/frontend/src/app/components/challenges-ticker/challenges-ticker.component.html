@@ -1,6 +1,15 @@
-<div class="challenge-card-container" *ngIf="time_left > 0">
-    <app-challenge-card *ngFor="let cd of challengeDisplay" [challenge]="cd" [thumbnail]="settings?.provide_thumbnails || false" (onEnableRefresh)="onEnableRefresh.emit()" (onDisableRefresh)="onDisableRefresh.emit()"></app-challenge-card>
-</div>
+<ng-container *ngIf="time_left > 0">
+    <div class="challenge-card-container">
+        <div class="challenge-card-container-servers" *ngFor="let server of servers">
+            <div class="challenge-card-container-header">
+                <p><ng-container i18n="Label prefixing Server Name on Challenge Schedule Header@@LabelScheduleFor">Schedule for</ng-container>: <span class="highlight">{{ server.name }}</span></p>
+            </div>
+            <div class="challenge-card-container-content">
+                <app-challenge-card *ngFor="let cd of challengeDisplay[server.id]" [challenge]="cd" [thumbnail]="settings?.provide_thumbnails || false" (onEnableRefresh)="onEnableRefresh.emit()" (onDisableRefresh)="onDisableRefresh.emit()"></app-challenge-card>
+            </div>
+        </div>
+    </div>
+</ng-container>
 
 <div class="challenge-card-container" *ngIf="time_left <= 0">
     <div class="finished">

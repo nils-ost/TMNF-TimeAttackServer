@@ -1,31 +1,13 @@
-<!--
-<app-challenges-ticker [challenges]="challenges" [settings]="settings" [currentChallenges]="currentChallenges" [nextChallenges]="nextChallenges" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()" (onEnableRefresh)="switchAutoRefreshSubject.next(true)" (onDisableRefresh)="switchAutoRefreshSubject.next(false)"></app-challenges-ticker>
--->
+
+<app-challenges-ticker [challenges]="challenges" [settings]="settings" [servers]="servers" [currentChallenges]="currentChallenges" [nextChallenges]="nextChallenges" [switchAutoRefreshEvent]="switchAutoRefreshSubject.asObservable()" (onEnableRefresh)="switchAutoRefreshSubject.next(true)" (onDisableRefresh)="switchAutoRefreshSubject.next(false)"></app-challenges-ticker>
 
 <div class="title-bar">
-    <div class="title">
-        <i class="pi pi-chevron-down"></i>
-        <span i18n="Title of the current challenge ranking table@@tableCurrentChallengeTitle">Current Challenge</span>
-        <i class="pi pi-chevron-down"></i>
-    </div>
-    <div class="title">
-        <i class="pi pi-chevron-up"></i>
-        <span i18n="challenge schedule ticker title|Title of the challenge schedule ticker on wallboard screen@@wallboardChallegenScheduleTitle">
-            Challenge Schedule
-        </span>
-        <i class="pi pi-chevron-up"></i>
-    </div>
-    <div class="title">
-        <i class="pi pi-chevron-down"></i>
-        <span i18n="Title of the global rankings table@@tableGlobalRankingTitle">Global Ranking</span>
-        <i class="pi pi-chevron-down"></i>
-    </div>
 </div>
 
 <div class="rankings-container">
     <div class="ranking-challenge" *ngFor="let server of servers">
         <div class="challenge-connector"></div>
-        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings[server.id]" [currentChallenge]="currentChallenges[server.id]" [nextChallenge]="nextChallenges[server.id]"></app-ranking-challenge>
+        <app-ranking-challenge [players]="players" [challengeRankings]="challengeRankings[server.id]" [currentChallenge]="currentChallenges[server.id]" [nextChallenge]="nextChallenges[server.id]" [serverName]="serverName(server.id)"></app-ranking-challenge>
     </div>
 
     <div class="ranking-global">

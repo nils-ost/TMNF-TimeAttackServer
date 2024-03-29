@@ -2,12 +2,46 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-top: 1rem;
     margin-bottom: 0rem;
 
-    app-challenge-card {
-        flex-grow: 1;
+    .challenge-card-container-servers {
+        display: flex;
+        flex-direction: column;
+
+        .challenge-card-container-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 2rem;
+            font-family: var(--font-family);
+            background-color: var(--surface-card);
+            color: var(--text-color);
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+            border-radius: 0.5rem;
+            
+            p {
+                margin: 0;
+
+                .highlight {
+                    color: var(--primary-color);
+                }
+            }
+        }
+
+        .challenge-card-container-content {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            margin: 0;
+            
+            app-challenge-card {
+                flex-grow: 1;
+            }
+        }
     }
 
     .finished {

@@ -13,6 +13,7 @@ export class RankingChallengeComponent implements OnInit, OnChanges {
   @Input() players!: Player[];
   @Input() currentChallenge!: Challenge;
   @Input() nextChallenge!: Challenge;
+  @Input() serverName: string = "";
   challengeName: string = "";
 
   constructor() { }

@@ -1,7 +1,7 @@
 <p-table [value]="challengeRankings" styleClass="ranking-table{{ !currentChallenge.id && nextChallenge.id ? '-done' : '' }}">
     <ng-template pTemplate="caption">
         <div class="flex align-items-center">
-            {{ currentChallenge.server }} - {{ challengeName }}
+            <ng-container i18n="Label prefixing Ranking Name on Ranking Table@@LabelScheduleFor">Ranking</ng-container>:&nbsp;<span class="highlight">{{ serverName }} - {{ challengeName }}</span>
         </div>
     </ng-template>
     <ng-template pTemplate="header">
