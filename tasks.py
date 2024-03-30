@@ -82,6 +82,20 @@ def create_bundle(c):
 
 @task(name='build-container-images')
 def build_container_images(c):
-    c.run('cd tas/backend; invoke build-container-image')
-    c.run('cd tas/frontend; invoke build-container-image')
-    c.run('cd tmnfd; invoke build-container-image')
+    version = c.run('git describe')
+    version = version.stdout.strip().replace('v', '', 1).rsplit('-', 1)[0].replace('-', '.')
+    with open('tas/backend/helpers/version.py', 'w') as f:
+        f.write(f"version = '{version}'")
+    c.run(f'cd tas/backend; invoke build-container-image --version {version}')
+    c.run('git restore tas/backend/helpers/version.py')
+    c.run(f'cd tas/frontend; invoke build-container-image --version {version}')
+    c.run(f'cd tmnfd; invoke build-container-image --version {version}')
+
+
+@task(name='push-container-images')
+def push_container_images(c):
+    version = c.run('git describe')
+    version = version.stdout.strip().replace('v', '', 1).rsplit('-', 1)[0].replace('-', '.')
+    c.run(f'cd tas/backend; invoke push-container-image --version {version}')
+    c.run(f'cd tas/frontend; invoke push-container-image --version {version}')
+    c.run(f'cd tmnfd; invoke push-container-image --version {version}')

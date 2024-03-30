@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'wallboard', component: WallboardComponent },
   { path: 'players', component: PlayersComponent },
   { path: 'challenges', component: ChallengesComponent },
-  { path: 'playerhud', component: PlayerhudComponent },
+  { path: 'playerhud', component: WelcomeComponent },
   { path: 'start-countdown', component: StartCountdownComponent },
   { path: 'end-countdown', component: EndCountdownComponent },
   { path: 'hotseat-name', component: HotseatNameScreenComponent },
