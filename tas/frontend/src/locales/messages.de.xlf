@@ -27,11 +27,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Header for column player name in tables</note>
       </trans-unit>
@@ -81,7 +81,7 @@
         <target state="signed-off">Cockpit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <note priority="1" from="description">Text of link to PlayerHUD screen</note>
       </trans-unit>
@@ -90,7 +90,7 @@
         <target state="signed-off">Server Admin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Server Admin</note>
       </trans-unit>
@@ -99,7 +99,7 @@
         <target state="signed-off">Anzahl Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Count</note>
       </trans-unit>
@@ -108,7 +108,7 @@
         <target state="signed-off">Summe Rundenzeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Laptimes Sum</note>
       </trans-unit>
@@ -117,7 +117,7 @@
         <target state="signed-off">Aktive Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Active Players</note>
       </trans-unit>
@@ -126,7 +126,7 @@
         <target state="signed-off">Anzahl Spieler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Total Players</note>
       </trans-unit>
@@ -144,7 +144,7 @@
         <target state="signed-off">Strecken insgesamt gesehen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <note priority="1" from="description">Label prefixing Challenges Total Seen Count</note>
       </trans-unit>
@@ -153,7 +153,7 @@
         <target state="signed-off">Neuste kompatible Spieleversion herunterladen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">Label prefixing TMNF Client Download URL</note>
       </trans-unit>
@@ -170,7 +170,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <note priority="1" from="description">Info box content for this page can be found at</note>
       </trans-unit>
@@ -183,7 +183,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <note priority="1" from="description">Text for link to enable autorefresh</note>
       </trans-unit>
@@ -196,7 +196,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <note priority="1" from="description">Text for link to disable autorefresh</note>
       </trans-unit>
@@ -205,7 +205,7 @@
         <target state="signed-off">Cockpit öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -213,7 +213,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <note priority="1" from="description">Text for link to open PlayerHUD</note>
       </trans-unit>
@@ -230,7 +230,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Challenges Screen</note>
       </trans-unit>
@@ -239,7 +239,7 @@
         <target state="signed-off">Spieler Liste öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
@@ -255,7 +255,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Players Screen</note>
       </trans-unit>
@@ -264,7 +264,7 @@
         <target state="signed-off">Startseite öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
@@ -284,7 +284,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Home Screen</note>
       </trans-unit>
@@ -293,7 +293,7 @@
         <target state="signed-off">Gesehen Anzahl</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Header for Seen Count in Tables</note>
       </trans-unit>
@@ -302,7 +302,7 @@
         <target state="signed-off">Zeitlimit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">Header for column time limit in tables</note>
       </trans-unit>
@@ -311,7 +311,7 @@
         <target state="signed-off">Dran in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Header for Up In in Tables</note>
       </trans-unit>
@@ -320,7 +320,7 @@
         <target state="signed-off">Aktiv</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">Label for current challenge in challenge-ticker</note>
       </trans-unit>
@@ -329,7 +329,7 @@
         <target state="signed-off">Nächste in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <note priority="1" from="description">Label for next challenge in challenge-ticker</note>
       </trans-unit>
@@ -338,7 +338,7 @@
         <target state="signed-off">Lädt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <note priority="1" from="description">Label for loading challenge in challenge-ticker</note>
       </trans-unit>
@@ -356,7 +356,7 @@
         <target state="signed-off">Anzeige aktualisieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/players/players.component.ts</context>
@@ -387,7 +387,7 @@
         <target state="signed-off">Anzeigetafel öffnen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges/challenges.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/hotseat-name-screen/hotseat-name-screen.component.ts</context>
@@ -432,11 +432,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Header for column rank in tables</note>
       </trans-unit>
@@ -470,11 +470,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Header for column points in tables</note>
       </trans-unit>
@@ -503,7 +503,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">Header for column time in tables</note>
       </trans-unit>
@@ -524,7 +524,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Header for column at in tables</note>
       </trans-unit>
@@ -555,7 +555,7 @@
         <target state="signed-off">Zeitlimit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenge-card/challenge-card.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Label for time limit in challenge-ticker</note>
       </trans-unit>
@@ -564,7 +564,7 @@
         <target state="signed-off">Gesehen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Header for column seen in tables</note>
       </trans-unit>
@@ -573,7 +573,7 @@
         <target state="signed-off">Dran</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Header for column up in tables</note>
       </trans-unit>
@@ -582,7 +582,7 @@
         <target state="signed-off">Anzahl</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <note priority="1" from="description">Label for seen count in challenges screen</note>
       </trans-unit>
@@ -591,7 +591,7 @@
         <target state="signed-off">Zuletzt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <note priority="1" from="description">Label for seen last in challenges screen</note>
       </trans-unit>
@@ -600,7 +600,7 @@
         <target state="signed-off">In</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <note priority="1" from="description">Label for up in in challenges screen</note>
       </trans-unit>
@@ -609,7 +609,7 @@
         <target state="signed-off">Um</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <note priority="1" from="description">Label for at in challenges screen</note>
       </trans-unit>
@@ -636,11 +636,11 @@
         <target state="signed-off">'Dran in' Zeiten könnten abweichen da noch nicht alle Zeitlimits berechnet wurden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <note priority="1" from="description">Info box content for warning, that not all up in times are savely predicted</note>
       </trans-unit>
@@ -649,16 +649,16 @@
         <target state="signed-off">Verbindung zum dedizierten Spieleserver verloren! Bitte kontaktiere</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">24</context>
         </context-group>
-        <note priority="1" from="description">Info box content for error, that the connection to tmnfd got lost</note>
+        <note priority="1" from="description">Info box content for error, that the connection to at least one dedicated server got lost</note>
       </trans-unit>
       <trans-unit id="LinkTextHidePageURL" datatype="html">
         <source>Hide Page-URL Message</source>
         <target state="signed-off">Seiten-URL Nachricht ausblenden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <note priority="1" from="description">Text for link to hide Page-URL Message on bottom of screen</note>
       </trans-unit>
@@ -696,7 +696,7 @@
           <context context-type="sourcefile">src/app/components/playerhud/playerhud.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <note priority="1" from="description">Says what the user needs to do if he can&amp;amp;amp;amp;amp;amp;amp;apos;t find his username</note>
+        <note priority="1" from="description">Says what the user needs to do if he can&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;apos;t find his username</note>
       </trans-unit>
       <trans-unit id="tableCurrentChallengeTitle" datatype="html">
         <source>Current Challenge</source>
@@ -704,10 +704,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud-current-list/playerhud-current-list.component.html</context>
           <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Title of the current challenge ranking table</note>
       </trans-unit>
@@ -717,10 +713,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/playerhud-global-list/playerhud-global-list.component.html</context>
           <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">18</context>
         </context-group>
         <note priority="1" from="description">Title of the global rankings table</note>
       </trans-unit>
@@ -840,16 +832,16 @@
         <target state="signed-off">Challenge Gbx Herunterladen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Tooltip for challenge donwload icon</note>
       </trans-unit>
       <trans-unit id="labelTournamentEnded" datatype="html">
         <source>Tournament finished</source>
-        <target state="signed-off">Turnier beended</target>
+        <target state="signed-off">Turnier beendet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Label for ended Tournament in challenges screen</note>
       </trans-unit>
@@ -858,7 +850,7 @@
         <target state="signed-off">Das Turnier ist vorbei</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-ticker/challenges-ticker.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <note priority="1" from="description">Text saying that Tournament is over</note>
       </trans-unit>
@@ -867,7 +859,7 @@
         <target state="signed-off">Weiterleitung zu den Ergebnissen in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/challenges-ticker/challenges-ticker.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <note priority="1" from="description">Redirecting to results info</note>
       </trans-unit>
@@ -943,11 +935,11 @@
         <target state="signed-off">Turnier endet um</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wallboard/wallboard.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <note priority="1" from="description">Info box content for end_time warning</note>
       </trans-unit>
@@ -974,7 +966,7 @@
         <target state="signed-off">Start Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <note priority="1" from="description">Text of link to start-countdown screen</note>
       </trans-unit>
@@ -983,7 +975,7 @@
         <target state="signed-off">Ende Countdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <note priority="1" from="description">Text of link to end-countdown screen</note>
       </trans-unit>
@@ -1058,6 +1050,411 @@
           <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Text for link to open Hotseat Screen</note>
+      </trans-unit>
+      <trans-unit id="tableHeaderChallengeServer" datatype="html">
+        <source>server</source>
+        <target state="signed-off">Server</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-list/challenges-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Header for column challenge server in tables</note>
+      </trans-unit>
+      <trans-unit id="elementFieldSuffixChallengesLeastTime" datatype="html">
+        <source>seconds</source>
+        <target state="signed-off">Sekunden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelChallengesLeastTime" datatype="html">
+        <source>Time at least</source>
+        <target state="signed-off">MindestrundenZEIT</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonSave" datatype="html">
+        <source>Save</source>
+        <target state="signed-off">Speichern</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-rabbit/config-rabbit.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonDismiss" datatype="html">
+        <source>Dismiss</source>
+        <target state="signed-off">Verwerfen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-rabbit/config-rabbit.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelChallengesRelTime" datatype="html">
+        <source>Relative to</source>
+        <target state="signed-off">Abhängig von</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelChallengesLeastRounds" datatype="html">
+        <source>Rounds at least</source>
+        <target state="signed-off">MindestrundenZAHL</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-challenges/config-challenges.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedName" datatype="html">
+        <source>Name</source>
+        <target state="signed-off">Name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedConnection" datatype="html">
+        <source>Connection</source>
+        <target state="signed-off">Verbindung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="LabelScheduleFor" datatype="html">
+        <source>Schedule for</source>
+        <target state="signed-off">Rennkalender</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/challenges-ticker/challenges-ticker.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Server Name on Challenge Schedule Header</note>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedGamePort" datatype="html">
+        <source>GamePort</source>
+        <target state="signed-off">ServerPort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedP2pPort" datatype="html">
+        <source>P2Pport</source>
+        <target state="signed-off">P2Pport</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedRpcPort" datatype="html">
+        <source>RPCport</source>
+        <target state="signed-off">RPCport</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedSuperadminPw" datatype="html">
+        <source>SuperadminPW</source>
+        <target state="signed-off">SuperadminPW</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedAdminPw" datatype="html">
+        <source>AdminPW</source>
+        <target state="signed-off">AdminPW</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedUserPw" datatype="html">
+        <source>UserPW</source>
+        <target state="signed-off">UserPW</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedMaxPlayers" datatype="html">
+        <source>MaxPlayers</source>
+        <target state="signed-off">maximale Spielerzahl</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedIngameName" datatype="html">
+        <source>IngameName</source>
+        <target state="signed-off">Name im Spiel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedCallvoteTimeout" datatype="html">
+        <source>CallvoteTimeout</source>
+        <target state="signed-off">Abstimmungs Zeitlimit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedCallvoteRatio" datatype="html">
+        <source>CallvoteRatio</source>
+        <target state="signed-off">Abstimmungs Verhältnis</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonDelete" datatype="html">
+        <source>Delete</source>
+        <target state="signed-off">Löschen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="DedicatedNameErrorAlreadyGiven" datatype="html">
+        <source>name is allready in use</source>
+        <target state="signed-off">Name wird bereits verwendet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.ts</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="DedicatedNameErrorInvalidCharacter" datatype="html">
+        <source>contains an invalid character</source>
+        <target state="signed-off">enthält ungültige Zeichen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelLokiHost" datatype="html">
+        <source>Host</source>
+        <target state="signed-off">Host</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelLokiPort" datatype="html">
+        <source>Port</source>
+        <target state="signed-off">Port</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelLokiProtocol" datatype="html">
+        <source>Protocol</source>
+        <target state="signed-off">Protokoll</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelLokiStreamPrefix" datatype="html">
+        <source>Stream Prefix</source>
+        <target state="signed-off">Prefix</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-loki/config-loki.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelRabbitHost" datatype="html">
+        <source>Host</source>
+        <target state="signed-off">Host</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-rabbit/config-rabbit.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelRabbitPort" datatype="html">
+        <source>Port</source>
+        <target state="signed-off">Port</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-rabbit/config-rabbit.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelS3Host" datatype="html">
+        <source>Host</source>
+        <target state="signed-off">Host</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelS3HostDed" datatype="html">
+        <source>Host for Dedicated</source>
+        <target state="signed-off">Host für Dedicated</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelS3Port" datatype="html">
+        <source>Port</source>
+        <target state="signed-off">Port</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelS3AccessKey" datatype="html">
+        <source>Access Key</source>
+        <target state="signed-off">Zugriffsschlüssel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelS3AccessSecret" datatype="html">
+        <source>Access Secret</source>
+        <target state="signed-off">Zugriffsgeheimnis</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-s3/config-s3.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <target state="signed-off">Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4958455407121881464" datatype="html">
+        <source>with your User credentials</source>
+        <target state="signed-off">mit deinen Benutzerdetails</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <target state="signed-off">Benutzername</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+        <target state="signed-off">Passwort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="935187492052582731" datatype="html">
+        <source>Submit</source>
+        <target state="signed-off">Abschicken</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/login/login.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="LabelRankingFor" datatype="html">
+        <source>Ranking</source>
+        <target state="signed-off">Rangliste</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-challenge/ranking-challenge.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ranking-global/ranking-global.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Ranking Name on Ranking Table</note>
+      </trans-unit>
+      <trans-unit id="AdminScreenLinkText" datatype="html">
+        <source>Admin</source>
+        <target state="signed-off">Admin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <note priority="1" from="description">Text of link to Admin screen</note>
+      </trans-unit>
+      <trans-unit id="LabelIngameServerNames" datatype="html">
+        <source>Ingame Server Name(s)</source>
+        <target state="signed-off">Servername(n) im Spiel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <note priority="1" from="description">Label prefixing Ingame Server Names</note>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedActiveMatchsetting" datatype="html">
+        <source>Matchsetting</source>
+        <target state="signed-off">Steckenkonfiguration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedType" datatype="html">
+        <source>Type</source>
+        <target state="signed-off">Typ</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelDedicatedContainer" datatype="html">
+        <source>Container</source>
+        <target state="signed-off">Container</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/config-dedicated/config-dedicated.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
       </trans-unit>
     </body>
   </file>
