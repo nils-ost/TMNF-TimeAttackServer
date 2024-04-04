@@ -26,7 +26,7 @@ _config = {
         'callvote_ratio': -1,
     },
     's3': {
-        'host': 'minio',
+        'host': '127.0.0.1',
         'port': 9000,
         'access_key': 'tmtas',
         'access_secret': 'password',
