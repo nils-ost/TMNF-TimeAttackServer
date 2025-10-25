@@ -4,7 +4,7 @@ The goal of the HotSeat-Mode is identical to the one in normal mode: To get the 
 
 In addition to that (and to give all Players a equal chance) there is only one Challenge played over and over in HotSeat-Mode; so everyone is just racing for the fastest Laptime on this one Challenge.
 
-As there is just one game connected to the server (and therefor also just one play-account) the serer needs a way to get told who is driving currently. If the HotSeat-Mode is enable the PlayerHUD Screen in the frontend gets replaced by the HotSeat screen. This enables Players to enter their name, refelcts who the server thinks is driving currently and gives the Player some statistics on how he performs. After changing the name all new Laptimes are immediatly captured for the new Player.
+As there is just one game connected to the server (and therefor also just one play-account) the server needs a way to get told who is driving currently. If the HotSeat-Mode is enable the PlayerHUD Screen in the frontend gets replaced by the HotSeat screen. This enables Players to enter their name, refelects who the server thinks is driving currently and gives the Player some statistics on how he performs. After changing the name all new Laptimes are immediatly captured for the new Player.
 
 ## Preamble
 
