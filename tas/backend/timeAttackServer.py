@@ -320,7 +320,7 @@ def periodic_events_function():
             one_playing = False
             for p in player_all():
                 if p.get('connected'):
-                    if (ts - p.get('ts', ts)) > 60:
+                    if (ts - p.get('last_update', ts)) > 60:
                         player_update(player_id=p.get('_id'), connected=False, ts=ts)
                     else:
                         one_playing = True
