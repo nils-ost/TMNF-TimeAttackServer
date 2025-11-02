@@ -1,5 +1,10 @@
 # TMNF-TimeAttackServer Changelog
 
+## v1.2.2
+
+  * Bugfix: tas-backend wasn't able to set Players offline in Hot Seat mode
+  * used deprecated tag for mongodb-exporter
+
 ## v1.2.1
 
   * TAS-CLI: Fixed bug in backup creation
